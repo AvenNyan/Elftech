@@ -7,247 +7,256 @@
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
   <style>
     * {
-      box-sizing: border-box;
-      font-family: 'Comfortaa', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+  box-sizing: border-box;
+  font-family: 'Comfortaa', sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
-    body {
-      background: #f7f9fb;
-      color: #333;
-      font-size: 18px;
-      line-height: 1.6;
-    }
+body {
+  background: #f7f9fb;
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+}
 
-    header {
-      background: linear-gradient(90deg, #f8d7ff, #d7ffe6);
-      text-align: center;
-      padding: 2rem 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+header {
+  background: linear-gradient(90deg, #f8d7ff, #d7ffe6);
+  text-align: center;
+  padding: 2rem 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
 
-    header img {
-      width: 100px;
-      border-radius: 50%;
-      margin-bottom: 1rem;
-    }
+header img {
+  width: 100px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
 
-    h1 {
-      font-size: 2.4rem;
-      color: #a030a0;
-    }
+h1 {
+  font-size: 2rem;
+  color: #a030a0;
+}
 
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
+nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 0 1rem;
+}
 
-    nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin: 1.5rem 0;
-      padding: 0 1rem;
-    }
+nav button {
+  background: #ff8cc6;
+  border: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
-    nav button {
-      background: #ff8cc6;
-      border: none;
-      padding: 0.9rem 1.6rem;
-      border-radius: 999px;
-      color: white;
-      font-size: 1.3rem;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+nav button:hover {
+  background: #e673b0;
+}
 
-    nav button:hover {
-      background: #e673b0;
-    }
+.section {
+  display: none;
+  padding: 2rem 1rem;
+  max-width: 800px;
+  margin: auto;
+}
 
-    .section {
-      display: none;
-      padding: 2rem 1rem;
-      max-width: 1000px;
-      margin: auto;
-    }
+.section.active {
+  display: block;
+}
 
-    .section.active {
-      display: block;
-    }
+.item {
+  background: white;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 1rem;
+  text-align: center;
+}
 
-    .subcategory {
-      margin-bottom: 2rem;
-    }
+.item img {
+  max-width: 100%;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
 
-    .subcategory h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: #444;
-    }
+.item a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: #8be9c4;
+  color: #053d2f;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
 
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-    }
+.item a:hover {
+  background: #73dcb0;
+}
 
-    .gallery img {
-      width: 100%;
-      border-radius: 1rem;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 1rem;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+}
 
-    .gallery img:hover {
-      transform: scale(1.05);
-    }
+.contacts {
+  margin-top: 1rem;
+}
 
-    .item-details {
-      display: none;
-      margin-top: 1rem;
-      text-align: center;
-    }
+.contacts a {
+  color: #a030a0;
+  margin: 0 0.5rem;
+  text-decoration: none;
+}
 
-    .ozon-link {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
-      background: #8be9c4;
-      color: #053d2f;
-      border-radius: 999px;
-      text-decoration: none;
-      font-size: 1.1rem;
-    }
+/* 📱 Мобильная адаптация */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.8rem;
+  }
 
-    footer {
-      margin-top: 3rem;
-      text-align: center;
-      font-size: 1rem;
-      padding: 1rem;
-      background: #fafafa;
-      border-top: 1px solid #eee;
-    }
+  nav {
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .contacts {
-      margin-top: 1rem;
-    }
+  nav button {
+    width: 90%;
+    font-size: 1.2rem;
+    padding: 0.8rem;
+  }
 
-    .contacts a {
-      color: #a030a0;
-      margin: 0 0.5rem;
-      text-decoration: none;
-    }
+  .item {
+    font-size: 1rem;
+    padding: 1.2rem;
+  }
 
-    @media (max-width: 600px) {
-      body {
-        font-size: 17px;
-      }
+  .item a {
+    font-size: 1.1rem;
+    padding: 0.6rem 1.4rem;
+  }
 
-      h1 {
-        font-size: 2rem;
-      }
+  footer {
+    font-size: 1rem;
+  }
+}
 
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      .gallery {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      nav {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      nav button {
-        width: 95%;
-        font-size: 1.3rem;
-        padding: 1rem;
-      }
-    }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Логотип Лавки Эльфтех">
+    <img src="logo.png" alt="Логотип">
     <h1>Лавка Эльфтех</h1>
   </header>
-
   <nav>
-    <button onclick="showSection('toys')">3D Игрушки</button>
+    <button onclick="showSection('toys')" class="active">3D Игрушки</button>
     <button onclick="showSection('repair')">Ремонт и детали</button>
     <button onclick="showSection('resin')">Фотополимерные фигурки</button>
   </nav>
 
   <section id="toys" class="section active">
-    <div class="subcategory">
-      <h3>Лягушки</h3>
+    <div class="group">
+      <div class="group-title">Лягушки</div>
       <div class="gallery">
-        <img src="placeholder.jpg" alt="Лягушка 1" onclick="showDetails(this, 'Лягушка розовая', 'Смешная игрушка. Цвет: розовый.', 'https://ozon.ru/rozovaya')">
-        <img src="placeholder.jpg" alt="Лягушка зелёная" onclick="showDetails(this, 'Лягушка зелёная', 'Такая же, но зелёная.', 'https://ozon.ru/zelenaya')">
-      </div>
-    </div>
-    <div class="subcategory">
-      <h3>Драконы</h3>
-      <div class="gallery">
-        <img src="placeholder.jpg" alt="Дракон 1" onclick="showDetails(this, 'Дракон 1', 'Милый дракончик', 'https://ozon.ru/dragon1')">
+        <img src="frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')">
+        <img src="frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')">
       </div>
     </div>
   </section>
 
   <section id="repair" class="section">
-    <div class="subcategory">
-      <h3>Корпуса</h3>
-      <div class="gallery">
-        <img src="placeholder.jpg" alt="Корпус 1" onclick="showDetails(this, 'Корпус 1', 'Запасной корпус', 'https://ozon.ru/case1')">
-      </div>
-    </div>
+    <p>Пока раздел не заполнен.</p>
   </section>
 
   <section id="resin" class="section">
-    <div class="subcategory">
-      <h3>Фигурки</h3>
-      <div class="gallery">
-        <img src="placeholder.jpg" alt="Фигурка 1" onclick="showDetails(this, 'Фигурка 1', 'Полимерная миниатюра', 'https://ozon.ru/resin1')">
-      </div>
-    </div>
+    <p>Пока раздел не заполнен.</p>
   </section>
 
-  <div id="details" class="item-details">
-    <h3 id="details-title"></h3>
-    <p id="details-desc"></p>
-    <a id="details-link" class="ozon-link" href="#" target="_blank">Смотреть на Ozon</a>
+  <div class="modal" id="modal" onclick="closeModal(event)">
+    <div class="modal-content">
+      <img id="modal-img" src="" alt="">
+      <div class="color-buttons" id="color-buttons"></div>
+      <div class="description" id="description"></div>
+      <a id="ozon-link" class="ozon-btn" href="#" target="_blank">Смотреть на Ozon</a>
+    </div>
   </div>
 
   <footer>
-    <div class="contacts">
-      <span>Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a></span> |
-      <span>WhatsApp: <a href="https://wa.me/79818522194">+79818522194</a></span>
-    </div>
-    <div style="margin-top: 0.5rem; color: #666;">
-      elftech3d.ru | эльфтех3д.рф
-    </div>
+    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> | WhatsApp: <a href="https://wa.me/79818522194">+79818522194</a><br>
+    elftech3d.ru | эльфтех3д.рф
   </footer>
 
   <script>
+    const data = {
+      frog1: {
+        name: 'Лягушка 1',
+        colors: {
+          pink: { img: 'frog1_pink.jpg', ozon: '#' },
+          green: { img: 'frog1_green.jpg', ozon: '#' },
+        },
+        description: 'Очаровательная лягушка с короткими лапками и широкой улыбкой.'
+      },
+      frog2: {
+        name: 'Лягушка 2',
+        colors: {
+          pink: { img: 'frog2_pink.jpg', ozon: '#' },
+          blue: { img: 'frog2_blue.jpg', ozon: '#' },
+        },
+        description: 'Модель с чуть более длинным туловищем и интересными глазами.'
+      }
+    };
+
     function showSection(id) {
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.querySelector(`nav button[onclick="showSection('${id}')"]`).classList.add('active');
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.getElementById('details').style.display = 'none';
     }
 
-    function showDetails(img, title, desc, link) {
-      const details = document.getElementById('details');
-      document.getElementById('details-title').textContent = title;
-      document.getElementById('details-desc').textContent = desc;
-      const ozonLink = document.getElementById('details-link');
-      ozonLink.href = link;
-      details.style.display = 'block';
-      details.scrollIntoView({ behavior: 'smooth' });
+    function openModal(name, key, colorList, defaultColor) {
+      const item = data[key];
+      const modal = document.getElementById('modal');
+      const modalImg = document.getElementById('modal-img');
+      const colorButtons = document.getElementById('color-buttons');
+      const description = document.getElementById('description');
+      const ozonLink = document.getElementById('ozon-link');
+
+      function setColor(c) {
+        modalImg.src = item.colors[c].img;
+        ozonLink.href = item.colors[c].ozon;
+      }
+
+      setColor(defaultColor);
+      description.innerText = item.description;
+      colorButtons.innerHTML = '';
+
+      colorList.forEach(c => {
+        const btn = document.createElement('button');
+        btn.innerText = c;
+        btn.onclick = () => setColor(c);
+        colorButtons.appendChild(btn);
+      });
+
+      modal.style.display = 'flex';
+    }
+
+    function closeModal(e) {
+      if (e.target.id === 'modal') {
+        e.target.style.display = 'none';
+      }
     }
   </script>
 </body>
