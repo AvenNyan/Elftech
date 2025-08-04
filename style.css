@@ -1,0 +1,190 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f7f9fb;
+  color: #333;
+  font-size: 17px;
+}
+
+header {
+  background: linear-gradient(90deg, #f8d7ff, #d7ffe6);
+  padding: 1rem;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+header img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+h1 {
+  font-size: 1.5rem;
+  color: #a030a0;
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  padding: 1rem;
+}
+
+nav button {
+  background: #ff8cc6;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+nav button.active {
+  background: #d55ca0;
+}
+
+.section {
+  display: none;
+  padding: 1rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.section.active {
+  display: block;
+}
+
+.group {
+  margin-bottom: 2rem;
+}
+
+.group-title {
+  font-size: 1.2rem;
+  color: #a030a0;
+  margin-bottom: 0.5rem;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.5rem;
+}
+
+.gallery img {
+  width: 100%;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 1rem;
+  max-width: 500px;
+  width: 100%;
+  padding: 1rem;
+}
+
+.modal img {
+  width: 100%;
+  border-radius: 1rem;
+}
+
+.color-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.color-buttons button {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  background: #8be9c4;
+  cursor: pointer;
+}
+
+.description {
+  margin-top: 0.5rem;
+}
+
+.ozon-btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  background: #ff8cc6;
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  background: #fafafa;
+  margin-top: 3rem;
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 16px;
+  }
+
+  header {
+    padding: 0.8rem;
+  }
+
+  header img {
+    width: 40px;
+    height: 40px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+}
