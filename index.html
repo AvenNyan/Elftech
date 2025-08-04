@@ -5,163 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Лавка Эльфтех</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Comfortaa', sans-serif;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f7f9fb;
-      color: #333;
-      font-size: 1.05rem;
-    }
-    header {
-      background: linear-gradient(90deg, #f8d7ff, #d7ffe6);
-      display: flex;
-      align-items: center;
-      padding: 0.8rem 1rem;
-      gap: 1rem;
-    }
-    header img {
-      width: 50px;
-      border-radius: 50%;
-    }
-    h1 {
-      font-size: 1.5rem;
-      color: #a030a0;
-      margin: 0;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      padding: 0.5rem 1rem;
-    }
-    nav button {
-      background: #ff8cc6;
-      border: none;
-      padding: 0.4rem 0.9rem;
-      border-radius: 999px;
-      color: white;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-    nav button.active {
-      background: #d55ca0;
-    }
-    .section {
-      display: none;
-      padding: 1rem;
-      max-width: 1000px;
-      margin: auto;
-    }
-    .section.active {
-      display: block;
-    }
-    .group {
-      margin-bottom: 2rem;
-    }
-    .group-title {
-      font-size: 1.3rem;
-      color: #a030a0;
-      margin-bottom: 0.5rem;
-    }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 0.5rem;
-    }
-    .gallery img {
-      width: 100%;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-    .gallery img:hover {
-      transform: scale(1.05);
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-    }
-    .modal-content {
-      background: white;
-      border-radius: 1rem;
-      max-width: 500px;
-      width: 100%;
-      padding: 1rem;
-    }
-    .modal img {
-      width: 100%;
-      border-radius: 1rem;
-    }
-    .color-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    .color-buttons button {
-      border: none;
-      border-radius: 0.5rem;
-      padding: 0.3rem 0.8rem;
-      background: #8be9c4;
-      cursor: pointer;
-    }
-    .description {
-      margin-top: 0.5rem;
-    }
-    .ozon-btn {
-      display: inline-block;
-      margin-top: 0.5rem;
-      background: #ff8cc6;
-      color: white;
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      text-decoration: none;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.8rem;
-      background: #fafafa;
-      margin-top: 3rem;
-    }
-    @media (max-width: 600px) {
-      h1 { font-size: 1.2rem; }
-      header {
-        flex-direction: row;
-        justify-content: flex-start;
-        padding: 0.6rem 0.8rem;
-      }
-      nav {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.3rem;
-      }
-      nav button {
-        font-size: 0.9rem;
-        padding: 0.4rem 1rem;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Логотип">
-    <h1>Лавка Эльфтех</h1>
+    <div class="header-inner">
+      <img src="images/logo.png" alt="Логотип">
+      <h1>Лавка Эльфтех</h1>
+    </div>
   </header>
+
   <nav>
     <button onclick="showSection('toys')" class="active">3D Игрушки</button>
     <button onclick="showSection('vases')">Вазы</button>
@@ -173,8 +26,8 @@
     <div class="group">
       <div class="group-title">Лягушки</div>
       <div class="gallery">
-        <img src="frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')">
-        <img src="frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')">
+        <img src="images/frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')">
+        <img src="images/frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')">
       </div>
     </div>
   </section>
@@ -205,65 +58,7 @@
     elftech3d.ru | эльфтех3д.рф
   </footer>
 
-  <script>
-    const data = {
-      frog1: {
-        name: 'Лягушка 1',
-        colors: {
-          pink: { img: 'frog1_pink.jpg', ozon: '#' },
-          green: { img: 'frog1_green.jpg', ozon: '#' },
-        },
-        description: 'Очаровательная лягушка с короткими лапками и широкой улыбкой.'
-      },
-      frog2: {
-        name: 'Лягушка 2',
-        colors: {
-          pink: { img: 'frog2_pink.jpg', ozon: '#' },
-          blue: { img: 'frog2_blue.jpg', ozon: '#' },
-        },
-        description: 'Модель с чуть более длинным туловищем и интересными глазами.'
-      }
-    };
-
-    function showSection(id) {
-      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-      document.querySelector(`nav button[onclick="showSection('${id}')"]`).classList.add('active');
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-
-    function openModal(name, key, colorList, defaultColor) {
-      const item = data[key];
-      const modal = document.getElementById('modal');
-      const modalImg = document.getElementById('modal-img');
-      const colorButtons = document.getElementById('color-buttons');
-      const description = document.getElementById('description');
-      const ozonLink = document.getElementById('ozon-link');
-
-      function setColor(c) {
-        modalImg.src = item.colors[c].img;
-        ozonLink.href = item.colors[c].ozon;
-      }
-
-      setColor(defaultColor);
-      description.innerText = item.description;
-      colorButtons.innerHTML = '';
-
-      colorList.forEach(c => {
-        const btn = document.createElement('button');
-        btn.innerText = c;
-        btn.onclick = () => setColor(c);
-        colorButtons.appendChild(btn);
-      });
-
-      modal.style.display = 'flex';
-    }
-
-    function closeModal(e) {
-      if (e.target.id === 'modal') {
-        e.target.style.display = 'none';
-      }
-    }
-  </script>
+  <script src="data/items.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
