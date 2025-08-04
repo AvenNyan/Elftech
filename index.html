@@ -15,20 +15,23 @@
       padding: 0;
       background: #f7f9fb;
       color: #333;
+      font-size: 1.05rem;
     }
     header {
       background: linear-gradient(90deg, #f8d7ff, #d7ffe6);
-      text-align: center;
-      padding: 1.5rem 1rem;
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      gap: 1rem;
     }
     header img {
-      width: 80px;
+      width: 50px;
       border-radius: 50%;
     }
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       color: #a030a0;
-      margin: 0.5rem 0;
+      margin: 0;
     }
     nav {
       display: flex;
@@ -37,15 +40,16 @@
       gap: 0.5rem;
       background: #fff;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      padding: 1rem;
+      padding: 0.5rem 1rem;
     }
     nav button {
       background: #ff8cc6;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 0.9rem;
       border-radius: 999px;
       color: white;
       cursor: pointer;
+      font-size: 0.95rem;
     }
     nav button.active {
       background: #d55ca0;
@@ -63,7 +67,7 @@
       margin-bottom: 2rem;
     }
     .group-title {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: #a030a0;
       margin-bottom: 0.5rem;
     }
@@ -135,9 +139,21 @@
       margin-top: 3rem;
     }
     @media (max-width: 600px) {
-      h1 { font-size: 1.5rem; }
-      nav { flex-direction: column; align-items: center; }
-      .gallery { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+      h1 { font-size: 1.2rem; }
+      header {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 0.6rem 0.8rem;
+      }
+      nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      nav button {
+        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
+      }
     }
   </style>
 </head>
@@ -148,6 +164,7 @@
   </header>
   <nav>
     <button onclick="showSection('toys')" class="active">3D Игрушки</button>
+    <button onclick="showSection('vases')">Вазы</button>
     <button onclick="showSection('repair')">Ремонт и детали</button>
     <button onclick="showSection('resin')">Фотополимерные фигурки</button>
   </nav>
@@ -160,6 +177,10 @@
         <img src="frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')">
       </div>
     </div>
+  </section>
+
+  <section id="vases" class="section">
+    <p>Пока раздел не заполнен.</p>
   </section>
 
   <section id="repair" class="section">
