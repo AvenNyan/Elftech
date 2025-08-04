@@ -1,110 +1,157 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Лавка Эльфтех</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: sans-serif;
+    * {
+      box-sizing: border-box;
+      font-family: 'Comfortaa', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f7f7f7;
+    }
+    body {
+      background: #f7f9fb;
+      color: #333;
     }
     header {
-      background-color: #444;
-      color: white;
-      padding: 1rem;
+      background: linear-gradient(90deg, #f8d7ff, #d7ffe6);
       text-align: center;
-      font-size: 1.5rem;
+      padding: 2rem 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    header img {
+      width: 100px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #a030a0;
     }
     nav {
       display: flex;
       justify-content: center;
       gap: 1rem;
-      background-color: #ddd;
-      padding: 0.5rem 0;
+      margin: 1.5rem 0;
     }
     nav button {
-      padding: 0.5rem 1rem;
-      background-color: #eee;
+      background: #ff8cc6;
       border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      color: white;
+      font-size: 1rem;
       cursor: pointer;
-      font-weight: bold;
+      transition: background 0.3s;
     }
-    nav button.active {
-      background-color: #bbb;
+    nav button:hover {
+      background: #e673b0;
     }
-    section {
+    .section {
       display: none;
-      padding: 1rem;
+      padding: 2rem 1rem;
+      max-width: 800px;
+      margin: auto;
     }
-    section.active {
+    .section.active {
       display: block;
     }
-    footer {
-      background-color: #444;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
-    }
     .item {
+      background: white;
       margin-bottom: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 1rem;
+      text-align: center;
+    }
+    .item img {
+      max-width: 100%;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
     }
     .item a {
       display: inline-block;
       margin-top: 0.5rem;
-      color: #0077cc;
+      padding: 0.4rem 0.8rem;
+      background: #8be9c4;
+      color: #053d2f;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .item a:hover {
+      background: #73dcb0;
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      padding: 1rem;
+      background: #fafafa;
+      border-top: 1px solid #eee;
+    }
+    .contacts {
+      margin-top: 1rem;
+    }
+    .contacts a {
+      color: #a030a0;
+      margin: 0 0.5rem;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <header>Лавка Эльфтех</header>
-
+  <header>
+    <img src="logo.png" alt="Логотип Лавки Эльфтех">
+    <h1>Лавка Эльфтех</h1>
+  </header>
   <nav>
-    <button onclick="showSection('toys')" id="btn-toys" class="active">3D Игрушки</button>
-    <button onclick="showSection('repair')" id="btn-repair">Ремонт/Детали</button>
-    <button onclick="showSection('figures')" id="btn-figures">Фигурки</button>
+    <button onclick="showSection('toys')">3D Игрушки</button>
+    <button onclick="showSection('repair')">Ремонт и детали</button>
+    <button onclick="showSection('resin')">Фотополимерные фигурки</button>
   </nav>
 
-  <section id="toys" class="active">
+  <section id="toys" class="section active">
     <div class="item">
-      <h2>Пример 3D игрушки</h2>
-      <img src="" alt="Фото игрушки" width="200" />
-      <br />
-      <a href="#">Ссылка на Ozon</a>
+      <h2>Игрушка 1</h2>
+      <img src="placeholder.jpg" alt="Игрушка 1">
+      <a href="#">Смотреть на Ozon</a>
     </div>
   </section>
 
-  <section id="repair">
+  <section id="repair" class="section">
     <div class="item">
-      <h2>Пример ремонта детали</h2>
-      <img src="" alt="Фото детали" width="200" />
-      <br />
-      <a href="#">Ссылка на Ozon</a>
+      <h2>Деталь 1</h2>
+      <img src="placeholder.jpg" alt="Деталь 1">
+      <a href="#">Смотреть на Ozon</a>
     </div>
   </section>
 
-  <section id="figures">
+  <section id="resin" class="section">
     <div class="item">
-      <h2>Пример фотополимерной фигурки</h2>
-      <img src="" alt="Фото фигурки" width="200" />
-      <br />
-      <a href="#">Ссылка на Ozon</a>
+      <h2>Фигурка 1</h2>
+      <img src="placeholder.jpg" alt="Фигурка 1">
+      <a href="#">Смотреть на Ozon</a>
     </div>
   </section>
 
   <footer>
-    Telegram: <a href="https://t.me/AvenNyan" style="color:white;">@AvenNyan</a> | WhatsApp: +7 981 852 2194
+    <div class="contacts">
+      <span>Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a></span> |
+      <span>WhatsApp: <a href="https://wa.me/79818522194">+79818522194</a></span>
+    </div>
+    <div style="margin-top: 0.5rem; color: #666;">
+      elftech3d.ru | эльфтех3д.рф
+    </div>
   </footer>
 
   <script>
     function showSection(id) {
-      document.querySelectorAll('section').forEach(section => section.classList.remove('active'));
-      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.getElementById('btn-' + id).classList.add('active');
     }
   </script>
 </body>
