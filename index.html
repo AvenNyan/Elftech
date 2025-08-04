@@ -39,7 +39,7 @@
     }
 
     h2 {
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       margin-bottom: 1rem;
     }
 
@@ -78,43 +78,48 @@
       display: block;
     }
 
-    .item {
-      background: white;
+    .subcategory {
       margin-bottom: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      padding: 1.5rem;
-      text-align: center;
     }
 
-    .item img {
-      width: 100%;
-      max-width: 300px;
-      height: auto;
-      border-radius: 1rem;
+    .subcategory h3 {
+      font-size: 1.5rem;
       margin-bottom: 1rem;
+      color: #444;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 1rem;
       cursor: pointer;
       transition: transform 0.3s;
     }
 
-    .item img:hover {
-      transform: scale(1.03);
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    .item-details {
+      display: none;
+      margin-top: 1rem;
+      text-align: center;
     }
 
     .ozon-link {
-      display: none;
-      margin-top: 0.5rem;
-      padding: 0.8rem 1.4rem;
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
       background: #8be9c4;
       color: #053d2f;
       border-radius: 999px;
       text-decoration: none;
       font-size: 1.1rem;
-      transition: background 0.3s;
-    }
-
-    .ozon-link:hover {
-      background: #73dcb0;
     }
 
     footer {
@@ -136,7 +141,6 @@
       text-decoration: none;
     }
 
-    /* Мобильная адаптация */
     @media (max-width: 600px) {
       body {
         font-size: 17px;
@@ -147,7 +151,11 @@
       }
 
       h2 {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       nav {
@@ -160,14 +168,6 @@
         font-size: 1.3rem;
         padding: 1rem;
       }
-
-      .item img {
-        max-width: 100%;
-      }
-
-      .item a {
-        font-size: 1rem;
-      }
     }
   </style>
 </head>
@@ -176,6 +176,7 @@
     <img src="logo.png" alt="Логотип Лавки Эльфтех">
     <h1>Лавка Эльфтех</h1>
   </header>
+
   <nav>
     <button onclick="showSection('toys')">3D Игрушки</button>
     <button onclick="showSection('repair')">Ремонт и детали</button>
@@ -183,28 +184,44 @@
   </nav>
 
   <section id="toys" class="section active">
-    <div class="item">
-      <h2>Игрушка 1</h2>
-      <img src="placeholder.jpg" alt="Игрушка 1" onclick="toggleLink(this)">
-      <a href="#" class="ozon-link">Смотреть на Ozon</a>
+    <div class="subcategory">
+      <h3>Лягушки</h3>
+      <div class="gallery">
+        <img src="placeholder.jpg" alt="Лягушка 1" onclick="showDetails(this, 'Лягушка розовая', 'Смешная игрушка. Цвет: розовый.', 'https://ozon.ru/rozovaya')">
+        <img src="placeholder.jpg" alt="Лягушка зелёная" onclick="showDetails(this, 'Лягушка зелёная', 'Такая же, но зелёная.', 'https://ozon.ru/zelenaya')">
+      </div>
+    </div>
+    <div class="subcategory">
+      <h3>Драконы</h3>
+      <div class="gallery">
+        <img src="placeholder.jpg" alt="Дракон 1" onclick="showDetails(this, 'Дракон 1', 'Милый дракончик', 'https://ozon.ru/dragon1')">
+      </div>
     </div>
   </section>
 
   <section id="repair" class="section">
-    <div class="item">
-      <h2>Деталь 1</h2>
-      <img src="placeholder.jpg" alt="Деталь 1" onclick="toggleLink(this)">
-      <a href="#" class="ozon-link">Смотреть на Ozon</a>
+    <div class="subcategory">
+      <h3>Корпуса</h3>
+      <div class="gallery">
+        <img src="placeholder.jpg" alt="Корпус 1" onclick="showDetails(this, 'Корпус 1', 'Запасной корпус', 'https://ozon.ru/case1')">
+      </div>
     </div>
   </section>
 
   <section id="resin" class="section">
-    <div class="item">
-      <h2>Фигурка 1</h2>
-      <img src="placeholder.jpg" alt="Фигурка 1" onclick="toggleLink(this)">
-      <a href="#" class="ozon-link">Смотреть на Ozon</a>
+    <div class="subcategory">
+      <h3>Фигурки</h3>
+      <div class="gallery">
+        <img src="placeholder.jpg" alt="Фигурка 1" onclick="showDetails(this, 'Фигурка 1', 'Полимерная миниатюра', 'https://ozon.ru/resin1')">
+      </div>
     </div>
   </section>
+
+  <div id="details" class="item-details">
+    <h3 id="details-title"></h3>
+    <p id="details-desc"></p>
+    <a id="details-link" class="ozon-link" href="#" target="_blank">Смотреть на Ozon</a>
+  </div>
 
   <footer>
     <div class="contacts">
@@ -220,11 +237,17 @@
     function showSection(id) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      document.getElementById('details').style.display = 'none';
     }
 
-    function toggleLink(imgEl) {
-      const link = imgEl.parentElement.querySelector('.ozon-link');
-      link.style.display = (link.style.display === 'inline-block') ? 'none' : 'inline-block';
+    function showDetails(img, title, desc, link) {
+      const details = document.getElementById('details');
+      document.getElementById('details-title').textContent = title;
+      document.getElementById('details-desc').textContent = desc;
+      const ozonLink = document.getElementById('details-link');
+      ozonLink.href = link;
+      details.style.display = 'block';
+      details.scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 </body>
