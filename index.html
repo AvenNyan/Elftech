@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Лавка Эльфтех</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <div class="header-inner">
-      <img src="images/logo.png" alt="Логотип">
+    <div class="header-content">
+      <img src="images/logo.png" alt="Логотип" class="logo" />
       <h1>Лавка Эльфтех</h1>
     </div>
   </header>
@@ -26,8 +26,8 @@
     <div class="group">
       <div class="group-title">Лягушки</div>
       <div class="gallery">
-        <img src="images/frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')">
-        <img src="images/frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')">
+        <img src="images/frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')" />
+        <img src="images/frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')" />
       </div>
     </div>
   </section>
@@ -46,7 +46,7 @@
 
   <div class="modal" id="modal" onclick="closeModal(event)">
     <div class="modal-content">
-      <img id="modal-img" src="" alt="">
+      <img id="modal-img" src="" alt="" />
       <div class="color-buttons" id="color-buttons"></div>
       <div class="description" id="description"></div>
       <a id="ozon-link" class="ozon-btn" href="#" target="_blank">Смотреть на Ozon</a>
@@ -54,11 +54,11 @@
   </div>
 
   <footer>
-    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> | WhatsApp: <a href="https://wa.me/79818522194">+79818522194</a><br>
+    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> |
+    WhatsApp: <a href="https://wa.me/79818522194">+79818522194</a><br />
     elftech3d.ru | эльфтех3д.рф
   </footer>
 
-  <script src="data/items.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
