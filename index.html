@@ -39,7 +39,7 @@
     }
 
     h2 {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       margin-bottom: 1rem;
     }
 
@@ -89,14 +89,20 @@
 
     .item img {
       width: 100%;
-      max-width: 400px;
+      max-width: 300px;
       height: auto;
       border-radius: 1rem;
       margin-bottom: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s;
     }
 
-    .item a {
-      display: inline-block;
+    .item img:hover {
+      transform: scale(1.03);
+    }
+
+    .ozon-link {
+      display: none;
       margin-top: 0.5rem;
       padding: 0.8rem 1.4rem;
       background: #8be9c4;
@@ -107,7 +113,7 @@
       transition: background 0.3s;
     }
 
-    .item a:hover {
+    .ozon-link:hover {
       background: #73dcb0;
     }
 
@@ -130,7 +136,7 @@
       text-decoration: none;
     }
 
-    /* 📱 Мобильная адаптация */
+    /* Мобильная адаптация */
     @media (max-width: 600px) {
       body {
         font-size: 17px;
@@ -141,7 +147,7 @@
       }
 
       h2 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
 
       nav {
@@ -151,13 +157,8 @@
 
       nav button {
         width: 95%;
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         padding: 1rem;
-      }
-
-      .item {
-        font-size: 1.2rem;
-        padding: 1.4rem;
       }
 
       .item img {
@@ -165,11 +166,6 @@
       }
 
       .item a {
-        font-size: 1.2rem;
-        padding: 0.8rem 1.6rem;
-      }
-
-      footer {
         font-size: 1rem;
       }
     }
@@ -189,24 +185,24 @@
   <section id="toys" class="section active">
     <div class="item">
       <h2>Игрушка 1</h2>
-      <img src="placeholder.jpg" alt="Игрушка 1">
-      <a href="#">Смотреть на Ozon</a>
+      <img src="placeholder.jpg" alt="Игрушка 1" onclick="toggleLink(this)">
+      <a href="#" class="ozon-link">Смотреть на Ozon</a>
     </div>
   </section>
 
   <section id="repair" class="section">
     <div class="item">
       <h2>Деталь 1</h2>
-      <img src="placeholder.jpg" alt="Деталь 1">
-      <a href="#">Смотреть на Ozon</a>
+      <img src="placeholder.jpg" alt="Деталь 1" onclick="toggleLink(this)">
+      <a href="#" class="ozon-link">Смотреть на Ozon</a>
     </div>
   </section>
 
   <section id="resin" class="section">
     <div class="item">
       <h2>Фигурка 1</h2>
-      <img src="placeholder.jpg" alt="Фигурка 1">
-      <a href="#">Смотреть на Ozon</a>
+      <img src="placeholder.jpg" alt="Фигурка 1" onclick="toggleLink(this)">
+      <a href="#" class="ozon-link">Смотреть на Ozon</a>
     </div>
   </section>
 
@@ -224,6 +220,11 @@
     function showSection(id) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+    }
+
+    function toggleLink(imgEl) {
+      const link = imgEl.parentElement.querySelector('.ozon-link');
+      link.style.display = (link.style.display === 'inline-block') ? 'none' : 'inline-block';
     }
   </script>
 </body>
