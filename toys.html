@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Игрушки — Лавка Эльфтех</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <a href="index.html">
+      <img src="logo.png" alt="Логотип" style="cursor: pointer;" />
+    </a>
+    <h1>Лавка Эльфтех</h1>
+  </header>
+
+  <nav>
+    <a href="toys.html">3D Игрушки</a>
+    <a href="vases.html">Вазы</a>
+    <a href="repair.html">Ремонт и детали</a>
+    <a href="resin.html">Фотополимерные фигурки</a>
+  </nav>
+
+  <main>
+    <section>
+      <h2>3D Игрушки</h2>
+      <div class="group">
+        <div class="group-title">Лягушки</div>
+        <div class="gallery">
+          <img src="frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')" />
+          <img src="frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" onclick="closeModal(event)">
+    <div class="modal-content">
+      <img id="modal-img" src="" alt="" />
+      <div class="color-buttons" id="color-buttons"></div>
+      <div class="description" id="description"></div>
+      <a id="ozon-link" class="ozon-btn" href="#" target="_blank">Смотреть на Ozon</a>
+    </div>
+  </div>
+
+  <footer>
+    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> |
+    WhatsApp: <a href="https://wa.me/79818522194">+79818522194</a><br />
+    elftech3d.ru | эльфтех3д.рф
+  </footer>
+
+  <!-- Нижняя навигация для мобильных -->
+  <div class="bottom-nav">
+    <a href="toys.html" class="active">
+      🧸<span>Игрушки</span>
+    </a>
+    <a href="vases.html">
+      🏺<span>Вазы</span>
+    </a>
+    <a href="repair.html">
+      🛠<span>Детали</span>
+    </a>
+    <a href="resin.html">
+      🧪<span>Фигурки</span>
+    </a>
+  </div>
+</body>
+</html>
