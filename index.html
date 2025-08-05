@@ -18,7 +18,7 @@
       display: flex;
       align-items: center;
       padding: 1rem;
-      background: #444;
+      background: linear-gradient(to right, #5b2c83, #8e44ad);
       color: white;
     }
 
@@ -38,7 +38,7 @@
       justify-content: center;
       gap: 1rem;
       padding: 0.8rem;
-      background: #555;
+      background: #6e348e;
     }
 
     nav button {
@@ -51,6 +51,12 @@
 
     nav button:hover {
       text-decoration: underline;
+    }
+
+    nav button:focus,
+    nav button:active {
+      outline: none;
+      color: white;
     }
 
     .section {
@@ -78,7 +84,7 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        background: #444;
+        background: #6e348e;
         color: white;
         box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
         padding: 0.4rem 0;
@@ -100,6 +106,12 @@
       .bottom-nav button span {
         margin-top: 0.1rem;
         font-size: 0.7rem;
+      }
+
+      .bottom-nav button:focus,
+      .bottom-nav button:active {
+        outline: none;
+        color: white;
       }
     }
 
