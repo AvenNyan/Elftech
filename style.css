@@ -1,3 +1,5 @@
+/* style.css */
+
 * {
   box-sizing: border-box;
   font-family: 'Comfortaa', sans-serif;
@@ -8,7 +10,6 @@ body {
   padding: 0;
   background: #f7f9fb;
   color: #333;
-  font-size: 17px;
 }
 
 header {
@@ -16,23 +17,22 @@ header {
   padding: 1rem;
 }
 
-.header-inner {
+.header-content {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   gap: 1rem;
   max-width: 1000px;
   margin: auto;
 }
 
-header img {
-  width: 50px;
-  height: 50px;
+.logo {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
 }
 
 h1 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: #a030a0;
   margin: 0;
 }
@@ -54,7 +54,6 @@ nav button {
   border-radius: 999px;
   color: white;
   cursor: pointer;
-  font-size: 1rem;
 }
 
 nav button.active {
@@ -161,30 +160,54 @@ footer {
   margin-top: 3rem;
 }
 
+/* Мобильная нижняя панель */
+.mobile-nav {
+  display: none;
+}
+
 @media (max-width: 600px) {
-  body {
-    font-size: 16px;
-  }
-
-  header {
-    padding: 0.8rem;
-  }
-
-  header img {
-    width: 40px;
-    height: 40px;
-  }
-
   h1 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
-
-  nav {
-    flex-direction: column;
+  .header-content {
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
   }
-
-  .gallery {
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  nav {
+    display: none;
+  }
+  .mobile-nav {
+    display: flex;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    padding: 0.5rem 0;
+    z-index: 1000;
+  }
+  .mobile-nav button {
+    background: none;
+    border: none;
+    color: #a030a0;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+  .mobile-nav button.active {
+    color: #d55ca0;
+  }
+  .mobile-nav .icon {
+    font-size: 1.2rem;
+  }
+  body {
+    padding-bottom: 60px;
   }
 }
+
+/* Можно позже добавить иконки через FontAwesome или SVG */
