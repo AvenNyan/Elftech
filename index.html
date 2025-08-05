@@ -3,35 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Лавка Эльфтех — Главная</title>
+  <title>Лавка Эльфтех</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comfortaa', sans-serif;
+      background: #f8f8f8;
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background: #444;
+      color: white;
+    }
+
+    header img {
+      height: 40px;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.8rem;
+      background: #555;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    nav button:hover {
+      text-decoration: underline;
+    }
+
+    .section {
+      display: none;
+      padding: 1rem;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .bottom-nav {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        display: none;
+      }
+
+      .bottom-nav {
+        display: flex;
+        justify-content: space-around;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #444;
+        color: white;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        padding: 0.4rem 0;
+        z-index: 1000;
+      }
+
+      .bottom-nav button {
+        flex: 1;
+        background: none;
+        border: none;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 0.75rem;
+        padding: 0.2rem 0;
+      }
+
+      .bottom-nav button span {
+        margin-top: 0.1rem;
+        font-size: 0.7rem;
+      }
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      padding: 1rem;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <a href="index.html">
-      <img src="logo.png" alt="Логотип" style="cursor: pointer;" />
-    </a>
+    <img src="logo.png" alt="Логотип" onclick="showSection('home')" />
     <h1>Лавка Эльфтех</h1>
   </header>
 
   <nav>
-    <a href="toys.html">3D Игрушки</a>
-    <a href="vases.html">Вазы</a>
-    <a href="repair.html">Ремонт и детали</a>
-    <a href="resin.html">Фотополимерные фигурки</a>
+    <button onclick="location.href='toys.html'">3D Игрушки</button>
+    <button onclick="location.href='vases.html'">Вазы</button>
+    <button onclick="location.href='repair.html'">Ремонт и детали</button>
+    <button onclick="location.href='resin.html'">Фотополимерные фигурки</button>
   </nav>
 
-  <main>
-    <section>
-      <h2>Добро пожаловать в Лавку Эльфтех</h2>
-      <p>Мы занимаемся 3D-печатью фигурок, деталей и декора по вашим пожеланиям.</p>
-      <p>Авторские игрушки, уникальные вазы и ремонт пластиковых изделий — всё это мы делаем с душой.</p>
-      <div style="margin-top: 1rem;">
-        <a href="toys.html"><button>Перейти к каталогу</button></a>
-      </div>
-    </section>
-  </main>
+  <section id="home" class="section active">
+    <h2>Добро пожаловать в Лавку Эльфтех</h2>
+    <p>Мы занимаемся 3D-печатью фигурок, деталей и декора по вашим пожеланиям.</p>
+    <p>Авторские игрушки, уникальные вазы и ремонт пластиковых изделий — всё это мы делаем с душой.</p>
+    <div style="margin-top: 1rem;">
+      <button onclick="location.href='toys.html'">Перейти к каталогу</button>
+    </div>
+  </section>
 
   <footer>
     Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> |
@@ -39,20 +139,20 @@
     elftech3d.ru | эльфтех3д.рф
   </footer>
 
-  <!-- Нижняя навигация для мобильных -->
+  <!-- Нижняя навигация только для мобильных -->
   <div class="bottom-nav">
-    <a href="toys.html">
+    <button onclick="location.href='toys.html'">
       🧸<span>Игрушки</span>
-    </a>
-    <a href="vases.html">
+    </button>
+    <button onclick="location.href='vases.html'">
       🏺<span>Вазы</span>
-    </a>
-    <a href="repair.html">
+    </button>
+    <button onclick="location.href='repair.html'">
       🛠<span>Детали</span>
-    </a>
-    <a href="resin.html">
+    </button>
+    <button onclick="location.href='resin.html'">
       🧪<span>Фигурки</span>
-    </a>
+    </button>
   </div>
 </body>
 </html>
