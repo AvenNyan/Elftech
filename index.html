@@ -3,113 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Лавка Эльфтех</title>
+  <title>Лавка Эльфтех — Главная</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    @media (min-width: 601px) {
-      nav {
-        font-size: 1rem;
-      }
-      .bottom-nav {
-        display: none !important;
-      }
-    }
-
-    @media (max-width: 600px) {
-      nav {
-        font-size: 0.9rem;
-      }
-
-      .bottom-nav {
-        display: flex;
-        justify-content: space-around;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: #fff;
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
-        padding: 0.2rem 0;
-        z-index: 1000;
-        border-top: none;
-      }
-
-      .bottom-nav button {
-        flex: 1;
-        background: none;
-        border: none;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-        padding: 0.3rem 0;
-        color: #555;
-      }
-
-      .bottom-nav button.active {
-        color: #a030a0;
-      }
-
-      .bottom-nav button span {
-        margin-top: 0.1rem;
-      }
-    }
-  </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Логотип" onclick="showSection('home')" style="cursor: pointer;" />
+    <a href="index.html">
+      <img src="logo.png" alt="Логотип" style="cursor: pointer;" />
+    </a>
     <h1>Лавка Эльфтех</h1>
   </header>
 
   <nav>
-    <button onclick="showSection('toys')">3D Игрушки</button>
-    <button onclick="showSection('vases')">Вазы</button>
-    <button onclick="showSection('repair')">Ремонт и детали</button>
-    <button onclick="showSection('resin')">Фотополимерные фигурки</button>
+    <a href="toys.html">3D Игрушки</a>
+    <a href="vases.html">Вазы</a>
+    <a href="repair.html">Ремонт и детали</a>
+    <a href="resin.html">Фотополимерные фигурки</a>
   </nav>
 
-  <section id="home" class="section active">
-    <h2>Добро пожаловать в Лавку Эльфтех</h2>
-    <p>Мы занимаемся 3D-печатью фигурок, деталей и декора по вашим пожеланиям.</p>
-    <p>Авторские игрушки, уникальные вазы и ремонт пластиковых изделий — всё это мы делаем с душой.</p>
-    <div style="margin-top: 1rem;">
-      <button onclick="showSection('toys')">Перейти к каталогу</button>
-    </div>
-  </section>
-
-  <section id="toys" class="section">
-    <div class="group">
-      <div class="group-title">Лягушки</div>
-      <div class="gallery">
-        <img src="frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')">
-        <img src="frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')">
+  <main>
+    <section>
+      <h2>Добро пожаловать в Лавку Эльфтех</h2>
+      <p>Мы занимаемся 3D-печатью фигурок, деталей и декора по вашим пожеланиям.</p>
+      <p>Авторские игрушки, уникальные вазы и ремонт пластиковых изделий — всё это мы делаем с душой.</p>
+      <div style="margin-top: 1rem;">
+        <a href="toys.html"><button>Перейти к каталогу</button></a>
       </div>
-    </div>
-  </section>
-
-  <section id="vases" class="section">
-    <p>Пока раздел не заполнен.</p>
-  </section>
-
-  <section id="repair" class="section">
-    <p>Пока раздел не заполнен.</p>
-  </section>
-
-  <section id="resin" class="section">
-    <p>Пока раздел не заполнен.</p>
-  </section>
-
-  <div class="modal" id="modal" onclick="closeModal(event)">
-    <div class="modal-content">
-      <img id="modal-img" src="" alt="">
-      <div class="color-buttons" id="color-buttons"></div>
-      <div class="description" id="description"></div>
-      <a id="ozon-link" class="ozon-btn" href="#" target="_blank">Смотреть на Ozon</a>
-    </div>
-  </div>
+    </section>
+  </main>
 
   <footer>
     Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> |
@@ -117,22 +39,20 @@
     elftech3d.ru | эльфтех3д.рф
   </footer>
 
-  <script src="script.js"></script>
-
   <!-- Нижняя навигация для мобильных -->
   <div class="bottom-nav">
-    <button onclick="showSection('toys')" id="nav-toys">
+    <a href="toys.html">
       🧸<span>Игрушки</span>
-    </button>
-    <button onclick="showSection('vases')" id="nav-vases">
+    </a>
+    <a href="vases.html">
       🏺<span>Вазы</span>
-    </button>
-    <button onclick="showSection('repair')" id="nav-repair">
+    </a>
+    <a href="repair.html">
       🛠<span>Детали</span>
-    </button>
-    <button onclick="showSection('resin')" id="nav-resin">
+    </a>
+    <a href="resin.html">
       🧪<span>Фигурки</span>
-    </button>
+    </a>
   </div>
 </body>
 </html>
