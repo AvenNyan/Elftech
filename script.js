@@ -18,10 +18,19 @@ const data = {
 };
 
 function showSection(id) {
+  // Обновление верхней панели (десктоп)
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.querySelector(`nav button[onclick="showSection('${id}')"]`).classList.add('active');
+  const topBtn = document.querySelector(`nav button[onclick="showSection('${id}')"]`);
+  if (topBtn) topBtn.classList.add('active');
+
+  // Обновление секций
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+
+  // Обновление нижней панели (мобильная)
+  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+  const bottomBtn = document.getElementById('nav-' + id);
+  if (bottomBtn) bottomBtn.classList.add('active');
 }
 
 function openModal(name, key, colorList, defaultColor) {
