@@ -29,10 +29,10 @@
         left: 0;
         width: 100%;
         background: #fff;
-        border-top: 1px solid #ccc;
         box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
         padding: 0.2rem 0;
         z-index: 1000;
+        border-top: none;
       }
 
       .bottom-nav button {
@@ -60,18 +60,27 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Логотип" />
+    <img src="logo.png" alt="Логотип" onclick="showSection('home')" style="cursor: pointer;" />
     <h1>Лавка Эльфтех</h1>
   </header>
 
   <nav>
-    <button onclick="showSection('toys')" class="active">3D Игрушки</button>
+    <button onclick="showSection('toys')">3D Игрушки</button>
     <button onclick="showSection('vases')">Вазы</button>
     <button onclick="showSection('repair')">Ремонт и детали</button>
     <button onclick="showSection('resin')">Фотополимерные фигурки</button>
   </nav>
 
-  <section id="toys" class="section active">
+  <section id="home" class="section active">
+    <h2>Добро пожаловать в Лавку Эльфтех</h2>
+    <p>Мы занимаемся 3D-печатью фигурок, деталей и декора по вашим пожеланиям.</p>
+    <p>Авторские игрушки, уникальные вазы и ремонт пластиковых изделий — всё это мы делаем с душой.</p>
+    <div style="margin-top: 1rem;">
+      <button onclick="showSection('toys')">Перейти к каталогу</button>
+    </div>
+  </section>
+
+  <section id="toys" class="section">
     <div class="group">
       <div class="group-title">Лягушки</div>
       <div class="gallery">
