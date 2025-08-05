@@ -6,13 +6,62 @@
   <title>Лавка Эльфтех</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    @media (min-width: 601px) {
+      nav {
+        font-size: 1rem;
+      }
+      .bottom-nav {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        font-size: 0.9rem;
+      }
+
+      .bottom-nav {
+        display: flex;
+        justify-content: space-around;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #ccc;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+        padding: 0.2rem 0;
+        z-index: 1000;
+      }
+
+      .bottom-nav button {
+        flex: 1;
+        background: none;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        padding: 0.3rem 0;
+        color: #555;
+      }
+
+      .bottom-nav button.active {
+        color: #a030a0;
+      }
+
+      .bottom-nav button span {
+        margin-top: 0.1rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <div class="header-content">
-      <img src="images/logo.png" alt="Логотип" class="logo" />
-      <h1>Лавка Эльфтех</h1>
-    </div>
+    <img src="logo.png" alt="Логотип" />
+    <h1>Лавка Эльфтех</h1>
   </header>
 
   <nav>
@@ -26,8 +75,8 @@
     <div class="group">
       <div class="group-title">Лягушки</div>
       <div class="gallery">
-        <img src="images/frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')" />
-        <img src="images/frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')" />
+        <img src="frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')">
+        <img src="frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')">
       </div>
     </div>
   </section>
@@ -46,7 +95,7 @@
 
   <div class="modal" id="modal" onclick="closeModal(event)">
     <div class="modal-content">
-      <img id="modal-img" src="" alt="" />
+      <img id="modal-img" src="" alt="">
       <div class="color-buttons" id="color-buttons"></div>
       <div class="description" id="description"></div>
       <a id="ozon-link" class="ozon-btn" href="#" target="_blank">Смотреть на Ozon</a>
@@ -62,20 +111,19 @@
   <script src="script.js"></script>
 
   <!-- Нижняя навигация для мобильных -->
-<div class="bottom-nav">
-  <button onclick="showSection('toys')" id="nav-toys">
-    🧸<span>Игрушки</span>
-  </button>
-  <button onclick="showSection('vases')" id="nav-vases">
-    🏺<span>Вазы</span>
-  </button>
-  <button onclick="showSection('repair')" id="nav-repair">
-    🛠<span>Детали</span>
-  </button>
-  <button onclick="showSection('resin')" id="nav-resin">
-    🧪<span>Фигурки</span>
-  </button>
-</div>
-
+  <div class="bottom-nav">
+    <button onclick="showSection('toys')" id="nav-toys">
+      🧸<span>Игрушки</span>
+    </button>
+    <button onclick="showSection('vases')" id="nav-vases">
+      🏺<span>Вазы</span>
+    </button>
+    <button onclick="showSection('repair')" id="nav-repair">
+      🛠<span>Детали</span>
+    </button>
+    <button onclick="showSection('resin')" id="nav-resin">
+      🧪<span>Фигурки</span>
+    </button>
+  </div>
 </body>
 </html>
