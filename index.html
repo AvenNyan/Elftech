@@ -1,175 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Лавка Эльфтех</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Comfortaa', sans-serif;
-      background: #f8f8f8;
-      color: #333;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      padding: 1rem;
-      background: linear-gradient(to right, #7d48b1, #a76bcc);
-      color: white;
-    }
-
-    header img {
-      height: 40px;
-      margin-right: 1rem;
-      cursor: pointer;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      margin: 0;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-    }
-
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      padding: 0.8rem;
-      background: #8854b3;
-    }
-
-    nav button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-
-    nav button:hover {
-      text-decoration: underline;
-    }
-
-    nav button:focus,
-    nav button:active {
-      outline: none;
-      color: white;
-    }
-
-    .section {
-      display: none;
-      padding: 1rem;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    .bottom-nav {
-      display: none;
-    }
-
-    @media (max-width: 600px) {
-      nav {
-        display: none;
-      }
-
-      .bottom-nav {
-        display: flex;
-        justify-content: space-around;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: #8854b3;
-        color: white;
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-        padding: 0.4rem 0;
-        z-index: 1000;
-      }
-
-      .bottom-nav button {
-        flex: 1;
-        background: none;
-        border: none;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-size: 0.75rem;
-        padding: 0.2rem 0;
-      }
-
-      .bottom-nav button span {
-        margin-top: 0.1rem;
-        font-size: 0.7rem;
-      }
-
-      .bottom-nav button:focus,
-      .bottom-nav button:active {
-        outline: none;
-        color: white;
-      }
-    }
-
-    footer {
-      text-align: center;
-      font-size: 0.8rem;
-      padding: 1rem;
-      color: #aaa;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Лавка Эльфтех — 3D игрушки, вазы и ремонт</title>
+  <meta name="description" content="Лавка Эльфтех — 3D-печать игрушек, ваз и деталей. Авторские модели, печать на FDM и фотополимере, доставка по РФ.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Логотип" onclick="showSection('home')" />
-    <h1>Лавка Эльфтех</h1>
+  <header class="site-header">
+    <a class="logo-wrap" href="index.html" aria-label="На главную — Лавка Эльфтех">
+      <img src="images/logo.png" alt="Лавка Эльфтех — логотип" class="logo" width="56" height="56">
+      <span class="site-title">Лавка <strong>Эльфтех</strong></span>
+    </a>
+    <nav class="top-nav" aria-label="Главное меню">
+      <a href="toys.html" class="nav-link">3D Игрушки</a>
+      <a href="vases.html" class="nav-link">Вазы</a>
+      <a href="repair.html" class="nav-link">Ремонт и детали</a>
+      <a href="resin.html" class="nav-link">Фигурки (фотополимер)</a>
+    </nav>
   </header>
 
-  <nav>
-    <button onclick="location.href='toys.html'">3D Игрушки</button>
-    <button onclick="location.href='vases.html'">Вазы</button>
-    <button onclick="location.href='repair.html'">Ремонт и детали</button>
-    <button onclick="location.href='resin.html'">Фотополимерные фигурки</button>
-  </nav>
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <h1>Лавка Эльфтех — 3D-мастерская</h1>
+        <p class="lead">Авторские игрушки, уникальные вазы и печать деталей на заказ. Работаем на FDM и фотополимерах. Подгон по размеру и цвету.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="toys.html">Каталог игрушек</a>
+          <a class="btn btn-outline" href="vases.html">Посмотреть вазы</a>
+        </div>
+        <ul class="features">
+          <li>Быстрое изготовление — прототип за 1–3 дня</li>
+          <li>Поддержка модели от клиента и доработки</li>
+          <li>Доставка по РФ (Ozon / WB / самовывоз)</li>
+        </ul>
+      </div>
+      <div class="hero-right">
+        <!-- пример коллажа, можно заменить на своё изображение в images/hero.jpg -->
+        <img class="hero-img" src="images/hero.jpg" alt="Примеры работ — игрушки и вазы" loading="lazy">
+      </div>
+    </section>
 
-  <section id="home" class="section active">
-    <h2>Добро пожаловать в Лавку Эльфтех</h2>
-    <p>Мы занимаемся 3D-печатью фигурок, деталей и декора по вашим пожеланиям.</p>
-    <p>Авторские игрушки, уникальные вазы и ремонт пластиковых изделий — всё это мы делаем с душой.</p>
-    <div style="margin-top: 1rem;">
-      <button onclick="location.href='toys.html'">Перейти к каталогу</button>
+    <section class="mini-catalog">
+      <h2>Популярные категории</h2>
+      <div class="cards">
+        <a class="card" href="toys.html">
+          <img src="images/card-toys.jpg" alt="3D игрушки" loading="lazy">
+          <div class="card-title">3D Игрушки</div>
+        </a>
+        <a class="card" href="vases.html">
+          <img src="images/card-vases.jpg" alt="Вазы" loading="lazy">
+          <div class="card-title">Вазы</div>
+        </a>
+        <a class="card" href="repair.html">
+          <img src="images/card-repair.jpg" alt="Ремонт и детали" loading="lazy">
+          <div class="card-title">Ремонт и детали</div>
+        </a>
+        <a class="card" href="resin.html">
+          <img src="images/card-resin.jpg" alt="Фигурки на фотополимере" loading="lazy">
+          <div class="card-title">Фигурки (фотополимер)</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="about">
+      <h2>Как мы работаем</h2>
+      <ol>
+        <li>Вы присылаете модель или идею — обсуждаем детали</li>
+        <li>Настраиваем печать — материал, размер, отделка</li>
+        <li>Изготавливаем, фотографируем и отправляем</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="contacts">
+      <a href="https://t.me/AvenNyan" target="_blank" rel="noopener">Telegram: @AvenNyan</a> |
+      <a href="https://wa.me/79818522194" target="_blank" rel="noopener">WhatsApp: +7 981 852-21-94</a>
     </div>
-  </section>
-
-  <footer>
-    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> |
-    WhatsApp: <a href="https://wa.me/79818522194">+79818522194</a><br />
-    elftech3d.ru | эльфтех3д.рф
+    <div class="domains">elftech3d.ru | эльфтех3д.рф</div>
+    <div class="copyright">© Лавка Эльфтех — <span id="year"></span></div>
   </footer>
 
-  <!-- Нижняя навигация только для мобильных -->
-  <div class="bottom-nav">
-    <button onclick="location.href='toys.html'">
-      <img src="icon-toys.png" alt="Игрушки" width="24" height="24" />
-      <span>Игрушки</span>
-    </button>
-    <button onclick="location.href='vases.html'">
-      <img src="icon-vases.png" alt="Вазы" width="24" height="24" />
-      <span>Вазы</span>
-    </button>
-    <button onclick="location.href='repair.html'">
-      <img src="icon-repair.png" alt="Детали" width="24" height="24" />
-      <span>Детали</span>
-    </button>
-    <button onclick="location.href='resin.html'">
-      <img src="icon-resin.png" alt="Фигурки" width="24" height="24" />
-      <span>Фигурки</span>
-    </button>
-  </div>
+  <!-- Мобильная нижняя навигация (иконки в корне проекта: icon-*.png/svg) -->
+  <nav class="bottom-nav" aria-label="Навигация по сайту">
+    <a href="toys.html" class="bn-item" id="bn-toys"><img src="icon-toys.png" alt=""><span>Игрушки</span></a>
+    <a href="vases.html" class="bn-item" id="bn-vases"><img src="icon-vases.png" alt=""><span>Вазы</span></a>
+    <a href="repair.html" class="bn-item" id="bn-repair"><img src="icon-repair.png" alt=""><span>Детали</span></a>
+    <a href="resin.html" class="bn-item" id="bn-resin"><img src="icon-resin.png" alt=""><span>Фигурки</span></a>
+  </nav>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
