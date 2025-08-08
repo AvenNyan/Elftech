@@ -1,70 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>3D Игрушки — Лавка Эльфтех</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
+  <meta name="description" content="Каталог авторских 3D-игрушек — примеры, цвета и ссылки на Ozon.">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <a href="index.html">
-      <img src="logo.png" alt="Логотип" style="cursor: pointer;" />
+  <header class="site-header">
+    <a class="logo-wrap" href="index.html" aria-label="На главную">
+      <img src="images/logo.png" alt="Логотип" class="logo" width="56" height="56">
+      <span class="site-title">Лавка <strong>Эльфтех</strong></span>
     </a>
-    <h1>Лавка Эльфтех</h1>
+    <nav class="top-nav" aria-label="Главное меню">
+      <a href="toys.html" class="nav-link active">3D Игрушки</a>
+      <a href="vases.html" class="nav-link">Вазы</a>
+      <a href="repair.html" class="nav-link">Ремонт и детали</a>
+      <a href="resin.html" class="nav-link">Фигурки (фотополимер)</a>
+    </nav>
   </header>
 
-  <nav>
-    <a href="toys.html">3D Игрушки</a>
-    <a href="vases.html">Вазы</a>
-    <a href="repair.html">Ремонт и детали</a>
-    <a href="resin.html">Фотополимерные фигурки</a>
-  </nav>
+  <main class="container">
+    <h1>3D Игрушки</h1>
 
-  <main>
-    <section>
-      <h2>3D Игрушки</h2>
-      <div class="group">
-        <div class="group-title">Лягушки</div>
-        <div class="gallery">
-          <img src="frog1_pink.jpg" onclick="openModal('Лягушка', 'frog1', ['pink', 'green'], 'pink')" />
-          <img src="frog2_pink.jpg" onclick="openModal('Лягушка', 'frog2', ['pink', 'blue'], 'pink')" />
-        </div>
+    <section class="group">
+      <div class="group-title">Лягушки</div>
+      <div class="gallery">
+        <img data-key="frog1" src="images/frog1_pink.jpg" alt="Лягушка 1" loading="lazy" class="gallery-item">
+        <img data-key="frog2" src="images/frog2_pink.jpg" alt="Лягушка 2" loading="lazy" class="gallery-item">
       </div>
     </section>
   </main>
 
-  <div class="modal" id="modal" onclick="closeModal(event)">
-    <div class="modal-content">
-      <img id="modal-img" src="" alt="" />
-      <div class="color-buttons" id="color-buttons"></div>
-      <div class="description" id="description"></div>
-      <a id="ozon-link" class="ozon-btn" href="#" target="_blank">Смотреть на Ozon</a>
+  <!-- модал: использует data из data/items.js -->
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-panel" role="document">
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+      <img id="modal-img" src="" alt="" loading="lazy">
+      <div id="color-buttons" class="color-buttons"></div>
+      <p id="description"></p>
+      <a id="ozon-link" class="btn btn-primary" target="_blank" rel="noopener">Смотреть на Ozon</a>
     </div>
   </div>
 
-  <footer>
-    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> |
-    WhatsApp: <a href="https://wa.me/79818522194">+79818522194</a><br />
-    elftech3d.ru | эльфтех3д.рф
+  <footer class="site-footer">
+    <div class="contacts">
+      <a href="https://t.me/AvenNyan" target="_blank" rel="noopener">Telegram: @AvenNyan</a> |
+      <a href="https://wa.me/79818522194" target="_blank" rel="noopener">WhatsApp: +7 981 852-21-94</a>
+    </div>
+    <div class="domains">elftech3d.ru | эльфтех3д.рф</div>
+    <div class="copyright">© Лавка Эльфтех — <span id="year-toys"></span></div>
   </footer>
 
-  <!-- Нижняя навигация для мобильных -->
-  <div class="bottom-nav">
-    <a href="toys.html" class="active">
-      🧸<span>Игрушки</span>
-    </a>
-    <a href="vases.html">
-      🏺<span>Вазы</span>
-    </a>
-    <a href="repair.html">
-      🛠<span>Детали</span>
-    </a>
-    <a href="resin.html">
-      🧪<span>Фигурки</span>
-    </a>
-  </div>
+  <nav class="bottom-nav" aria-hidden="false">
+    <a href="toys.html" class="bn-item active" id="bn-toys"><img src="icon-toys.png" alt=""><span>Игрушки</span></a>
+    <a href="vases.html" class="bn-item" id="bn-vases"><img src="icon-vases.png" alt=""><span>Вазы</span></a>
+    <a href="repair.html" class="bn-item" id="bn-repair"><img src="icon-repair.png" alt=""><span>Детали</span></a>
+    <a href="resin.html" class="bn-item" id="bn-resin"><img src="icon-resin.png" alt=""><span>Фигурки</span></a>
+  </nav>
+
+  <script src="data/items.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
