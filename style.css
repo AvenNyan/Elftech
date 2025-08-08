@@ -146,3 +146,7 @@ h1{margin:0 0 8px;font-size:1.6rem}
 .modal-links a:hover {
   background: #8e44ad;
 }
+/* цветовые кнопки в модале */
+.color-buttons button { padding:6px 10px;border-radius:8px;border:1px solid #e6e6e6;background:#fafafa;cursor:pointer; }
+.color-buttons button.active { background:var(--accent-1); color:white; border-color:transparent; }
+
