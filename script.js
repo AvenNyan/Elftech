@@ -1,67 +1,87 @@
-const data = {
-  frog1: {
-    name: 'Лягушка 1',
-    colors: {
-      pink: { img: 'images/frog1_pink.jpg', ozon: '#' },
-      green: { img: 'images/frog1_green.jpg', ozon: '#' },
-    },
-    description: 'Очаровательная лягушка с короткими лапками и широкой улыбкой.'
-  },
-  frog2: {
-    name: 'Лягушка 2',
-    colors: {
-      pink: { img: 'images/frog2_pink.jpg', ozon: '#' },
-      blue: { img: 'images/frog2_blue.jpg', ozon: '#' },
-    },
-    description: 'Модель с чуть более длинным туловищем и интересными глазами.'
-  }
-};
-
-function showSection(id) {
-  // Обновление верхней панели (десктоп)
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  const topBtn = document.querySelector(`nav button[onclick="showSection('${id}')"]`);
-  if (topBtn) topBtn.classList.add('active');
-
-  // Обновление секций
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-
-  // Обновление нижней панели (мобильная)
-  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-  const bottomBtn = document.getElementById('nav-' + id);
-  if (bottomBtn) bottomBtn.classList.add('active');
-}
-
-function openModal(name, key, colorList, defaultColor) {
-  const item = data[key];
-  const modal = document.getElementById('modal');
-  const modalImg = document.getElementById('modal-img');
-  const colorButtons = document.getElementById('color-buttons');
-  const description = document.getElementById('description');
-  const ozonLink = document.getElementById('ozon-link');
-
-  function setColor(c) {
-    modalImg.src = item.colors[c].img;
-    ozonLink.href = item.colors[c].ozon;
-  }
-
-  setColor(defaultColor);
-  description.innerText = item.description;
-  colorButtons.innerHTML = '';
-
-  colorList.forEach(c => {
-    const btn = document.createElement('button');
-    btn.innerText = c;
-    btn.onclick = () => setColor(c);
-    colorButtons.appendChild(btn);
+// helper: set year in footers
+document.addEventListener('DOMContentLoaded', () => {
+  const y = new Date().getFullYear();
+  document.querySelectorAll('#year, #year-toys, #year-vases, #year-repair, #year-resin').forEach(el => {
+    if (el) el.textContent = y;
   });
 
+  // highlight top nav and bottom nav based on pathname
+  const path = location.pathname.split('/').pop() || 'index.html';
+  const map = {
+    'index.html':'index',
+    '': 'index',
+    'toys.html':'toys',
+    'vases.html':'vases',
+    'repair.html':'repair',
+    'resin.html':'resin'
+  };
+  const key = map[path] || 'index';
+  // top
+  document.querySelectorAll('.top-nav .nav-link').forEach(a => a.classList.remove('active'));
+  const topActive = document.querySelector(`.top-nav .nav-link[href$="${key === 'index' ? 'index.html' : key + '.html'}"]`);
+  if (topActive) topActive.classList.add('active');
+  // bottom
+  document.querySelectorAll('.bn-item').forEach(a => a.classList.remove('active'));
+  const bottom = document.getElementById('bn-' + key);
+  if (bottom) bottom.classList.add('active');
+
+  // gallery items -> modal open
+  document.querySelectorAll('.gallery-item').forEach(img => {
+    img.addEventListener('click', () => {
+      const k = img.getAttribute('data-key');
+      openModalByKey(k);
+    });
+  });
+
+  // If modal exists, setup listeners
+  const modal = document.getElementById('modal');
+  if (modal) {
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+    const closeBtn = modal.querySelector('.modal-close');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  }
+});
+
+// Open modal by data key using data/items.js
+function openModalByKey(key) {
+  if (!window.data || !data[key]) return;
+  const item = data[key];
+  const modal = document.getElementById('modal');
+  const img = document.getElementById('modal-img');
+  const desc = document.getElementById('description');
+  const cb = document.getElementById('color-buttons');
+  const oz = document.getElementById('ozon-link');
+
+  // default to first color
+  const firstColor = Object.keys(item.colors)[0];
+  img.src = item.colors[firstColor].img;
+  desc.textContent = item.description || item.name || '';
+  oz.href = item.colors[firstColor].ozon || '#';
+
+  // color buttons
+  cb.innerHTML = '';
+  Object.keys(item.colors).forEach(colorKey => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = colorKey;
+    b.addEventListener('click', () => {
+      img.src = item.colors[colorKey].img;
+      oz.href = item.colors[colorKey].ozon || '#';
+    });
+    cb.appendChild(b);
+  });
+
+  // show modal
   modal.style.display = 'flex';
+  modal.setAttribute('aria-hidden','false');
 }
 
-function closeModal(e) {
-  if (e.target.id === 'modal') {
-    e.target.style.display = 'none';
-  }
+// close modal
+function closeModal(){
+  const modal = document.getElementById('modal');
+  if (!modal) return;
+  modal.style.display = 'none';
+  modal.setAttribute('aria-hidden','true');
 }
