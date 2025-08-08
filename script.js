@@ -1,131 +1,78 @@
-// script.js — обновлённая версия: кликабельные картинки, универсальный модал
-document.addEventListener('DOMContentLoaded', () => {
-  // вставляем год в футеры
-  const y = new Date().getFullYear();
-  document.querySelectorAll('#year, #year-toys, #year-vases, #year-repair, #year-resin').forEach(el => {
-    if (el) el.textContent = y;
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  const galleryItems = document.querySelectorAll(".gallery-item");
+  const modal = document.getElementById("modal");
+  const modalImg = document.getElementById("modal-img");
+  const colorButtons = document.getElementById("color-buttons");
+  const description = document.getElementById("description");
+  const ozonLink = document.getElementById("ozon-link");
+  const closeBtn = document.querySelector(".modal-close");
 
-  // подсветка верхней и нижней навигации по URL
-  const path = location.pathname.split('/').pop() || 'index.html';
-  const pageMap = { 'index.html':'index', '': 'index', 'toys.html':'toys','vases.html':'vases','repair.html':'repair','resin.html':'resin' };
-  const key = pageMap[path] || 'index';
+  galleryItems.forEach(item => {
+    item.addEventListener("click", () => {
+      const key = item.dataset.key;
+      const data = window.itemsData[key];
 
-  // top-nav: по атрибуту href
-  document.querySelectorAll('.top-nav .nav-link').forEach(a => {
-    const href = a.getAttribute('href') || '';
-    const should = href.endsWith(key + '.html') || (key === 'index' && href.endsWith('index.html'));
-    a.classList.toggle('active', should);
-  });
+      if (!data) return;
 
-  // bottom nav
-  document.querySelectorAll('.bn-item').forEach(a => a.classList.remove('active'));
-  const bottom = document.getElementById('bn-' + key);
-  if (bottom) bottom.classList.add('active');
+      // Описание
+      description.textContent = data.description || "";
 
-  // modal hookup (close behavior)
-  const modal = document.getElementById('modal');
-  if (modal) {
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    const closeBtn = modal.querySelector('.modal-close');
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-  }
+      // Ссылка на Ozon
+      ozonLink.href = data.ozon || "#";
 
-  // Attach click handlers to gallery images (robust: uses data-key or matches filename in data)
-  const galleryImgs = document.querySelectorAll('.gallery img, .gallery-item, img.gallery-item');
-  galleryImgs.forEach(img => {
-    img.style.cursor = 'pointer';
-    img.addEventListener('click', () => {
-      // 1) try explicit data-key on img or nearest parent
-      const explicitKey = img.dataset.key || img.closest('[data-key]')?.dataset?.key;
-      if (explicitKey && window.data && data[explicitKey]) {
-        openModalByKey(explicitKey);
-        return;
-      }
+      // Контакты
+      const contactsBlock = document.createElement("div");
+      contactsBlock.style.marginTop = "10px";
+      contactsBlock.style.color = "#666";
+      contactsBlock.innerHTML = `
+        Контакты:
+        <a href="https://t.me/${data.contacts.telegram.replace("@", "")}" target="_blank">Telegram: ${data.contacts.telegram}</a>,
+        <a href="https://wa.me/${data.contacts.whatsapp.replace(/\D/g, "")}" target="_blank">WhatsApp: ${data.contacts.whatsapp}</a>
+        <br>
+        <small>Можно скопировать: ${data.contacts.telegram} | ${data.contacts.whatsapp}</small>
+      `;
 
-      // 2) try to match filename to entries in data/items.js
-      if (window.data) {
-        const filename = img.getAttribute('src')?.split('/').pop();
-        if (filename) {
-          for (const k in data) {
-            const colors = data[k].colors || {};
-            for (const colorKey in colors) {
-              const p = colors[colorKey].img || '';
-              const name = p.split('/').pop();
-              if (name === filename) {
-                openModalByKey(k, colorKey);
-                return;
-              }
-            }
+      // Очищаем контейнер перед вставкой
+      description.insertAdjacentElement("afterend", contactsBlock);
+
+      // Кнопки цветов
+      colorButtons.innerHTML = "";
+      if (data.colors && data.colors.length > 0) {
+        data.colors.forEach((color, index) => {
+          const btn = document.createElement("button");
+          btn.textContent = color.name;
+          btn.classList.add("color-btn");
+          btn.addEventListener("click", () => {
+            modalImg.src = color.img;
+          });
+          if (index === 0) {
+            modalImg.src = color.img; // ставим первый цвет по умолчанию
           }
-        }
+          colorButtons.appendChild(btn);
+        });
+      } else {
+        modalImg.src = item.src;
       }
 
-      // 3) fallback — просто открыть изображение в модале (без данных)
-      if (modal) {
-        const imgEl = modal.querySelector('#modal-img') || modal.querySelector('img');
-        const desc = modal.querySelector('#description') || modal.querySelector('.modal-description');
-        if (imgEl) imgEl.src = img.src;
-        if (desc) desc.textContent = img.alt || '';
-        if (modal.querySelector('#ozon-link')) modal.querySelector('#ozon-link').href = '#';
-        modal.style.display = 'flex';
-        modal.setAttribute('aria-hidden', 'false');
-      }
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden"; // убираем скролл
     });
   });
+
+  // Закрытие модалки
+  closeBtn.addEventListener("click", () => {
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  });
+
+  modal.addEventListener("click", e => {
+    if (e.target === modal) {
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+  });
+
+  // Год в футере
+  const yearToys = document.getElementById("year-toys");
+  if (yearToys) yearToys.textContent = new Date().getFullYear();
 });
-
-// open modal using data from data/items.js
-function openModalByKey(key, colorKey) {
-  if (!window.data || !data[key]) return;
-  const item = data[key];
-  const modal = document.getElementById('modal');
-  if (!modal) return;
-
-  const imgEl = modal.querySelector('#modal-img');
-  const descEl = modal.querySelector('#description');
-  const colorButtons = modal.querySelector('#color-buttons');
-  const ozLink = modal.querySelector('#ozon-link');
-
-  const available = Object.keys(item.colors || {});
-  const chosen = colorKey || available[0];
-
-  if (imgEl && item.colors[chosen]) {
-    imgEl.src = item.colors[chosen].img;
-    imgEl.alt = item.name || '';
-  }
-  if (descEl) {
-    descEl.textContent = (item.name ? item.name + '. ' : '') + (item.description || '');
-  }
-  if (ozLink) {
-    ozLink.href = item.colors[chosen]?.ozon || '#';
-  }
-
-  // build color buttons
-  if (colorButtons) {
-    colorButtons.innerHTML = '';
-    available.forEach(c => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.textContent = c;
-      b.className = (c === chosen) ? 'active' : '';
-      b.addEventListener('click', () => {
-        if (imgEl && item.colors[c]) imgEl.src = item.colors[c].img;
-        if (ozLink) ozLink.href = item.colors[c]?.ozon || '#';
-        colorButtons.querySelectorAll('button').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
-      });
-      colorButtons.appendChild(b);
-    });
-  }
-
-  modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden', 'false');
-}
-
-function closeModal() {
-  const modal = document.getElementById('modal');
-  if (!modal) return;
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden', 'true');
-}
