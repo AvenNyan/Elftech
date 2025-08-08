@@ -24,8 +24,26 @@
 
   <main class="container">
     <h1>Ремонт и детали</h1>
-    <p>Здесь можно описать процесс приёма деталей, оценки и восстановления. Пока заглушка.</p>
+    <p>Приём деталей — диагностика — печать новой детали или восстановление. Отправляйте фото в Telegram.</p>
+
+    <section class="gallery-section" style="margin-top:14px">
+      <h3>Примеры восстановленных деталей</h3>
+      <div class="gallery">
+        <img data-key="repair1" src="images/repair1.jpg" alt="Ремонт 1" loading="lazy" class="gallery-item">
+        <img data-key="repair2" src="images/repair2.jpg" alt="Ремонт 2" loading="lazy" class="gallery-item">
+      </div>
+    </section>
   </main>
+
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-panel" role="document">
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+      <img id="modal-img" src="" alt="" loading="lazy">
+      <div id="color-buttons" class="color-buttons"></div>
+      <p id="description"></p>
+      <div style="margin-top:10px;color:#666;">Контакты: <a href="https://t.me/AvenNyan">Telegram</a>, <a href="https://wa.me/79818522194">WhatsApp</a></div>
+    </div>
+  </div>
 
   <footer class="site-footer">
     <div class="contacts">
@@ -43,6 +61,7 @@
     <a href="resin.html" class="bn-item" id="bn-resin"><img src="icon-resin.png" alt=""><span>Фигурки</span></a>
   </nav>
 
+  <script src="data/items.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>

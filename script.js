@@ -1,11 +1,12 @@
-// helper: set year in footers
+// site script: modal, active nav, year insertion, gallery hookup
 document.addEventListener('DOMContentLoaded', () => {
+  // year
   const y = new Date().getFullYear();
   document.querySelectorAll('#year, #year-toys, #year-vases, #year-repair, #year-resin').forEach(el => {
     if (el) el.textContent = y;
   });
 
-  // highlight top nav and bottom nav based on pathname
+  // highlight navs
   const path = location.pathname.split('/').pop() || 'index.html';
   const map = {
     'index.html':'index',
@@ -18,14 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const key = map[path] || 'index';
   // top
   document.querySelectorAll('.top-nav .nav-link').forEach(a => a.classList.remove('active'));
-  const topActive = document.querySelector(`.top-nav .nav-link[href$="${key === 'index' ? 'index.html' : key + '.html'}"]`);
+  const topActive = document.querySelector('.top-nav .nav-link[href$="' + (key==='index'?'index.html': key + '.html') + '"]');
   if (topActive) topActive.classList.add('active');
   // bottom
   document.querySelectorAll('.bn-item').forEach(a => a.classList.remove('active'));
   const bottom = document.getElementById('bn-' + key);
   if (bottom) bottom.classList.add('active');
 
-  // gallery items -> modal open
+  // gallery click handlers
   document.querySelectorAll('.gallery-item').forEach(img => {
     img.addEventListener('click', () => {
       const k = img.getAttribute('data-key');
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // If modal exists, setup listeners
+  // modal close on backdrop
   const modal = document.getElementById('modal');
   if (modal) {
     modal.addEventListener('click', e => {
@@ -44,36 +45,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Open modal by data key using data/items.js
+// open modal by key using data/items.js
 function openModalByKey(key) {
   if (!window.data || !data[key]) return;
   const item = data[key];
   const modal = document.getElementById('modal');
+  if (!modal) return;
   const img = document.getElementById('modal-img');
   const desc = document.getElementById('description');
   const cb = document.getElementById('color-buttons');
   const oz = document.getElementById('ozon-link');
 
-  // default to first color
-  const firstColor = Object.keys(item.colors)[0];
-  img.src = item.colors[firstColor].img;
-  desc.textContent = item.description || item.name || '';
-  oz.href = item.colors[firstColor].ozon || '#';
+  // use first color
+  const first = Object.keys(item.colors)[0];
+  img.src = item.colors[first].img;
+  img.alt = item.name || '';
+  desc.textContent = (item.name? item.name + ' — ' : '') + (item.description || '');
+  if (oz) oz.href = item.colors[first].ozon || '#';
 
-  // color buttons
-  cb.innerHTML = '';
-  Object.keys(item.colors).forEach(colorKey => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.textContent = colorKey;
-    b.addEventListener('click', () => {
-      img.src = item.colors[colorKey].img;
-      oz.href = item.colors[colorKey].ozon || '#';
+  // colors
+  if (cb) {
+    cb.innerHTML = '';
+    Object.keys(item.colors).forEach(colorKey => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = colorKey;
+      b.addEventListener('click', () => {
+        img.src = item.colors[colorKey].img;
+        if (oz) oz.href = item.colors[colorKey].ozon || '#';
+      });
+      cb.appendChild(b);
     });
-    cb.appendChild(b);
-  });
+  }
 
-  // show modal
+  // show
   modal.style.display = 'flex';
   modal.setAttribute('aria-hidden','false');
 }

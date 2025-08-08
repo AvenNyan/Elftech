@@ -24,8 +24,22 @@
 
   <main class="container">
     <h1>Фотополимерные фигурки</h1>
-    <p>Высокодетализированные фигурки на фотополимере. Разные масштабы и постобработка.</p>
+    <p>Все фигурки делаются индивидуально — только под заказ. Обсудим детали в Telegram.</p>
+    <div class="gallery">
+      <img data-key="resin1" src="images/resin1.jpg" alt="Фигурка 1" loading="lazy" class="gallery-item">
+      <img data-key="resin2" src="images/resin2.jpg" alt="Фигурка 2" loading="lazy" class="gallery-item">
+    </div>
   </main>
+
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-panel" role="document">
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+      <img id="modal-img" src="" alt="" loading="lazy">
+      <div id="color-buttons" class="color-buttons"></div>
+      <p id="description"></p>
+      <div style="margin-top:10px;color:#666;">Контакты: <a href="https://t.me/AvenNyan">Telegram</a>, <a href="https://wa.me/79818522194">WhatsApp</a></div>
+    </div>
+  </div>
 
   <footer class="site-footer">
     <div class="contacts">
@@ -43,6 +57,7 @@
     <a href="resin.html" class="bn-item active" id="bn-resin"><img src="icon-resin.png" alt=""><span>Фигурки</span></a>
   </nav>
 
+  <script src="data/items.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>

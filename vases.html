@@ -24,8 +24,23 @@
 
   <main class="container">
     <h1>Вазы</h1>
-    <p>Раздел в разработке — сюда будут попадать примеры ваз с вариантами отделки и размерами.</p>
+    <div class="gallery">
+      <img data-key="vase1" src="images/vase1.jpg" alt="Ваза 1" loading="lazy" class="gallery-item">
+      <img data-key="vase2" src="images/vase2.jpg" alt="Ваза 2" loading="lazy" class="gallery-item">
+    </div>
+    <p style="margin-top:14px;color:#555">Раздел в разработке — примеры и варианты отделки появятся позже.</p>
   </main>
+
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-panel" role="document">
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+      <img id="modal-img" src="" alt="" loading="lazy">
+      <div id="color-buttons" class="color-buttons"></div>
+      <p id="description"></p>
+      <a id="ozon-link" class="btn btn-primary" target="_blank" rel="noopener">Смотреть на Ozon</a>
+      <div style="margin-top:10px;color:#666;">Контакты: <a href="https://t.me/AvenNyan">Telegram</a>, <a href="https://wa.me/79818522194">WhatsApp</a></div>
+    </div>
+  </div>
 
   <footer class="site-footer">
     <div class="contacts">
@@ -43,6 +58,7 @@
     <a href="resin.html" class="bn-item" id="bn-resin"><img src="icon-resin.png" alt=""><span>Фигурки</span></a>
   </nav>
 
+  <script src="data/items.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
