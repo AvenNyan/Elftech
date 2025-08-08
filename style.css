@@ -98,3 +98,51 @@ h1{margin:0 0 8px;font-size:1.6rem}
 
 /* focus outline */
 :focus{outline:2px dashed rgba(125,95,182,0.25);outline-offset:2px}
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.modal.open {
+  display: flex;
+}
+.modal-content {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 90%;
+  width: 400px;
+  text-align: center;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.modal-image {
+  max-width: 100%;
+  border-radius: 8px;
+}
+.modal-links {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.modal-links a {
+  background: #6e348e;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.modal-links a:hover {
+  background: #8e44ad;
+}
