@@ -242,3 +242,48 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
   }
 });
+
+document.querySelectorAll('.gallery-item').forEach(img => {
+  img.addEventListener('click', () => {
+    const key = img.dataset.key;
+    if (!items[key]) return;
+    openModal(key);
+  });
+});
+
+function openModal(key) {
+  const item = items[key];
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modal-img');
+  const description = document.getElementById('description');
+  const ozonLink = document.getElementById('ozon-link');
+  const colorButtons = document.getElementById('color-buttons');
+
+  modalImg.src = item.images[0];
+  description.textContent = item.description;
+  colorButtons.innerHTML = '';
+
+  if (item.colors) {
+    item.colors.forEach(color => {
+      const btn = document.createElement('button');
+      btn.textContent = color.name;
+      btn.addEventListener('click', () => {
+        modalImg.src = color.image;
+      });
+      colorButtons.appendChild(btn);
+    });
+  }
+
+  if (item.ozon) {
+    ozonLink.href = item.ozon;
+    ozonLink.style.display = '';
+  } else {
+    ozonLink.style.display = 'none';
+  }
+
+  modal.setAttribute('aria-hidden', 'false');
+}
+
+document.querySelector('.modal-close').addEventListener('click', () => {
+  document.getElementById('modal').setAttribute('aria-hidden', 'true');
+});
