@@ -142,3 +142,30 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 
 /* focus outlines for accessibility */
 :focus{outline:2px dashed rgba(125,95,182,0.18);outline-offset:2px}
+
+/* Миниатюры товаров — сетка */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* вместо больших картинок */
+  gap: 15px;
+}
+
+.gallery-item {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Квадратные превью */
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.gallery-item:hover {
+  transform: scale(1.03);
+}
+
+/* На телефоне — две в ряд */
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
