@@ -2,60 +2,58 @@ document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("modal");
   const modalImg = document.getElementById("modal-img");
   const description = document.getElementById("description");
-  const colorButtonsContainer = document.getElementById("color-buttons");
+  const colorButtons = document.getElementById("color-buttons");
   const ozonLink = document.getElementById("ozon-link");
 
-  // Клик по картинке
-  document.querySelectorAll(".gallery-item").forEach(item => {
-    item.addEventListener("click", () => {
-      const key = item.dataset.key;
-      const product = items[key];
+  document.querySelectorAll(".gallery-item").forEach(img => {
+    img.addEventListener("click", () => {
+      const key = img.dataset.key;
+      const item = items[key];
 
-      if (!product) return;
+      if (!item) return;
 
-      modalImg.src = product.images[0];
-      modalImg.alt = product.name;
-      description.textContent = product.description;
+      modalImg.src = item.images[0];
+      modalImg.alt = item.name;
+      description.textContent = item.desc || "";
 
       // Кнопки выбора цвета
-      colorButtonsContainer.innerHTML = "";
-      if (product.colors) {
-        product.colors.forEach(color => {
+      colorButtons.innerHTML = "";
+      if (item.colors) {
+        item.colors.forEach(c => {
           const btn = document.createElement("button");
-          btn.style.background = color.hex;
-          btn.title = color.name;
+          btn.style.background = c.color;
+          btn.title = c.name;
           btn.addEventListener("click", () => {
-            modalImg.src = color.image;
+            modalImg.src = c.img;
           });
-          colorButtonsContainer.appendChild(btn);
+          colorButtons.appendChild(btn);
         });
       }
 
-      // Кнопка Ozon
-      if (product.ozon) {
-        ozonLink.href = product.ozon;
+      // Кнопка Ozon — скрыть если нет ссылки
+      if (item.ozon) {
+        ozonLink.href = item.ozon;
         ozonLink.style.display = "inline-block";
       } else {
         ozonLink.style.display = "none";
       }
 
-      modal.classList.add("show");
+      modal.setAttribute("aria-hidden", "false");
+      modal.style.display = "flex";
     });
   });
 
   // Закрытие модалки
   document.querySelector(".modal-close").addEventListener("click", () => {
-    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+    modal.style.display = "none";
   });
 
+  // Закрытие по клику вне панели
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
-      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+      modal.style.display = "none";
     }
-  });
-
-  // Год в футере
-  document.querySelectorAll("[id^=year]").forEach(el => {
-    el.textContent = new Date().getFullYear();
   });
 });
