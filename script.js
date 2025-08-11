@@ -250,30 +250,34 @@ document.querySelectorAll('.gallery-item').forEach(img => {
     openModal(key);
   });
 });
-
 function openModal(key) {
   const item = items[key];
   const modal = document.getElementById('modal');
   const modalImg = document.getElementById('modal-img');
   const description = document.getElementById('description');
   const ozonLink = document.getElementById('ozon-link');
-  const colorButtons = document.getElementById('color-buttons');
+  const thumbnailsContainer = document.getElementById('modal-thumbnails');
 
+  if (!item || !item.images || item.images.length === 0) return;
+
+  // Основное изображение
   modalImg.src = item.images[0];
-  description.textContent = item.description;
-  colorButtons.innerHTML = '';
 
-  if (item.colors) {
-    item.colors.forEach(color => {
-      const btn = document.createElement('button');
-      btn.textContent = color.name;
-      btn.addEventListener('click', () => {
-        modalImg.src = color.image;
-      });
-      colorButtons.appendChild(btn);
+  // Превьюшки
+  thumbnailsContainer.innerHTML = '';
+  item.images.forEach((src, idx) => {
+    const thumb = document.createElement('img');
+    thumb.src = src;
+    thumb.addEventListener('click', () => {
+      modalImg.src = src;
     });
-  }
+    thumbnailsContainer.appendChild(thumb);
+  });
 
+  // Описание
+  description.textContent = item.description || '';
+
+  // Ozon
   if (item.ozon) {
     ozonLink.href = item.ozon;
     ozonLink.style.display = '';
@@ -283,6 +287,7 @@ function openModal(key) {
 
   modal.setAttribute('aria-hidden', 'false');
 }
+
 
 document.querySelector('.modal-close').addEventListener('click', () => {
   document.getElementById('modal').setAttribute('aria-hidden', 'true');
