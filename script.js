@@ -244,26 +244,22 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal
 });
 
 document.querySelectorAll('.gallery-item').forEach(img => {
-img.addEventListener('click', () => {
-const key = img.dataset.key;
-if (!items[key]) return;
-openModal(key);
-});
+  img.addEventListener('click', () => {
+    const key = img.dataset.key;
+    if (!items[key]) return;
+    openModal(key);
+  });
 });
 
 function openModal(key) {
-const item = items[key];
-const modal = document.getElementById('modal');
-const modalImg = document.getElementById('modal-img');
-const description = document.getElementById('description');
-const ozonLink = document.getElementById('ozon-link');
+  const item = items[key];
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modal-img');
+  const description = document.getElementById('description');
+  const ozonLink = document.getElementById('ozon-link');
   const colorButtons = document.getElementById('color-buttons');
-  const thumbnailsContainer = document.getElementById('modal-thumbnails');
 
-  if (!item || !item.images || item.images.length === 0) return;
-
-  // Основное изображение
-modalImg.src = item.images[0];
+  modalImg.src = item.images[0];
   description.textContent = item.description;
   colorButtons.innerHTML = '';
 
@@ -275,34 +271,19 @@ modalImg.src = item.images[0];
         modalImg.src = color.image;
       });
       colorButtons.appendChild(btn);
-
-  // Превьюшки
-  thumbnailsContainer.innerHTML = '';
-  item.images.forEach((src, idx) => {
-    const thumb = document.createElement('img');
-    thumb.src = src;
-    thumb.addEventListener('click', () => {
-      modalImg.src = src;
-});
+    });
   }
-    thumbnailsContainer.appendChild(thumb);
-  });
 
-  // Описание
-  description.textContent = item.description || '';
+  if (item.ozon) {
+    ozonLink.href = item.ozon;
+    ozonLink.style.display = '';
+  } else {
+    ozonLink.style.display = 'none';
+  }
 
-  // Ozon
-if (item.ozon) {
-ozonLink.href = item.ozon;
-ozonLink.style.display = '';
-} else {
-ozonLink.style.display = 'none';
+  modal.setAttribute('aria-hidden', 'false');
 }
-
-modal.setAttribute('aria-hidden', 'false');
-}
-
 
 document.querySelector('.modal-close').addEventListener('click', () => {
-document.getElementById('modal').setAttribute('aria-hidden', 'true');
+  document.getElementById('modal').setAttribute('aria-hidden', 'true');
 });
