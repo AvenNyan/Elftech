@@ -1,208 +1,157 @@
-/* ==== Общие стили ==== */
-body {
-  font-family: 'Comfortaa', sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #fafafa;
-  color: #333;
+/* ========== style.css ========== */
+/* Базовые переменные и сброс */
+:root{
+  --accent-1: #7d5fb6;
+  --accent-2: #a985d6;
+  --bg: #fafafc;
+  --muted: #666;
+  --card-bg: #fff;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comfortaa',sans-serif}
+
+/* Header */
+.site-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 20px;
+  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  color:#fff;
+  box-shadow:0 6px 18px rgba(16,24,40,0.06);
+}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo{width:48px;height:48px;object-fit:cover;border-radius:8px}
+.site-title{font-weight:700;font-size:1.05rem;text-shadow:0 2px 6px rgba(0,0,0,0.25)}
+.top-nav{display:flex;gap:12px}
+.top-nav .nav-link{color:#fff;text-decoration:none;padding:6px 8px;border-radius:6px}
+.top-nav .nav-link.active{background:rgba(255,255,255,0.08)}
+
+/* Layout container */
+.container{max-width:1200px;margin:20px auto;padding:0 16px}
+
+/* Group title */
+.group{margin:18px 0}
+.group-title{margin-left:8px;margin-bottom:10px;font-weight:700;color:var(--accent-1)}
+
+/* ====== Gallery ====== */
+/* Миниатюры: квадраты, компактные
+   на ПК min-width ~180-220 (примерно 60-70% от 300) */
+.gallery{
+  display:grid;
+  gap:14px;
+  grid-auto-rows: 1fr;
+  align-items: start;
+  /* default: responsive grid */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
-/* ==== Шапка ==== */
-.site-header {
-  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* На широких экранах увеличиваем число карточек (они не растягиваются сильно) */
+@media (min-width: 1400px){
+  .gallery{ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+}
+@media (min-width: 1800px){
+  .gallery{ grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 }
 
-.logo-wrap {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: white;
-}
-
-.logo {
-  margin-right: 10px;
-}
-
-.site-title {
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
-
-.top-nav {
-  display: flex;
-  gap: 15px;
-}
-
-.nav-link {
-  color: white;
-  text-decoration: none;
-}
-
-.nav-link.active {
-  border-bottom: 2px solid white;
-}
-
-/* ==== Контейнер ==== */
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
-}
-
-/* ==== Галерея ==== */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 15px;
-}
-
-.gallery-item {
-  width: 100%;
-  height: 300px;
+/* Квадратные превью: aspect-ratio и object-fit */
+.gallery img, .gallery-item {
+  width:100%;
+  aspect-ratio: 1/1;
   object-fit: cover;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(16,24,40,0.06);
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+.gallery img:hover, .gallery-item:hover{ transform: translateY(-6px); box-shadow:0 12px 30px rgba(16,24,40,0.12); }
+
+/* ====== Modal (centered, компактно) ====== */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.72);
+  z-index:2000;
+  padding:18px;
+}
+.modal.show{ display:flex; }
+
+/* modal panel — single-column so image + info fit on 1 screen */
+.modal-panel{
+  background:var(--card-bg);
+  width:100%;
+  max-width:760px;
+  max-height:90vh;
+  overflow:auto;
+  border-radius:12px;
+  padding:14px;
+  position:relative;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(16,24,40,0.18);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:center;
 }
 
-.gallery-item:hover {
-  transform: scale(1.05);
+/* image: large but constrained to viewport */
+#modal-img{
+  width:100%;
+  max-height:60vh;
+  object-fit:contain;
+  border-radius:8px;
+  background:#f7f7f7;
 }
 
-/* ПК версия — больше миниатюр в ряд */
-@media (min-width: 1025px) {
-  .gallery {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
+/* color buttons row */
+.color-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.color-buttons button{padding:6px 10px;border-radius:8px;border:1px solid #e6e6e6;background:#fafafa;cursor:pointer}
+.color-buttons button.active{background:var(--accent-1);color:#fff;border-color:transparent}
+
+/* modal controls */
+.modal-close{
+  position:absolute;
+  right:12px;
+  top:12px;
+  border:none;
+  background:transparent;
+  font-size:20px;
+  cursor:pointer;
+  color:#666;
 }
 
-/* Мобильная версия — 2 в ряд */
-@media (max-width: 1024px) {
-  .gallery {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* ozon button */
+#ozon-link{display:inline-block;margin-top:6px;padding:8px 12px;border-radius:8px;background:var(--accent-1);color:#fff;text-decoration:none}
+#ozon-link.hidden{display:none}
+
+/* contacts inside modal */
+.modal-contacts{width:100%;display:flex;flex-direction:column;gap:8px;align-items:center;color:var(--muted)}
+.modal-contacts .copy-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.modal-contacts input{padding:6px;border:1px solid #e6e6e6;border-radius:6px}
+
+/* ====== Footer ====== */
+.site-footer{background:#fafafa;padding:16px;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid #eee;width:100%}
+
+/* оставить место снизу под мобильное меню */
+@media (max-width:1024px){
+  body{padding-bottom:70px}
+  .top-nav{display:none}
+  .bottom-nav{display:flex}
 }
 
-/* ==== Модальное окно ==== */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+/* bottom nav on mobile only */
+.bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;padding:6px 0;justify-content:space-around;z-index:1500}
+.bn-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#555;font-size:12px}
+.bn-item img{width:22px;height:22px}
+
+/* desktop hide bottom nav */
+@media (min-width:1025px){
+  .bottom-nav{display:none}
+  body{padding-bottom:0}
 }
 
-.modal-panel {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 90%;
-  max-height: 90%;
-  overflow-y: auto;
-  text-align: center;
-}
-
-.modal-panel img {
-  max-width: 100%;
-  max-height: 60vh;
-  border-radius: 8px;
-}
-
-.modal-close {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-/* ==== Кнопки выбора цвета ==== */
-.color-buttons {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin: 10px 0;
-}
-
-.color-buttons button {
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  background: #eee;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-/* ==== Кнопка Ozon ==== */
-.btn-primary {
-  background: #8b5cf6;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 5px;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.btn-primary:hover {
-  background: #7c3aed;
-}
-
-/* ==== Нижнее меню ==== */
-.bottom-nav {
-  display: none;
-}
-
-@media (max-width: 1024px) {
-  .top-nav {
-    display: none;
-  }
-
-  .bottom-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    border-top: 1px solid #ddd;
-    justify-content: space-around;
-    padding: 5px 0;
-  }
-
-  .bn-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #555;
-    text-decoration: none;
-    font-size: 12px;
-  }
-
-  .bn-item img {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-/* ==== Подвал ==== */
-.site-footer {
-  background: #f4f4f4;
-  text-align: center;
-  padding: 15px;
-  font-size: 14px;
-  margin-bottom: 50px; /* под мобильное меню */
-}
-
-@media (min-width: 1025px) {
-  .site-footer {
-    margin-bottom: 0;
-  }
-}
+/* focus outlines for accessibility */
+:focus{outline:2px dashed rgba(125,95,182,0.18);outline-offset:2px}
