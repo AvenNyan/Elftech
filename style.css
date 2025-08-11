@@ -169,3 +169,53 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.modal-main-img {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+}
+
+.modal-thumbnails {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.modal-thumbnails img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border 0.2s ease;
+}
+
+.modal-thumbnails img:hover {
+  transform: scale(1.05);
+  border: 2px solid #6a4dc4; /* под цвет темы */
+}
+
+.modal-contacts {
+  margin-top: 15px;
+}
+
+.contact-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.contact-btn {
+  background-color: #6a4dc4;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.contact-btn:hover {
+  background-color: #5438a6;
+}
