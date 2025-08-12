@@ -7,7 +7,7 @@ window.itemsData = {
     ozon: "",
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      { code: "D01", img: "images/r001-D01.jpg" }
+      { code: "D01", img: "images/logo.png" }
     ]
   }
 };
