@@ -40,7 +40,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   flex-wrap:wrap;
   gap: var(--gap);
   align-items:flex-start;
-  justify-content:flex-start; /* important: items start from left */
+  justify-content:flex-start; /* items start from left */
 }
 
 /* Small screens: 2 in row */
@@ -80,7 +80,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .gallery img:hover, .gallery-item:hover{ transform: translateY(-6px); box-shadow:0 12px 30px rgba(16,24,40,0.12); }
 
 /* ===== Modal (centered) ===== */
-/* note: we reduce modal-img max-height to reserve space for thumbs and description */
+/* уменьшили max-height картинки, чтобы зарезервировать место под миниатюры и описание */
 .modal{
   position:fixed;
   inset:0;
@@ -111,9 +111,9 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 }
 
 /* Main image: reserve space for thumbnails under it */
+/* calc: допустимая высота экрана - (thumb row + описание ~90px) */
 #modal-img{
   width:100%;
-  /* subtract thumb row + description area (~var(--thumb-size) + 80px) from 70vh */
   max-height: calc(70vh - (var(--thumb-size) + 90px));
   object-fit:contain;
   border-radius:8px;
