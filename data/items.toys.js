@@ -22,9 +22,7 @@ window.itemsData = {
     colors: [
       {
         code: "B01",
-        // prices per variant suffix ("" or "-m")
         prices: { "": "200 ₽", "-m": "250 ₽" },
-        // optional per-color-per-variant ozon overrides (can be string or object)
         ozon: { "": "https://ozon.ru/product/t010?color=G01", "-m": "https://ozon.ru/product/t010-m?color=G01" }
       },
       { code: "B04", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
@@ -58,9 +56,9 @@ window.itemsData = {
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
       { code: "R01", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
-      { code: "M01", prices: { "": "500 ₽", "-m": "600 ₽" } ozon: "" },
-      { code: "M02", prices: { "": "500 ₽", "-m": "600 ₽" } ozon: "" },
-      { code: "M03", prices: { "": "500 ₽", "-m": "600 ₽" } ozon: "" }
+      { code: "M01", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
+      { code: "M02", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
+      { code: "M03", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" }
     ]
   }
 
