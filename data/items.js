@@ -19,6 +19,56 @@ const items = {
     ],
     ozon: ""
   },
+    frog2: {
+    name: "Лягушка 3",
+    description: "Лягушка с милой мордочкой.",
+    images: ["images/frog2_pink.jpg"],
+    colors: [
+      { name: "Розовый", hex: "#ffc0cb", image: "images/frog2_pink.jpg" },
+      { name: "Зелёный", hex: "#32cd32", image: "images/frog2_green.jpg" }
+    ],
+    ozon: ""
+  },
+    frog2: {
+    name: "Лягушка 4",
+    description: "Лягушка с милой мордочкой.",
+    images: ["images/frog2_pink.jpg"],
+    colors: [
+      { name: "Розовый", hex: "#ffc0cb", image: "images/frog2_pink.jpg" },
+      { name: "Зелёный", hex: "#32cd32", image: "images/frog2_green.jpg" }
+    ],
+    ozon: ""
+  },
+    frog2: {
+    name: "Лягушка 5",
+    description: "Лягушка с милой мордочкой.",
+    images: ["images/frog2_pink.jpg"],
+    colors: [
+      { name: "Розовый", hex: "#ffc0cb", image: "images/frog2_pink.jpg" },
+      { name: "Зелёный", hex: "#32cd32", image: "images/frog2_green.jpg" }
+    ],
+    ozon: ""
+  },
+    frog2: {
+    name: "Лягушка 6",
+    description: "Лягушка с милой мордочкой.",
+    images: ["images/frog2_pink.jpg"],
+    colors: [
+      { name: "Розовый", hex: "#ffc0cb", image: "images/frog2_pink.jpg" },
+      { name: "Зелёный", hex: "#32cd32", image: "images/frog2_green.jpg" }
+    ],
+    ozon: ""
+  },
+    frog2: {
+    name: "Лягушка 7",
+    description: "Лягушка с милой мордочкой.",
+    images: ["images/frog2_pink.jpg"],
+    colors: [
+      { name: "Розовый", hex: "#ffc0cb", image: "images/frog2_pink.jpg" },
+      { name: "Зелёный", hex: "#32cd32", image: "images/frog2_green.jpg" }
+    ],
+    ozon: ""
+  },
   vase1: {
     name: "Ваза 1",
     description: "Элегантная ваза для декора.",
