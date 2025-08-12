@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Палитра — Лавка Эльфтех</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo-wrap" href="index.html"><img src="images/logo.png" alt="Логотип" class="logo"><span class="site-title">Лавка <strong>Эльфтех</strong></span></a>
+    <nav class="top-nav">
+      <a href="toys.html">3D Игрушки</a>
+      <a href="vases.html">Вазы</a>
+      <a href="repair.html">Ремонт</a>
+      <a href="resin.html">Фигурки</a>
+      <a href="palette.html" class="nav-link active">Палитра</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Палитра</h1>
+    <p>Здесь показаны образцы цветов / текстур. Клик по картинке откроет её крупно.</p>
+    <section>
+      <div class="palette-grid gallery"></div>
+    </section>
+  </main>
+
+  <!-- modal (simple image view, reuse main modal) -->
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-panel" role="document">
+      <button class="modal-close">✕</button>
+      <img id="modal-img" src="" alt="" loading="lazy">
+      <div id="sku"></div>
+      <!-- palette page: no description or contacts shown by script -->
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> | WhatsApp: <a href="https://wa.me/79818522194">+7 981 852-21-94</a><br>
+    elftech3d.ru | эльфтех3д.рф<br>© Лавка Эльфтех — <span id="year-toys"></span>
+  </footer>
+
+  <script src="data/items.palette.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
