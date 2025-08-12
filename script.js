@@ -25,12 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const year = new Date().getFullYear();
   ['year','year-toys','year-vases','year-repair','year-resin'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = year; });
 
-  // DATA: every page should include its own data file setting window.itemsData
+  // RAW data loaded via data/items.toys.js etc.
   const RAW = window.itemsData || null;
 
   function normalize(raw, key) {
     if (!raw) return null;
-    // variants: if raw.variants exists use it; else create default single variant ''
     const variants = Array.isArray(raw.variants) && raw.variants.length ? raw.variants.map(v => ({
       suffix: v.suffix || '',
       label: v.label || (v.suffix ? v.suffix : 'Базовый'),
@@ -39,11 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
       price: v.price || v.pr || ''
     })) : [{ suffix: raw.suffix || '', label: raw.variantLabel || 'Базовый', description: raw.description || '', ozon: raw.ozon || '', price: raw.price || '' }];
 
-    // colors: if provided as codes-only, keep code; if object with img, use that
     const colors = Array.isArray(raw.colors) ? raw.colors.map(c => {
       if (!c) return { code: '', img: '' };
       if (typeof c === 'string') return { code: c, img: '' };
-      return { code: c.code || c.name || '', img: c.img || c.image || '', ozon: c.ozon || '' };
+      return { code: c.code || c.name || '', img: c.img || c.image || '', ozon: c.ozon || '' , prices: c.prices || c.priceMap || {} };
     }) : [];
 
     return {
@@ -57,66 +55,60 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // detect page (for palette behavior)
-  const path = location.pathname.split('/').pop().toLowerCase();
-  let pageCategory = 'toys';
-  if (path.includes('vases')) pageCategory = 'vases';
-  else if (path.includes('repair')) pageCategory = 'repair';
-  else if (path.includes('resin')) pageCategory = 'resin';
-  else if (path.includes('palette')) pageCategory = 'palette';
-  else if (path === '' || path === 'index.html') pageCategory = 'home';
-
-  /* ---------- fill gallery from RAW, group by group ---------- */
+  /* ------------ NEW: fillGallery - groups + category-grid ------------ */
   function fillGallery() {
-    if (!RAW) return;
     const galleryRoot = document.querySelector('.gallery');
     if (!galleryRoot) return;
+    // clear
+    galleryRoot.innerHTML = '';
 
-    // existing keys -> avoid duplicates
-    const existingKeys = new Set(Array.from(galleryRoot.querySelectorAll('[data-key]')).map(el => el.dataset.key).filter(Boolean));
+    if (!RAW || typeof RAW !== 'object') {
+      // nothing to render
+      const p = document.createElement('p'); p.textContent = 'Пока нет товаров.';
+      galleryRoot.appendChild(p);
+      return;
+    }
 
-    const items = Object.keys(RAW).map(k => ({ key:k, raw:RAW[k] }));
+    // normalize all items and group them
+    const items = Object.keys(RAW).map(k => ({ key: k, norm: normalize(RAW[k], k) })).filter(x => x.norm);
     const groups = {};
     items.forEach(it => {
-      const norm = normalize(it.raw, it.key);
-      const g = norm.group || (pageCategory === 'palette' ? 'palette' : 'Без группы');
+      const g = it.norm.group || 'Без группы';
       if (!groups[g]) groups[g] = [];
-      groups[g].push(norm);
+      groups[g].push(it.norm);
     });
 
-    const ordered = Object.keys(groups).sort((a,b) => a.localeCompare(b,'ru'));
-    ordered.forEach(groupName => {
-      if (pageCategory !== 'palette') {
-        const h = document.createElement('div');
-        h.className = 'group';
-        const title = document.createElement('div');
-        title.className = 'group-title';
-        title.textContent = groupName;
-        h.appendChild(title);
-        galleryRoot.appendChild(h);
-      }
+    // keep stable order of group names (alphabetic)
+    const groupNames = Object.keys(groups).sort((a,b) => a.localeCompare(b,'ru'));
 
-      const container = document.createElement('div');
-      container.className = 'group-items';
-      container.style.display = 'flex';
-      container.style.flexWrap = 'wrap';
-      container.style.gap = '12px';
-      container.style.marginBottom = '12px';
+    groupNames.forEach(groupName => {
+      // section wrapper
+      const section = document.createElement('section');
+      section.className = 'category-section';
 
+      // title
+      const title = document.createElement('div');
+      title.className = 'category-title';
+      title.textContent = groupName;
+      section.appendChild(title);
+
+      // grid
+      const grid = document.createElement('div');
+      grid.className = 'category-grid';
+
+      // fill cards
       groups[groupName].forEach(item => {
-        if (existingKeys.has(item.key)) return;
         const card = document.createElement('div');
-        card.className = 'gallery-item card';
+        card.className = 'card gallery-card';
+        // image
         const img = document.createElement('img');
-
-        // choose first color img or placeholder: prefer explicit img; else build path from key + first variant suffix + code
-        const firstColor = item.colors[0];
+        // try explicit first color img, else build path from key + first variant + first color code
+        const firstColor = item.colors && item.colors[0];
         let thumb = 'images/placeholder.png';
         if (firstColor) {
           if (firstColor.img) thumb = firstColor.img;
           else {
-            // take first variant suffix (likely '') to build thumb
-            const variantSuffix = item.variants && item.variants[0] ? item.variants[0].suffix || '' : '';
+            const variantSuffix = (item.variants && item.variants[0]) ? (item.variants[0].suffix || '') : '';
             thumb = `images/${item.key}${variantSuffix}-${firstColor.code}.jpg`;
           }
         }
@@ -126,33 +118,39 @@ document.addEventListener('DOMContentLoaded', () => {
         img.dataset.key = item.key;
         card.appendChild(img);
 
-        const title = document.createElement('div'); title.className = 'title'; title.textContent = item.name || item.key;
-        const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = item.key;
-        card.appendChild(title); card.appendChild(meta);
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'title';
+        titleDiv.textContent = item.name || item.key;
+        card.appendChild(titleDiv);
 
-        container.appendChild(card);
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = item.key;
+        card.appendChild(meta);
+
+        grid.appendChild(card);
       });
 
-      galleryRoot.appendChild(container);
+      section.appendChild(grid);
+      galleryRoot.appendChild(section);
     });
   }
 
+  // call initial fill
   fillGallery();
 
-  /* ---------- modal: manage current item, variant, color arrays ---------- */
-  let currentItem = null; // normalized
+  /* ---------- modal and interactions (unchanged logic) ---------- */
+  let currentItem = null;
   let currentVariantIndex = 0;
   let currentColorIndex = 0;
   let thumbsContainer = modal?.querySelector('.modal-thumbs') || null;
   if (!thumbsContainer && modal) { thumbsContainer = document.createElement('div'); thumbsContainer.className = 'modal-thumbs'; }
 
   function getImageFor(item, variant, color) {
-    // if color.img is present and contains placeholders, replace; else if color.img present return it
     if (color.img && String(color.img).includes('{key}')) {
       return color.img.replace(/\{key\}/g, item.key).replace(/\{variant\}/g, variant.suffix || '').replace(/\{code\}/g, color.code || '');
     }
     if (color.img) return color.img;
-    // build by convention images/<key><variantSuffix>-<code>.jpg
     const vs = variant.suffix || '';
     return `images/${item.key}${vs ? vs : ''}-${color.code}.jpg`;
   }
@@ -161,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     currentItem = item;
     currentVariantIndex = 0;
     currentColorIndex = 0;
-    // show description of variant 0
     const desc = item.variants[0].description || item.baseDescription || '';
     descEl.textContent = desc;
     renderVariantControls();
@@ -172,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderVariantControls() {
-    // create variant toggle if >1
     const panel = modal.querySelector('.modal-panel');
     let variantWrap = panel.querySelector('.variant-toggle');
     if (variantWrap) variantWrap.remove();
@@ -186,17 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (idx === currentVariantIndex) btn.classList.add('active');
       btn.addEventListener('click', () => {
         currentVariantIndex = idx;
-        // update description to variant-specific
         descEl.textContent = v.description || currentItem.baseDescription || '';
-        // re-render thumbs and main image
         renderMainAndThumbs();
         updateSkuPriceOzon();
-        // update active state
         variantWrap.querySelectorAll('button').forEach((b,i)=> b.classList.toggle('active', i===idx));
       });
       variantWrap.appendChild(btn);
     });
-    // insert before actions or after modal-img
     const actions = panel.querySelector('.actions');
     if (actions) panel.insertBefore(variantWrap, actions);
     else panel.appendChild(variantWrap);
@@ -206,13 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!currentItem) return;
     const variant = currentItem.variants[currentVariantIndex];
     const colors = currentItem.colors || [];
-    // build current images array
     const imgs = colors.map(c => getImageFor(currentItem, variant, c));
-    // main image = first color by default or currentColorIndex
     currentColorIndex = Math.min(currentColorIndex, imgs.length - 1);
     modalImg.src = imgs[currentColorIndex] || '';
     modalImg.alt = currentItem.name || '';
-    // thumbs
     thumbsContainer.innerHTML = '';
     imgs.forEach((src, idx) => {
       const t = document.createElement('img');
@@ -238,44 +227,34 @@ document.addEventListener('DOMContentLoaded', () => {
     if (active) active.scrollIntoView({ inline:'center', behavior:'auto' });
   }
 
-function updateSkuPriceOzon() {
-  if (!currentItem) return;
-  const variant = currentItem.variants[currentVariantIndex] || { suffix: '' };
-  const color = currentItem.colors[currentColorIndex] || {};
-  const code = color.code || '';
-
-  // SKU: key + variantSuffix + "-" + code  (variant.suffix may include leading dash like "-m")
-  const sku = code ? `${currentItem.key}${variant.suffix || ''}-${code}` : `${currentItem.key}${variant.suffix || ''}`;
-  if (skuEl) skuEl.textContent = 'Артикул: ' + sku;
-
-  // PRICE: priority -> color.prices[variant.suffix] -> color.prices[""] -> variant.price -> ''
-  let price = '';
-  if (color.prices) {
-    // color.prices can be object { "": "950 ₽", "-m": "1150 ₽" }
-    if (variant.suffix && color.prices.hasOwnProperty(variant.suffix)) price = color.prices[variant.suffix];
-    else if (color.prices.hasOwnProperty('')) price = color.prices[''];
-  }
-  if (!price && variant.price) price = variant.price;
-  if (priceEl) priceEl.textContent = price ? 'Цена: ' + price : '';
-
-  // OZON: priority -> color.ozon[variant.suffix] -> color.ozon (string) -> variant.ozon -> ''
-  let oz = '';
-  if (color.ozon) {
-    if (typeof color.ozon === 'object') {
-      if (variant.suffix && color.ozon[variant.suffix]) oz = color.ozon[variant.suffix];
-      else if (color.ozon['']) oz = color.ozon[''];
-    } else if (typeof color.ozon === 'string' && String(color.ozon).trim() !== '') {
-      oz = color.ozon;
+  function updateSkuPriceOzon() {
+    if (!currentItem) return;
+    const variant = currentItem.variants[currentVariantIndex] || { suffix: '' };
+    const color = currentItem.colors[currentColorIndex] || {};
+    const code = color.code || '';
+    const sku = code ? `${currentItem.key}${variant.suffix || ''}-${code}` : `${currentItem.key}${variant.suffix || ''}`;
+    if (skuEl) skuEl.textContent = 'Артикул: ' + sku;
+    let price = '';
+    if (color.prices) {
+      if (variant.suffix && color.prices.hasOwnProperty(variant.suffix)) price = color.prices[variant.suffix];
+      else if (color.prices.hasOwnProperty('')) price = color.prices[''];
     }
+    if (!price && variant.price) price = variant.price;
+    if (priceEl) priceEl.textContent = price ? 'Цена: ' + price : '';
+    let oz = '';
+    if (color.ozon) {
+      if (typeof color.ozon === 'object') {
+        if (variant.suffix && color.ozon[variant.suffix]) oz = color.ozon[variant.suffix];
+        else if (color.ozon['']) oz = color.ozon[''];
+      } else if (typeof color.ozon === 'string' && String(color.ozon).trim() !== '') {
+        oz = color.ozon;
+      }
+    }
+    if (!oz && variant.ozon) oz = variant.ozon;
+    if (oz && ozonLink) { ozonLink.href = oz; ozonLink.style.display = 'inline-block'; }
+    else if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
+    if (paletteLink) paletteLink.href = `palette.html?pref=${encodeURIComponent(sku)}`;
   }
-  if (!oz && variant.ozon) oz = variant.ozon;
-  if (oz && ozonLink) { ozonLink.href = oz; ozonLink.style.display = 'inline-block'; }
-  else if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
-
-  // palette link update (unchanged)
-  if (paletteLink) paletteLink.href = `palette.html?pref=${encodeURIComponent(sku)}`;
-}
-
 
   function fillContacts(contacts) {
     let container = modal.querySelector('.modal-contacts');
@@ -290,7 +269,6 @@ function updateSkuPriceOzon() {
   }
 
   function openRawImage(imgEl) {
-    // minimal modal for raw images
     currentItem = null;
     modalImg.src = imgEl.src;
     descEl.textContent = imgEl.alt || '';
@@ -301,9 +279,9 @@ function updateSkuPriceOzon() {
     showModal();
   }
 
-  // click delegation for gallery images
+  // delegated click on gallery; works with new card layout because img.dataset.key is set
   document.addEventListener('click', (e) => {
-    const target = e.target.closest('.gallery img, .gallery-item img, img[data-key]');
+    const target = e.target.closest('.gallery img, .gallery-card img, img[data-key]');
     if (!target) return;
     e.preventDefault();
     const key = target.dataset.key;
@@ -311,12 +289,10 @@ function updateSkuPriceOzon() {
       const item = normalize(RAW[key], key);
       renderModalFor(item);
     } else if (RAW) {
-      // try to find by matching filename
       const srcFile = (target.getAttribute('src')||'').split('/').pop();
       let found = null;
       for (const k in RAW) {
         const norm = normalize(RAW[k], k);
-        // check if any color img equal filename (constructed or explicit)
         for (const v of norm.variants) {
           for (const c of norm.colors) {
             const candidate = c.img ? c.img.split('/').pop() : `${norm.key}${v.suffix||''}-${c.code}.jpg`;
@@ -332,7 +308,6 @@ function updateSkuPriceOzon() {
     }
   });
 
-  // show/close modal
   function showModal(){ if (!modal) return; modal.style.display = 'flex'; modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('no-scroll'); }
   function closeModal(){ if (!modal) return; modal.style.display = 'none'; modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); }
 
@@ -342,7 +317,6 @@ function updateSkuPriceOzon() {
     if (modal?.getAttribute('aria-hidden') === 'false') {
       if (e.key === 'Escape') closeModal();
       if (e.key === 'ArrowLeft') {
-        // prev color
         if (currentItem && currentItem.colors && currentItem.colors.length>1) {
           currentColorIndex = (currentColorIndex - 1 + currentItem.colors.length) % currentItem.colors.length;
           renderMainAndThumbs();
@@ -359,13 +333,13 @@ function updateSkuPriceOzon() {
     }
   });
 
-  // swipe on modal image
+  // touch swipe
   let touchStartX = null;
   modalImg?.addEventListener('touchstart', (e)=> { if (e.touches && e.touches.length) touchStartX = e.touches[0].clientX; }, {passive:true});
   modalImg?.addEventListener('touchend', (e)=> {
     if (touchStartX === null) return;
     const x = e.changedTouches[0].clientX; const diff = x - touchStartX; touchStartX = null;
-    if (diff > 50) { // swipe right -> prev
+    if (diff > 50) {
       if (currentItem && currentItem.colors && currentItem.colors.length>1) {
         currentColorIndex = (currentColorIndex - 1 + currentItem.colors.length) % currentItem.colors.length; renderMainAndThumbs(); updateSkuPriceOzon();
       }
@@ -376,7 +350,7 @@ function updateSkuPriceOzon() {
     }
   }, {passive:true});
 
-  // ensure ozonLink and paletteLink exist in modal panel
+  // ensure ozonLink and paletteLink exist
   if (!ozonLink && modal) {
     const a = document.createElement('a'); a.id='ozon-link'; a.className='btn'; a.textContent='Смотреть на Ozon'; a.style.display='none';
     modal.querySelector('.modal-panel')?.appendChild(a);
