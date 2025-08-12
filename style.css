@@ -1,12 +1,13 @@
 :root{
-  --accent-1: #6f46d3;
-  --accent-2: #9f7aea;
-  --bg: #fafafc;
+  --accent-1: #5e4db2;
+  --accent-2: #8f6be0;
+  --bg: #fbfbfd;
   --muted: #666;
   --card-bg: #fff;
   --gap: 12px;
   --thumb-size: 64px;
   --bottom-nav-h: 66px;
+  --sku-color: #333;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comfortaa',sans-serif}
@@ -23,189 +24,91 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 }
 .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
 .logo{width:48px;height:48px;object-fit:cover;border-radius:8px}
-.site-title{font-weight:700;font-size:1.05rem;text-shadow:0 2px 6px rgba(0,0,0,0.25)}
-.top-nav{display:flex;gap:12px}
+.site-title{font-weight:700;font-size:1.05rem;text-shadow:0 2px 6px rgba(0,0,0,0.18)}
+.top-nav{display:flex;gap:10px}
 .top-nav .nav-link{color:#fff;text-decoration:none;padding:6px 8px;border-radius:6px}
-.top-nav .nav-link.active{background:rgba(255,255,255,0.08)}
+.top-nav .nav-link.active{background:rgba(255,255,255,0.07)}
 
-/* Container */
+/* Layout */
 .container{max-width:1200px;margin:18px auto;padding:0 16px}
 
 /* Group title */
 .group{margin:18px 0}
-.group-title{margin-left:6px;margin-bottom:10px;font-weight:700;color:var(--accent-1)}
+.group-title{margin-left:6px;margin-bottom:10px;font-weight:700;color:var(--accent-1);font-size:1.05rem}
 
-/* ===== Gallery (flex, left-aligned) ===== */
-.gallery{
-  display:flex;
-  flex-wrap:wrap;
-  gap: var(--gap);
-  align-items:flex-start;
-  justify-content:flex-start;
-  max-width: 1200px;
-  margin-left: 0;
-}
+/* Gallery layout (flex left-aligned). Items always start from left */
+.gallery{display:flex;flex-wrap:wrap;gap:var(--gap);align-items:flex-start;justify-content:flex-start;max-width:1200px;margin-left:0}
 
-/* Default breakpoints (non-touch behavior) */
-/* Small screens: 2 in row (fallback) */
-@media (max-width: 767px) {
-  .gallery-item {
-    flex: 0 0 calc(50% - (var(--gap) / 2));
-    max-width: calc(50% - (var(--gap) / 2));
-  }
-}
+/* Force two columns on touch devices via class .is-touch (JS sets it) */
+body.is-touch .gallery-item { flex: 0 0 calc(50% - (var(--gap) / 2)) !important; max-width: calc(50% - (var(--gap) / 2)) !important; }
 
-/* Tablet: 4 in row */
-@media (min-width: 768px) and (max-width:1199px) {
-  .gallery-item {
-    flex: 0 0 calc(25% - (var(--gap) * 3 / 4));
-    max-width: calc(25% - (var(--gap) * 3 / 4));
-  }
-}
+/* fallback small screens */
+@media (max-width:767px){ .gallery-item{ flex:0 0 calc(50% - (var(--gap)/2)); max-width:calc(50% - (var(--gap)/2)); } }
 
-/* Desktop: 6 in row */
-@media (min-width: 1200px) {
-  .gallery-item {
-    flex: 0 0 calc(16.6666% - (var(--gap) * 5 / 6));
-    max-width: calc(16.6666% - (var(--gap) * 5 / 6));
-  }
-}
+/* tablet 4 in row */
+@media (min-width:768px) and (max-width:1199px){ .gallery-item{ flex:0 0 calc(25% - (var(--gap)*3/4)); max-width:calc(25% - (var(--gap)*3/4)); } }
 
-/* Thumbnails in gallery: always square */
-.gallery img, .gallery-item {
-  width:100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius:8px;
-  cursor:pointer;
-  box-shadow:0 6px 18px rgba(16,24,40,0.06);
-  transition: transform .14s ease, box-shadow .14s ease;
-}
-.gallery img:hover, .gallery-item:hover{ transform: translateY(-6px); box-shadow:0 12px 30px rgba(16,24,40,0.12); }
+/* desktop 6 in row */
+@media (min-width:1200px){ .gallery-item{ flex:0 0 calc(16.6666% - (var(--gap)*5/6)); max-width:calc(16.6666% - (var(--gap)*5/6)); } }
 
-/* ===== Modal ===== */
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,0.72);
-  z-index:2200;
-  padding:18px;
-}
+/* thumbs in gallery - square */
+.gallery img, .gallery-item{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px; cursor:pointer; box-shadow:0 6px 18px rgba(16,24,40,0.06); transition:transform .14s ease,box-shadow .14s ease; }
+.gallery img:hover, .gallery-item:hover{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(16,24,40,0.12); }
+
+/* Card wrapper (some spacing + caption) */
+.card{ display:flex; flex-direction:column; gap:8px; }
+.card .title{ font-weight:700; font-size:0.95rem; color:#222; }
+.card .meta{ font-size:0.85rem; color:var(--muted); }
+
+/* Modal */
+.modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.72); z-index:2200; padding:18px; }
 .modal.show{ display:flex; }
+.modal-panel{ background:var(--card-bg); width:100%; max-width:920px; max-height:90vh; overflow:auto; border-radius:12px; padding:14px 14px 18px; position:relative; text-align:center; box-shadow:0 20px 50px rgba(16,24,40,0.18); display:flex; flex-direction:column; gap:12px; align-items:center; }
 
-.modal-panel{
-  background:var(--card-bg);
-  width:100%;
-  max-width:900px;
-  max-height:90vh;
-  overflow:auto;
-  border-radius:12px;
-  padding:14px 14px 18px;
-  position:relative;
-  text-align:center;
-  box-shadow:0 20px 50px rgba(16,24,40,0.18);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  align-items:center;
-}
+/* main image: reserve space for thumbs and info */
+#modal-img{ width:100%; max-height: calc(70vh - (var(--thumb-size) + 110px)); object-fit:contain; border-radius:8px; background:#f7f7f7; }
 
-/* Main image — reserve space for thumbs and description */
-#modal-img{
-  width:100%;
-  max-height: calc(70vh - (var(--thumb-size) + 90px));
-  object-fit:contain;
-  border-radius:8px;
-  background:#f7f7f7;
-}
+/* thumbs row */
+.modal-thumbs{ display:flex; gap:8px; margin-top:8px; margin-bottom:6px; overflow-x:auto; padding:6px 4px; justify-content:center; align-items:center; -webkit-overflow-scrolling:touch; scrollbar-width:none; -ms-overflow-style:none; }
+.modal-thumbs::-webkit-scrollbar{ height:0; }
+.modal-thumbs .thumb{ width:var(--thumb-size); height:var(--thumb-size); object-fit:cover; border-radius:6px; cursor:pointer; border:2px solid transparent; flex:0 0 auto; }
+.modal-thumbs .thumb.active{ border-color:var(--accent-1); box-shadow:0 6px 16px rgba(16,24,40,0.08); }
 
-/* Thumbnails under the main image */
-.modal-thumbs{
-  display:flex;
-  gap:8px;
-  margin-top:8px;
-  margin-bottom:6px;
-  overflow-x:auto;
-  padding:6px 4px;
-  justify-content:center;
-  align-items:center;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.modal-thumbs::-webkit-scrollbar { height: 0; }
-.modal-thumbs::-webkit-scrollbar-thumb { background: transparent; }
+/* controls */
+.modal-close{ position:absolute; right:12px; top:12px; border:none; background:transparent; font-size:20px; cursor:pointer; color:#666 }
 
-/* thumb fixed square */
-.modal-thumbs .thumb{
-  width:var(--thumb-size);
-  height:var(--thumb-size);
-  object-fit:cover;
-  border-radius:6px;
-  cursor:pointer;
-  border:2px solid transparent;
-  flex:0 0 auto;
-}
-.modal-thumbs .thumb.active{
-  border-color:var(--accent-1);
-  box-shadow:0 6px 16px rgba(16,24,40,0.08);
-}
+/* action buttons (ozon + palette) */
+.actions{ display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:6px; }
+.btn{ display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; color:#fff; background:var(--accent-1); }
+.btn.ghost{ background:transparent; color:var(--accent-1); border:1px solid rgba(0,0,0,0.06); }
 
-/* hide old color-buttons */
-.color-buttons{display:none}
-.modal-close{position:absolute;right:12px;top:12px;border:none;background:transparent;font-size:20px;cursor:pointer;color:#666}
+/* SKU row */
+#sku { color:var(--sku-color); font-weight:600; font-size:0.95rem; margin-top:6px; }
 
-/* Ozon button */
-#ozon-link{display:inline-block;margin-top:6px;padding:8px 12px;border-radius:8px;background:var(--accent-1);color:#fff;text-decoration:none}
-#ozon-link.hidden{display:none}
+/* contacts: compact single line */
+.modal-contacts{ width:100%; display:flex; justify-content:center; gap:8px; align-items:center; color:var(--muted); font-size:0.95rem; }
 
-/* modal contacts — only one compact line */
-.modal-contacts{width:100%;display:flex;justify-content:center;gap:8px;align-items:center;color:var(--muted)}
-.modal-contacts a{color:var(--accent-1);text-decoration:underline}
+/* footer */
+.site-footer{ background:#fafafa; padding:14px; text-align:center; color:var(--muted); font-size:14px; border-top:1px solid #eee }
 
-/* Footer */
-.site-footer{background:#fafafa;padding:14px;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid #eee}
+/* bottom nav */
+.bottom-nav{ display:none; position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid #eee; padding:6px 8px; justify-content:space-around; z-index:10000; height:var(--bottom-nav-h); align-items:center }
+.bn-item{ display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#555; font-size:12px }
+.bn-item img{ width:22px; height:22px }
 
-/* Bottom nav */
-.bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;padding:6px 8px;justify-content:space-around;z-index:9999;height:var(--bottom-nav-h);align-items:center}
-.bn-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#555;font-size:12px}
-.bn-item img{width:22px;height:22px}
-
-/* Mobile rules (non-touch fallback) */
+/* mobile rules */
 @media (max-width:1024px){
-  body{padding-bottom:calc(var(--bottom-nav-h) + 6px);}
-  .top-nav{display:none}
-  .bottom-nav{display:flex}
+  body{ padding-bottom:calc(var(--bottom-nav-h) + 6px); }
+  .top-nav{ display:none; }
+  .bottom-nav{ display:flex; position:fixed; bottom:0; left:0; right:0; background:#fff; }
 }
 
-/* Desktop hides bottom nav */
-@media (min-width:1025px){
-  .bottom-nav{display:none}
-  body{padding-bottom:0}
-}
+/* desktop hides bottom nav */
+@media (min-width:1025px){ .bottom-nav{ display:none } body{ padding-bottom:0 } }
 
-/* ========================= */
-/* Touch-device overrides via body.is-touch (more reliable than media queries) */
-/* If JS adds class 'is-touch' to <body>, these rules force mobile UI */
+/* accessibility focus */
+:focus{ outline:2px dashed rgba(125,95,182,0.18); outline-offset:2px }
 
-/* force 2 items in row on touch devices */
-body.is-touch .gallery-item {
-  flex: 0 0 calc(50% - (var(--gap) / 2)) !important;
-  max-width: calc(50% - (var(--gap) / 2)) !important;
-}
-
-/* hide top nav, show bottom nav on touch devices */
-body.is-touch .top-nav { display: none !important; }
-body.is-touch .bottom-nav { display: flex !important; }
-
-/* reserve space for bottom nav when touch */
-body.is-touch { padding-bottom: calc(var(--bottom-nav-h) + 6px) !important; }
-
-/* ensure bottom nav above footer */
-body.is-touch .bottom-nav { z-index: 10000; position: fixed; }
-
-/* Focus outline */
-:focus{outline:2px dashed rgba(125,95,182,0.18);outline-offset:2px}
+/* palette page: large grid */
+.palette-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap:12px; align-items:center; }
+.palette-card img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px; cursor:pointer; }
