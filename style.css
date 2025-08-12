@@ -29,6 +29,14 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .top-nav .nav-link{color:#fff;text-decoration:none;padding:6px 8px;border-radius:6px}
 .top-nav .nav-link.active{background:rgba(255,255,255,0.07)}
 
+/* prevent visited links from turning purple */
+.top-nav .nav-link,
+.top-nav .nav-link:visited,
+.top-nav .nav-link:active,
+.top-nav .nav-link:focus {
+  color: #fff;
+}
+
 /* Layout */
 .container{max-width:1200px;margin:18px auto;padding:0 16px}
 
@@ -37,7 +45,6 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .category-title{ font-size:1.25rem; color:var(--accent-1); margin:8px 0 12px 6px; font-weight:700 }
 
 /* Category grid: responsive columns */
-/* Desktop wide: 8 columns, large desktop 10 */
 .category-grid{
   display:grid;
   gap: var(--gap);
@@ -77,16 +84,43 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .card .title{ font-weight:700; font-size:0.95rem; color:#222; margin-left:2px; }
 .card .meta{ font-size:0.82rem; color:var(--muted); margin-left:2px; }
 
-/* Modal & thumbs (unchanged from previous working version) */
+/* Modal & thumbs */
 .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.72); z-index:2200; padding:18px; }
 .modal.show{ display:flex; }
 .modal-panel{ background:var(--card-bg); width:100%; max-width:920px; max-height:90vh; overflow:auto; border-radius:12px; padding:14px 14px 18px; position:relative; text-align:center; box-shadow:0 20px 50px rgba(16,24,40,0.18); display:flex; flex-direction:column; gap:12px; align-items:center; }
 #modal-img{ width:100%; max-height: calc(70vh - (var(--thumb-size) + 110px)); object-fit:contain; border-radius:8px; background:#f7f7f7; }
-.modal-thumbs{ display:flex; gap:8px; margin-top:8px; margin-bottom:6px; overflow-x:auto; padding:6px 4px; justify-content:center; align-items:center; -webkit-overflow-scrolling:touch; scrollbar-width:none; -ms-overflow-style:none; }
-.modal-thumbs::-webkit-scrollbar{ height:0; }
+
+/* horizontal thumbs row: forced single line + scroll */
+.modal-thumbs{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+  margin-bottom:6px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:6px 4px;
+  justify-content:flex-start;
+  align-items:center;
+  -webkit-overflow-scrolling:touch;
+  white-space:nowrap;
+  scrollbar-width:auto;
+  max-width:95%;
+}
+/* hide default scrollbar lightly (still usable) */
+.modal-thumbs::-webkit-scrollbar{ height:8px; }
+.modal-thumbs::-webkit-scrollbar-thumb{ background: rgba(0,0,0,0.12); border-radius:8px; }
+
+/* thumbs fixed square size, won't compress */
 .modal-thumbs .thumb{ width:var(--thumb-size); height:var(--thumb-size); object-fit:cover; border-radius:6px; cursor:pointer; border:2px solid transparent; flex:0 0 auto; }
 .modal-thumbs .thumb.active{ border-color:var(--accent-1); box-shadow:0 6px 16px rgba(16,24,40,0.08); }
+
+/* controls */
 .modal-close{ position:absolute; right:12px; top:12px; border:none; background:transparent; font-size:20px; cursor:pointer; color:#666 }
+
+/* variant toggle styling */
+.variant-toggle{ display:flex; gap:8px; align-items:center; justify-content:center; margin-top:6px; flex-wrap:wrap; }
+.variant-toggle button{ padding:8px 12px; border-radius:8px; border:1px solid #e6e6e6; background:#fafafa; cursor:pointer; color:#333; font-weight:600; }
+.variant-toggle button.active{ background:var(--accent-1); color:#fff; border-color:transparent; box-shadow:0 6px 18px rgba(94,77,178,0.12); }
 
 /* actions */
 .actions{ display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:6px; }
@@ -97,23 +131,45 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 #sku { color:var(--sku-color); font-weight:600; font-size:0.95rem; margin-top:6px; display:inline-block; }
 #price { color:var(--accent-1); font-weight:700; margin-left:10px; font-size:1rem; }
 
-/* contacts: compact single line */
+/* contacts styling - appear as neutral buttons, not blue links */
 .modal-contacts{ width:100%; display:flex; justify-content:center; gap:8px; align-items:center; color:var(--muted); font-size:0.95rem; }
+.modal-contacts a, .site-footer .contacts a {
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:8px;
+  background:transparent;
+  border:1px solid rgba(0,0,0,0.06);
+  color:var(--accent-1);
+  text-decoration:none;
+  font-weight:600;
+}
+.modal-contacts a:visited, .site-footer .contacts a:visited { color:var(--accent-1); }
 
 /* footer */
 .site-footer{ background:#fafafa; padding:14px; text-align:center; color:var(--muted); font-size:14px; border-top:1px solid #eee }
+.site-footer .contacts { margin-bottom:8px; }
 
 /* bottom nav */
 .bottom-nav{ display:none; position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid #eee; padding:6px 8px; justify-content:space-around; z-index:10000; height:var(--bottom-nav-h); align-items:center }
 .bn-item{ display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#555; font-size:12px }
 .bn-item img{ width:22px; height:22px }
 
-/* mobile rules */
+/* if device uses coarse pointer (touch) — force mobile nav regardless of CSS pixel width */
+@media (pointer: coarse) {
+  body{ padding-bottom:calc(var(--bottom-nav-h) + 6px); }
+  .top-nav{ display:none !important; }
+  .bottom-nav{ display:flex !important; position:fixed; bottom:0; left:0; right:0; background:#fff; }
+}
+
+/* mobile rules by width as well */
 @media (max-width:1024px){
   body{ padding-bottom:calc(var(--bottom-nav-h) + 6px); }
   .top-nav{ display:none; }
   .bottom-nav{ display:flex; position:fixed; bottom:0; left:0; right:0; background:#fff; }
 }
+
+/* desktop hides bottom nav */
+@media (min-width:1025px){ .bottom-nav{ display:none } body{ padding-bottom:0 } }
 
 /* accessibility focus */
 :focus{ outline:2px dashed rgba(125,95,182,0.18); outline-offset:2px }
