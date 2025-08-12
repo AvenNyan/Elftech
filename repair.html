@@ -51,13 +51,37 @@
     elftech3d.ru | эльфтех3д.рф<br>© Лавка Эльфтех — <span id="year-repair"></span>
   </footer>
 
-  <nav class="bottom-nav">
-    <a href="toys.html" class="bn-item"><img src="images/card-toys.png" alt=""><span>Игрушки</span></a>
-    <a href="vases.html" class="bn-item"><img src="images/card-vases.png" alt=""><span>Вазы</span></a>
-    <a href="repair.html" class="bn-item active"><img src="images/card-repair.png" alt=""><span>Ремонт</span></a>
-    <a href="resin.html" class="bn-item"><img src="images/card-resin.png" alt=""><span>Фигурки</span></a>
-    <a href="palette.html" class="bn-item"><img src="images/card-resin.png" alt=""><span>Палитра</span></a>
-  </nav>
+<nav class="bottom-nav" aria-hidden="false">
+  <a href="toys.html" class="bn-item" id="bn-toys">
+    <!-- SVG игрушки -->
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M5 21v-2a4 4 0 014-4h6a4 4 0 014 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Игрушки</span>
+  </a>
+
+  <a href="vases.html" class="bn-item" id="bn-vases">
+    <!-- SVG ваза / placeholder -->
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3h8v2a4 4 0 01-4 4 4 4 0 01-4-4V3z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 21h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Вазы</span>
+  </a>
+
+  <a href="repair.html" class="bn-item" id="bn-repair">
+    <!-- SVG ремонт -->
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 15v4a1 1 0 01-1 1h-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9l7.5 7.5 4.5-4.5L7.5 4.5 3 9z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    <span>Ремонт</span>
+  </a>
+
+  <a href="resin.html" class="bn-item" id="bn-resin">
+    <!-- SVG фигурки -->
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="14" r="6" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+    <span>Фигурки</span>
+  </a>
+
+  <a href="palette.html" class="bn-item" id="bn-palette">
+    <!-- SVG палитра -->
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM9 9a1 1 0 110-2 1 1 0 010 2zM13 7a1 1 0 110-2 1 1 0 010 2zM15 11a1 1 0 110-2 1 1 0 010 2z" stroke="currentColor" stroke-width="0.9" fill="currentColor"/></svg>
+    <span>Палитра</span>
+  </a>
+</nav>
 
   <script src="data/items.repair.js" defer></script>
   <script src="script.js" defer></script>
