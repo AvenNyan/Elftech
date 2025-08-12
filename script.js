@@ -1,23 +1,23 @@
-/* script.js — модалка с лентой миниатюр, свайп и клавиши, автоскрытие Ozon */
+/* script.js — модалка с лентой миниатюр, свайп, клавиши, автогенерация галереи для toys */
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modal');
-  if (!modal) return; // safety
+  if (!modal) return; // nothing to do
 
   const modalImg = document.getElementById('modal-img');
   const descEl = document.getElementById('description');
   const ozonLink = document.getElementById('ozon-link');
   const closeBtn = modal.querySelector('.modal-close');
 
-  // year
+  // set year
   const year = new Date().getFullYear();
   ['year','year-toys','year-vases','year-repair','year-resin'].forEach(id => {
     const el = document.getElementById(id); if (el) el.textContent = year;
   });
 
-  // data source
+  // data source (try common globals)
   const RAW = window.itemsData || window.items || null;
 
-  // normalize helper (same logic as before)
+  // Normalize helper
   function normalize(raw) {
     if (!raw) return null;
     const out = {
@@ -45,14 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
       Object.keys(raw.colors).forEach(k => {
         const v = raw.colors[k];
         if (typeof v === 'string') { out.colors.push({ name: k, img: v }); if (!out.images.includes(v)) out.images.push(v); }
-        else if (v && typeof v === 'object') { const img = v.img || v.image || ''; out.colors.push({ name: k, img, hex: v.hex || v.color || '' }); if (img && !out.images.includes(img)) out.images.push(img); }
+        else if (v && typeof v === 'object') {
+          const img = v.img || v.image || '';
+          out.colors.push({ name: k, img, hex: v.hex || v.color || '' });
+          if (img && !out.images.includes(img)) out.images.push(img);
+        }
       });
     }
-    if (out.colors.length === 0 && out.images.length) out.images.forEach((im,i) => out.colors.push({ name: 'Вариант '+(i+1), img: im }));
+    if (out.colors.length === 0 && out.images.length) out.images.forEach((im, i) => out.colors.push({ name: 'Вариант '+(i+1), img: im }));
     return out;
   }
 
-  // find item by data-key or filename
+  // find item by clicked element (data-key or filename)
   function findItemByTarget(target) {
     const key = target.dataset?.key;
     if (key && RAW && RAW[key]) return { key, item: normalize(RAW[key]) };
@@ -80,7 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentImages = [];
   let currentIndex = 0;
 
-  // delegated click for any image in gallery
+  // If the .gallery exists and is empty, auto-render items for "Игрушки" page
+  tryAutoRenderGallery();
+
+  // delegated click for gallery images
   document.addEventListener('click', (e) => {
     const target = e.target.closest('.gallery img, .gallery-item, img[data-key]');
     if (!target) return;
@@ -106,14 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!currentImages || currentImages.length === 0) currentImages = [''];
     currentIndex = 0;
     renderMainAndThumbs();
-
     descEl.textContent = (item.name ? item.name + '. ' : '') + (item.description || '');
-
-    if (item.ozon && String(item.ozon).trim() !== '') {
-      ozonLink.href = item.ozon;
-      ozonLink.style.display = 'inline-block';
-    } else hideOzon();
-
+    if (item.ozon && String(item.ozon).trim() !== '') { ozonLink.href = item.ozon; ozonLink.style.display = 'inline-block'; }
+    else hideOzon();
     fillContacts(item.contacts);
     showModal();
   }
@@ -121,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderMainAndThumbs() {
     modalImg.src = currentImages[currentIndex] || '';
     modalImg.alt = '';
-
     thumbsContainer.innerHTML = '';
     currentImages.forEach((src, idx) => {
       const t = document.createElement('img');
@@ -130,30 +131,23 @@ document.addEventListener('DOMContentLoaded', () => {
       if (idx === currentIndex) t.classList.add('active');
       t.dataset.index = idx;
       t.addEventListener('click', () => {
-        currentIndex = idx;
-        renderMainAndThumbs();
+        currentIndex = idx; renderMainAndThumbs();
       });
       thumbsContainer.appendChild(t);
     });
-
-    // ensure thumbsContainer is inserted once after modalImg
     const panel = modal.querySelector('.modal-panel');
     if (panel && !panel.contains(thumbsContainer)) {
       const imgNode = panel.querySelector('#modal-img');
       if (imgNode) imgNode.insertAdjacentElement('afterend', thumbsContainer);
       else panel.appendChild(thumbsContainer);
     }
-
-    // scroll active thumb into view (smooth off for performance)
     const active = thumbsContainer.querySelector('.thumb.active');
-    if (active) active.scrollIntoView({ inline: 'center', behavior: 'auto' });
+    if (active) active.scrollIntoView({ inline:'center', behavior:'auto' });
   }
 
-  function hideOzon() {
-    if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
-  }
+  function hideOzon() { if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; } }
 
-  // contacts functions (same as previous)
+  // contacts
   function fillContacts(contacts) {
     let container = modal.querySelector('.modal-contacts');
     if (!container) {
@@ -172,8 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ${wa ? `<a href="https://wa.me/${String(wa).replace(/\\D/g,'')}" target="_blank" rel="noopener">WhatsApp: ${wa}</a>` : ''}
     `;
     container.appendChild(linksDiv);
-    const copyRow = document.createElement('div');
-    copyRow.className = 'copy-row';
+    const copyRow = document.createElement('div'); copyRow.className = 'copy-row';
     if (tg) {
       const wrap = document.createElement('div');
       const input = document.createElement('input'); input.readOnly = true; input.value = tg;
@@ -202,10 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function copyToClipboard(text, btn) {
     if (!text) return;
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => {
-        const prev = btn.textContent; btn.textContent = 'Скопировано';
-        setTimeout(()=> btn.textContent = prev, 1200);
-      }).catch(()=> {});
+      navigator.clipboard.writeText(text).then(() => { const prev = btn.textContent; btn.textContent = 'Скопировано'; setTimeout(()=> btn.textContent = prev,1200); }).catch(()=> {});
     } else {
       const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
       try { document.execCommand('copy'); const prev = btn.textContent; btn.textContent = 'Скопировано'; setTimeout(()=> btn.textContent = prev,1200); } catch(e){}
@@ -213,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // swipe support on modalImg
+  // swipe support
   let touchStartX = null;
   modalImg.addEventListener('touchstart', (e) => { if (e.touches && e.touches.length) touchStartX = e.touches[0].clientX; }, {passive:true});
   modalImg.addEventListener('touchend', (e) => {
@@ -223,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (diff > 50) prevImage(); if (diff < -50) nextImage();
   }, {passive:true});
 
-  // keyboard nav & close
+  // keyboard nav
   document.addEventListener('keydown', (e) => {
     if (modal.getAttribute('aria-hidden') === 'false') {
       if (e.key === 'ArrowLeft') prevImage();
@@ -240,5 +230,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+  /* ---------- AUTO-RENDER GALLERY (only when .gallery is empty) ---------- */
+  function tryAutoRenderGallery() {
+    // only run if RAW data exists
+    if (!RAW) return;
+    // choose to auto-render on toys page (or on index)
+    const path = location.pathname.split('/').pop();
+    const onToys = path.includes('toys') || path === '' || path === 'index.html';
+    if (!onToys) return;
+
+    const gallery = document.querySelector('.gallery');
+    if (!gallery) return;
+    // only auto-render if gallery is empty
+    if (gallery.children.length > 0) return;
+
+    // Render all items that look like toys (frog/dragon) — fallback: render everything
+    const keys = Object.keys(RAW);
+    const toyKeys = keys.filter(k => (/frog|dragon|toy|игруш/i).test(k) || String(RAW[k].name||'').toLowerCase().includes('лягуш') || String(RAW[k].name||'').toLowerCase().includes('дракон'));
+    const renderKeys = toyKeys.length ? toyKeys : keys;
+
+    renderKeys.forEach(k => {
+      const raw = RAW[k];
+      const norm = normalize(raw);
+      const thumbSrc = norm.images && norm.images[0] ? norm.images[0] : (norm.colors && norm.colors[0] ? norm.colors[0].img : '');
+      // wrapper div with class gallery-item and data-key on img
+      const wrap = document.createElement('div');
+      wrap.className = 'gallery-item';
+      // create img inside
+      const img = document.createElement('img');
+      img.src = thumbSrc || 'images/placeholder.png';
+      img.alt = norm.name || k;
+      img.loading = 'lazy';
+      img.dataset.key = k;
+      wrap.appendChild(img);
+      gallery.appendChild(wrap);
+    });
+  }
 
 });
