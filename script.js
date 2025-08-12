@@ -1,149 +1,172 @@
-// ВСТАВЬТЕ ЭТО В НАЧАЛО script.js (или перед DOMContentLoaded)
+/* script.js — общая логика галерей/модалки, multi-page via data/items.*.js */
+/* Touch detection — добавляем класс is-touch */
 (function detectTouchAndMarkBody(){
   try {
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 0);
     if (isTouch) {
-      document.documentElement.classList.add('is-touch'); // добавляем к <html> для совместимости
-      document.body.classList.add('is-touch'); // и к <body> (используется в CSS)
+      document.documentElement.classList.add('is-touch');
+      if (document.body) document.body.classList.add('is-touch');
+      else document.addEventListener('DOMContentLoaded', () => document.body.classList.add('is-touch'));
     }
-  } catch(e) { /* silent */ }
+  } catch(e){}
 })();
 
-
-/* script.js — модалка с лентой миниатюр, per-color ozon, компактные контакты, авто-дополнение галереи */
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modal');
-  if (!modal) return;
-
   const modalImg = document.getElementById('modal-img');
   const descEl = document.getElementById('description');
   const ozonLink = document.getElementById('ozon-link');
-  const closeBtn = modal.querySelector('.modal-close');
-
-  // set year placeholders
+  const paletteLink = document.getElementById('palette-link');
+  const skuEl = document.getElementById('sku');
+  const closeBtn = modal?.querySelector('.modal-close');
   const year = new Date().getFullYear();
-  ['year','year-toys','year-vases','year-repair','year-resin'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.textContent = year;
-  });
+  ['year','year-toys','year-vases','year-repair','year-resin'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = year; });
 
-  const RAW = window.itemsData || window.items || null;
+  // DATA: each page should include its own data file that sets window.itemsData
+  const RAW = window.itemsData || null;
+  if (!RAW) {
+    // nothing to render automatically
+  }
 
-  function normalize(raw) {
+  // normalize item structure (colors array with code,img,ozon)
+  function normalize(raw, key){
     if (!raw) return null;
     const out = {
+      key: key,
       name: raw.name || raw.title || '',
-      description: raw.description || raw.desc || raw.text || '',
-      ozon: raw.ozon || raw.oz || raw.ozon_link || '',
-      contacts: raw.contacts || { telegram: raw.telegram || raw.tg || '@AvenNyan', whatsapp: raw.whatsapp || raw.phone || raw.tel || '+79818522194' },
-      images: [],
+      description: raw.description || '',
+      ozon: raw.ozon || '',
+      contacts: raw.contacts || { telegram: "@AvenNyan", whatsapp: "+79818522194" },
+      group: raw.group || raw.category || '',
       colors: []
     };
-
-    if (Array.isArray(raw.images) && raw.images.length) out.images = raw.images.slice();
-    else if (raw.image) out.images.push(raw.image);
-    else if (raw.img) out.images.push(raw.img);
-
     if (Array.isArray(raw.colors) && raw.colors.length) {
-      raw.colors.forEach((c, i) => {
-        if (typeof c === 'string') out.colors.push({ name: c, img: out.images[i] || '', ozon: '' });
-        else if (c && typeof c === 'object') {
-          const img = c.img || c.image || '';
-          out.colors.push({ name: c.name || c.title || ('Вариант ' + (i+1)), img, hex: c.hex || c.color || '', ozon: c.ozon || c.ozon_link || c.oz || '' });
-          if (img && !out.images.includes(img)) out.images.push(img);
-        }
+      raw.colors.forEach(c => {
+        if (!c) return;
+        if (typeof c === 'string') out.colors.push({ code: c, img: '', ozon: '' });
+        else out.colors.push({ code: c.code || c.name || '', img: c.img || c.image || '', ozon: c.ozon || c.ozon_link || '' });
       });
-    } else if (raw.colors && typeof raw.colors === 'object') {
-      Object.keys(raw.colors).forEach(k => {
-        const v = raw.colors[k];
-        if (typeof v === 'string') { out.colors.push({ name: k, img: v, ozon: '' }); if (!out.images.includes(v)) out.images.push(v); }
-        else if (v && typeof v === 'object') {
-          const img = v.img || v.image || '';
-          out.colors.push({ name: k, img, hex: v.hex || v.color || '', ozon: v.ozon || v.ozon_link || v.oz || '' });
-          if (img && !out.images.includes(img)) out.images.push(img);
-        }
-      });
+    } else if (Array.isArray(raw.images) && raw.images.length) {
+      raw.images.forEach((im, i) => out.colors.push({ code: 'C' + String(i+1).padStart(2,'0'), img: im, ozon: raw.ozon || '' }));
     }
-
-    // fallback: colors from images
-    if (out.colors.length === 0 && out.images.length) out.images.forEach((im, i) => out.colors.push({ name: 'Вариант ' + (i+1), img: im, ozon: '' }));
-
     return out;
   }
 
-  function findItemByTarget(target) {
-    const key = target.dataset?.key;
-    if (key && RAW && RAW[key]) return { key, item: normalize(RAW[key]) };
+  // determine page category for palette linking or special behavior
+  const path = location.pathname.split('/').pop().toLowerCase();
+  let pageCategory = 'toys';
+  if (path.includes('vases')) pageCategory = 'vases';
+  else if (path.includes('repair')) pageCategory = 'repair';
+  else if (path.includes('resin')) pageCategory = 'resin';
+  else if (path.includes('palette')) pageCategory = 'palette';
+  else if (path === '' || path === 'index.html') pageCategory = 'home';
 
-    const src = target.getAttribute('src') || target.dataset?.src || '';
-    const filename = src.split('/').pop();
-    if (!filename || !RAW) return null;
+  // fill gallery from RAW, grouping by group field
+  function fillGallery() {
+    if (!RAW) return;
+    const galleryRoot = document.querySelector('.gallery');
+    if (!galleryRoot) return;
 
-    for (const k in RAW) {
-      const norm = normalize(RAW[k]);
-      if (!norm) continue;
-      for (const im of norm.images) if (im && im.split('/').pop() === filename) return { key: k, item: norm };
-      for (const c of norm.colors) if (c && c.img && c.img.split('/').pop() === filename) return { key: k, item: norm };
-    }
-    return null;
+    // group items by group name
+    const items = Object.keys(RAW).map(k => ({ key:k, raw:RAW[k] }));
+    // if items already in DOM (with data-key) we won't duplicate
+    const existingKeys = new Set(Array.from(galleryRoot.querySelectorAll('[data-key]')).map(el => el.dataset.key).filter(Boolean));
+
+    // group by raw.group or fallback to 'Без группы'
+    const groups = {};
+    items.forEach(it => {
+      const norm = normalize(it.raw, it.key);
+      let g = norm.group || (pageCategory === 'palette' ? 'palette' : 'Без группы');
+      if (!groups[g]) groups[g] = [];
+      groups[g].push(norm);
+    });
+
+    // render groups in stable order (Лягушки/Драконы first if exist)
+    const ordered = Object.keys(groups).sort((a,b) => a.localeCompare(b,'ru'));
+    ordered.forEach(groupName => {
+      // add group header if not palette page
+      if (pageCategory !== 'palette') {
+        const h = document.createElement('div');
+        h.className = 'group';
+        const title = document.createElement('div');
+        title.className = 'group-title';
+        title.textContent = groupName;
+        h.appendChild(title);
+        galleryRoot.appendChild(h);
+      }
+      // container for group items
+      const container = document.createElement('div');
+      container.className = 'group-items';
+      container.style.display = 'flex';
+      container.style.flexWrap = 'wrap';
+      container.style.gap = '12px';
+      container.style.marginBottom = '12px';
+
+      groups[groupName].forEach(item => {
+        if (existingKeys.has(item.key)) return; // skip duplicates already in HTML
+        const card = document.createElement('div');
+        card.className = 'gallery-item card';
+        card.style.width = ''; // controlled by CSS flex rules
+        const img = document.createElement('img');
+        // choose first color img or placeholder
+        const thumb = (item.colors && item.colors[0] && item.colors[0].img) ? item.colors[0].img : 'images/placeholder.png';
+        img.src = thumb;
+        img.alt = item.name || item.key;
+        img.loading = 'lazy';
+        img.dataset.key = item.key;
+        card.appendChild(img);
+
+        // caption area under image
+        const title = document.createElement('div');
+        title.className = 'title';
+        title.textContent = item.name || item.key;
+        card.appendChild(title);
+
+        // maybe short meta (sku base)
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = item.key;
+        card.appendChild(meta);
+
+        container.appendChild(card);
+      });
+
+      galleryRoot.appendChild(container);
+    });
   }
+
+  fillGallery();
+
+  // modal machinery
+  let currentImages = [];
+  let currentOzon = [];
+  let currentCodes = [];
+  let currentKey = '';
+  let currentIndex = 0;
 
   // thumbs container
   let thumbsContainer = modal.querySelector('.modal-thumbs');
-  if (!thumbsContainer) {
-    thumbsContainer = document.createElement('div');
-    thumbsContainer.className = 'modal-thumbs';
-  }
+  if (!thumbsContainer){ thumbsContainer = document.createElement('div'); thumbsContainer.className = 'modal-thumbs'; }
 
-  let currentImages = [];
-  let currentOzon = []; // per-image ozon links ('' if none)
-  let currentIndex = 0;
-
-  autoFillGallery(); // append missing items if needed
-
-  // delegated clicking on gallery
-  document.addEventListener('click', (e) => {
-    const target = e.target.closest('.gallery img, .gallery-item, img[data-key]');
-    if (!target) return;
-    e.preventDefault();
-
-    const found = findItemByTarget(target);
-    if (found && found.item) openModalWithItem(found.item);
-    else openRawImage(target);
-  });
-
-  function openRawImage(imgEl) {
-    currentImages = [ imgEl.src ];
-    currentOzon = [''];
+  function renderModalForItem(item) {
+    currentKey = item.key;
+    currentImages = item.colors.map(c => c.img || '');
+    currentOzon = item.colors.map(c => c.ozon || '');
+    currentCodes = item.colors.map(c => c.code || '');
+    if (!currentImages.length) currentImages = [''];
     currentIndex = 0;
+    descEl.textContent = item.description || '';
     renderMainAndThumbs();
-    descEl.textContent = imgEl.alt || '';
-    hideOzon();
-    fillContactsEmpty();
-    showModal();
-  }
-
-  function openModalWithItem(item) {
-    // build arrays of images and per-image ozon links
-    const colors = item.colors && item.colors.length ? item.colors : (item.images.map((im, i) => ({ name: 'Вариант ' + (i+1), img: im, ozon: item.ozon || '' })));
-    currentImages = colors.map(c => c.img || '');
-    currentOzon = colors.map(c => c.ozon || item.ozon || '');
-    if (!currentImages || currentImages.length === 0) currentImages = [''];
-    currentIndex = 0;
-
-    renderMainAndThumbs();
-    descEl.textContent = (item.name ? item.name + '. ' : '') + (item.description || '');
-
-    // show ozon for the current image if exists
-    updateOzonForIndex(currentIndex);
-
+    // SKU: shown as key-(code) for current color
+    updateSkuAndOzon();
+    // contacts
     fillContacts(item.contacts);
     showModal();
   }
 
-  function renderMainAndThumbs() {
+  function renderMainAndThumbs(){
     modalImg.src = currentImages[currentIndex] || '';
     modalImg.alt = '';
-
     thumbsContainer.innerHTML = '';
     currentImages.forEach((src, idx) => {
       const t = document.createElement('img');
@@ -151,152 +174,119 @@ document.addEventListener('DOMContentLoaded', () => {
       t.className = 'thumb';
       if (idx === currentIndex) t.classList.add('active');
       t.dataset.index = idx;
-      // attach per-thumb click
-      t.addEventListener('click', () => {
-        currentIndex = idx;
-        renderMainAndThumbs();
-        updateOzonForIndex(idx);
-      });
+      t.addEventListener('click', () => { currentIndex = idx; renderMainAndThumbs(); updateSkuAndOzon(); });
       thumbsContainer.appendChild(t);
     });
-
     const panel = modal.querySelector('.modal-panel');
     if (panel && !panel.contains(thumbsContainer)) {
       const imgNode = panel.querySelector('#modal-img');
       if (imgNode) imgNode.insertAdjacentElement('afterend', thumbsContainer);
       else panel.appendChild(thumbsContainer);
     }
-
     const active = thumbsContainer.querySelector('.thumb.active');
     if (active) active.scrollIntoView({ inline:'center', behavior:'auto' });
   }
 
-  function updateOzonForIndex(idx) {
-    const oz = (currentOzon && currentOzon[idx]) ? String(currentOzon[idx]).trim() : '';
-    if (oz) {
-      ozonLink.href = oz;
-      ozonLink.style.display = 'inline-block';
-    } else {
-      hideOzon();
-    }
+  function updateSkuAndOzon(){
+    const code = currentCodes[currentIndex] || '';
+    const sku = code ? `${currentKey}-${code}` : `${currentKey}`;
+    if (skuEl) skuEl.textContent = 'Артикул: ' + sku;
+    // palette link: palette.html?pref=sku
+    if (paletteLink) paletteLink.href = `palette.html?pref=${encodeURIComponent(sku)}`;
+    // ozon link per-image if present, else fallback to ''
+    const oz = (currentOzon[currentIndex] && String(currentOzon[currentIndex]).trim()) ? currentOzon[currentIndex] : '';
+    if (oz) { ozonLink.href = oz; ozonLink.style.display = 'inline-block'; }
+    else { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
   }
 
-  function hideOzon() {
-    if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
-  }
-
-  /* Contacts handling: use existing "Контакты" block if present, else create modal-contacts */
-  function getOrCreateContactsContainer() {
+  function fillContacts(contacts){
     let container = modal.querySelector('.modal-contacts');
-    if (container) return container;
-
-    // try to find an existing inline "Контакты" block (static markup) and reuse it
-    const panel = modal.querySelector('.modal-panel');
-    if (panel) {
-      const possible = Array.from(panel.children).find(ch => {
-        if (ch === thumbsContainer) return false;
-        if (ch.classList && ch.classList.contains('modal-contacts')) return true;
-        if (ch.tagName === 'DIV' || ch.tagName === 'P') {
-          const txt = (ch.textContent || '').trim();
-          return /контакт/i.test(txt) && txt.length < 200; // heuristic: contains 'Контакт' and not huge
-        }
-        return false;
-      });
-      if (possible) {
-        possible.classList.add('modal-contacts');
-        container = possible;
-      }
-    }
-
     if (!container) {
       container = document.createElement('div');
       container.className = 'modal-contacts';
       modal.querySelector('.modal-panel')?.appendChild(container);
     }
-    return container;
+    const tg = contacts?.telegram || '@AvenNyan';
+    const wa = contacts?.whatsapp || '+7 981 852-21-94';
+    container.innerHTML = `<a href="https://t.me/${String(tg).replace(/^@/,'')}" target="_blank" rel="noopener">Telegram: ${tg}</a> &nbsp;|&nbsp; <a href="https://wa.me/${String(wa).replace(/\D/g,'')}" target="_blank" rel="noopener">WhatsApp: ${wa}</a>`;
+  }
+  function fillContactsEmpty(){ fillContacts({telegram:'@AvenNyan', whatsapp:'+7 981 852-21-94'}); }
+
+  // open raw img if clicked and not found in itemsData
+  function openRawImage(imgEl){
+    currentImages = [ imgEl.src ];
+    currentOzon = [''];
+    currentCodes = [''];
+    currentKey = imgEl.dataset.key || 'img';
+    currentIndex = 0;
+    descEl.textContent = imgEl.alt || '';
+    renderMainAndThumbs();
+    updateSkuAndOzon();
+    fillContactsEmpty();
+    showModal();
   }
 
-  function fillContacts(contacts) {
-    const container = getOrCreateContactsContainer();
-    container.innerHTML = '';
-    const tg = contacts?.telegram || contacts?.tg || contacts?.telegram_handle || '@AvenNyan';
-    const wa = contacts?.whatsapp || contacts?.wh || contacts?.phone || contacts?.tel || '+7 981 852-21-94';
-    const tgLink = `<a href="https://t.me/${tg.replace(/^@/,'')}" target="_blank" rel="noopener">Telegram: ${tg}</a>`;
-    const waLink = `<a href="https://wa.me/${String(wa).replace(/\D/g,'')}" target="_blank" rel="noopener">WhatsApp: ${wa}</a>`;
-    container.innerHTML = `${tgLink} &nbsp;|&nbsp; ${waLink}`;
-  }
-
-  function fillContactsEmpty() {
-    const container = getOrCreateContactsContainer();
-    container.innerHTML = `<a href="https://t.me/AvenNyan" target="_blank" rel="noopener">Telegram: @AvenNyan</a> &nbsp;|&nbsp; <a href="https://wa.me/79818522194" target="_blank" rel="noopener">WhatsApp: +7 981 852-21-94</a>`;
-  }
-
-  function copyToClipboard(text, btn) {
-    if (!text) return;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => {
-        const prev = btn.textContent; btn.textContent = 'Скопировано';
-        setTimeout(()=> btn.textContent = prev, 1200);
-      }).catch(()=> {});
-    }
-  }
-
-  // swipe support on modalImg
-  let touchStartX = null;
-  modalImg.addEventListener('touchstart', (e) => { if (e.touches && e.touches.length) touchStartX = e.touches[0].clientX; }, {passive:true});
-  modalImg.addEventListener('touchend', (e) => {
-    if (touchStartX === null) return;
-    const x = e.changedTouches[0].clientX;
-    const diff = x - touchStartX; touchStartX = null;
-    if (diff > 50) prevImage(); if (diff < -50) nextImage();
-  }, {passive:true});
-
-  // keyboard nav
-  document.addEventListener('keydown', (e) => {
-    if (modal.getAttribute('aria-hidden') === 'false') {
-      if (e.key === 'ArrowLeft') prevImage();
-      if (e.key === 'ArrowRight') nextImage();
-      if (e.key === 'Escape') closeModal();
+  // clicks: delegate gallery images
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('.gallery img, .gallery-item img, img[data-key]');
+    if (!target) return;
+    e.preventDefault();
+    const key = target.dataset.key;
+    if (RAW && key && RAW[key]) {
+      const item = normalize(RAW[key], key);
+      renderModalForItem(item);
+    } else {
+      // try to find by filename
+      const src = target.getAttribute('src') || '';
+      if (RAW) {
+        let found = null;
+        for (const k in RAW) {
+          const norm = normalize(RAW[k], k);
+          if (norm.colors.some(c => c.img && c.img.split('/').pop() === src.split('/').pop())) { found = norm; break; }
+        }
+        if (found) { renderModalForItem(found); return; }
+      }
+      openRawImage(target);
     }
   });
 
-  function nextImage(){ if (!currentImages || currentImages.length <= 1) return; currentIndex = (currentIndex + 1) % currentImages.length; renderMainAndThumbs(); updateOzonForIndex(currentIndex); }
-  function prevImage(){ if (!currentImages || currentImages.length <= 1) return; currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length; renderMainAndThumbs(); updateOzonForIndex(currentIndex); }
-
-  function showModal(){ modal.style.display = 'flex'; modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('no-scroll'); }
-  function closeModal(){ modal.style.display = 'none'; modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); }
+  // show / close modal
+  function showModal(){ if (!modal) return; modal.style.display = 'flex'; modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('no-scroll'); }
+  function closeModal(){ if (!modal) return; modal.style.display = 'none'; modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); }
 
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (modal?.getAttribute('aria-hidden') === 'false'){ if (e.key==='Escape') closeModal(); if (e.key==='ArrowLeft') { if (currentImages && currentImages.length>1){ currentIndex=(currentIndex-1+currentImages.length)%currentImages.length; renderMainAndThumbs(); updateSkuAndOzon(); } } if (e.key==='ArrowRight'){ if (currentImages && currentImages.length>1){ currentIndex=(currentIndex+1)%currentImages.length; renderMainAndThumbs(); updateSkuAndOzon(); } } } });
 
-  /* ---------- AUTO-FILL GALLERY: append missing items if gallery has less elements ---------- */
-  function autoFillGallery() {
-    if (!RAW) return;
-    const gallery = document.querySelector('.gallery');
-    if (!gallery) return;
+  // swipe support
+  let touchStartX = null;
+  modalImg?.addEventListener('touchstart', (e)=> { if (e.touches && e.touches.length) touchStartX = e.touches[0].clientX; }, {passive:true});
+  modalImg?.addEventListener('touchend', (e)=> { if (touchStartX===null) return; const x = e.changedTouches[0].clientX; const diff = x - touchStartX; touchStartX = null; if (diff > 50){ if (currentImages && currentImages.length>1){ currentIndex=(currentIndex-1+currentImages.length)%currentImages.length; renderMainAndThumbs(); updateSkuAndOzon(); } } if (diff < -50){ if (currentImages && currentImages.length>1){ currentIndex=(currentIndex+1)%currentImages.length; renderMainAndThumbs(); updateSkuAndOzon(); } } }, {passive:true});
 
-    const keys = Object.keys(RAW);
-    const toyKeys = keys.filter(k => (/frog|dragon|toy|игруш/i).test(k) || String(RAW[k].name||'').toLowerCase().includes('лягуш') || String(RAW[k].name||'').toLowerCase().includes('дракон'));
-    const renderKeys = toyKeys.length ? toyKeys : keys;
-
-    // existing keys in DOM
-    const existingKeys = new Set(Array.from(gallery.querySelectorAll('[data-key]')).map(img => img.dataset.key).filter(Boolean));
-
-    renderKeys.forEach(k => {
-      if (existingKeys.has(k)) return;
-      const raw = RAW[k];
-      const norm = normalize(raw);
-      const thumbSrc = norm.images && norm.images[0] ? norm.images[0] : (norm.colors && norm.colors[0] ? norm.colors[0].img : 'images/placeholder.png');
-      const wrap = document.createElement('div');
-      wrap.className = 'gallery-item';
-      const img = document.createElement('img');
-      img.src = thumbSrc;
-      img.alt = norm.name || k;
-      img.loading = 'lazy';
-      img.dataset.key = k;
-      wrap.appendChild(img);
-      gallery.appendChild(wrap);
+  // copy SKU on click (if skuEl clicked) — create small copy button
+  if (skuEl) {
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Копировать';
+    copyBtn.style.marginLeft = '8px';
+    copyBtn.className = 'btn ghost';
+    copyBtn.addEventListener('click', () => {
+      const txt = skuEl.textContent.replace(/^Артикул:\s*/i,'').trim();
+      if (!txt) return;
+      if (navigator.clipboard) navigator.clipboard.writeText(txt);
+      const prev = copyBtn.textContent; copyBtn.textContent = 'Скопировано'; setTimeout(()=> copyBtn.textContent = prev,1200);
     });
+    skuEl.style.display = 'inline-block';
+    skuEl.appendChild(copyBtn);
+  }
+
+  // ensure there's a paletteLink element and ozonLink in modal markup; if not, create them
+  if (!ozonLink && modal) {
+    const a = document.createElement('a'); a.id='ozon-link'; a.className='btn'; a.textContent='Смотреть на Ozon'; a.style.display='none';
+    modal.querySelector('.modal-panel')?.appendChild(a);
+  }
+  if (!paletteLink && modal) {
+    const p = document.createElement('a'); p.id='palette-link'; p.className='btn ghost'; p.textContent='Подобрать цвет'; p.href='palette.html';
+    modal.querySelector('.modal-panel')?.appendChild(p);
   }
 
 });
