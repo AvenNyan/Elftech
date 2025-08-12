@@ -34,26 +34,41 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .group{margin:18px 0}
 .group-title{margin-left:6px;margin-bottom:10px;font-weight:700;color:var(--accent-1)}
 
-/* ===== Gallery ===== */
-/* Сетка — миниатюры квадратные; уменьшенные на ПК (минимальная ширина карточки 160px) */
+/* ===== Gallery: flex-based for left-aligned flow ===== */
 .gallery{
-  display:grid;
+  display:flex;
+  flex-wrap:wrap;
   gap: var(--gap);
-  align-items:start;
-  grid-auto-rows: 1fr;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* уменьшено для компактных превью */
+  align-items:flex-start;
+  justify-content:flex-start; /* items start from left */
 }
 
-/* Более плотная сетка на широких экранах */
-@media (min-width:1400px){
-  .gallery{ grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
-}
-@media (min-width:1800px){
-  .gallery{ grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+/* Mobile: 2 in row */
+@media (max-width: 767px) {
+  .gallery-item {
+    flex: 0 0 calc(50% - (var(--gap) / 2));
+    max-width: calc(50% - (var(--gap) / 2));
+  }
 }
 
-/* Квадратные превью */
-.gallery img, .gallery-item{
+/* Tablet: 4 in row */
+@media (min-width: 768px) and (max-width:1199px) {
+  .gallery-item {
+    flex: 0 0 calc(25% - (var(--gap) * 3 / 4));
+    max-width: calc(25% - (var(--gap) * 3 / 4));
+  }
+}
+
+/* Desktop: 6 in row */
+@media (min-width: 1200px) {
+  .gallery-item {
+    flex: 0 0 calc(16.6666% - (var(--gap) * 5 / 6));
+    max-width: calc(16.6666% - (var(--gap) * 5 / 6));
+  }
+}
+
+/* always square and cover */
+.gallery img, .gallery-item {
   width:100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
@@ -64,7 +79,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 }
 .gallery img:hover, .gallery-item:hover{ transform: translateY(-6px); box-shadow:0 12px 30px rgba(16,24,40,0.12); }
 
-/* ===== Modal (compact & centered) ===== */
+/* ===== Modal ===== */
 .modal{
   position:fixed;
   inset:0;
@@ -80,7 +95,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .modal-panel{
   background:var(--card-bg);
   width:100%;
-  max-width:820px;
+  max-width:900px;
   max-height:90vh;
   overflow:auto;
   border-radius:12px;
@@ -94,16 +109,16 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   align-items:center;
 }
 
-/* Main image: large but constrained to viewport */
+/* Main image */
 #modal-img{
   width:100%;
-  max-height:56vh;
+  max-height:60vh;
   object-fit:contain;
   border-radius:8px;
   background:#f7f7f7;
 }
 
-/* Thumbnails row (gallery under the main image) */
+/* Thumbnails under main image */
 .modal-thumbs{
   display:flex;
   gap:8px;
@@ -115,6 +130,10 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   align-items:center;
   -webkit-overflow-scrolling: touch;
 }
+.modal-thumbs::-webkit-scrollbar{height:8px}
+.modal-thumbs::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:4px}
+
+/* thumb style */
 .modal-thumbs .thumb{
   width:var(--thumb-size);
   height:var(--thumb-size);
@@ -129,10 +148,8 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   box-shadow:0 6px 16px rgba(16,24,40,0.08);
 }
 
-/* color-buttons kept for backwards compatibility but hidden if thumbs exist */
-.color-buttons{display:none;gap:8px;flex-wrap:wrap;justify-content:center}
-.color-buttons button{padding:6px 10px;border-radius:8px;border:1px solid #e6e6e6;background:#fafafa;cursor:pointer}
-.color-buttons button.active{background:var(--accent-1);color:#fff;border-color:transparent}
+/* hide old color-buttons (kept for compatibility) */
+.color-buttons{display:none}
 
 /* modal controls */
 .modal-close{position:absolute;right:12px;top:12px;border:none;background:transparent;font-size:20px;cursor:pointer;color:#666}
@@ -141,7 +158,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 #ozon-link{display:inline-block;margin-top:6px;padding:8px 12px;border-radius:8px;background:var(--accent-1);color:#fff;text-decoration:none}
 #ozon-link.hidden{display:none}
 
-/* contacts inside modal */
+/* contacts */
 .modal-contacts{width:100%;display:flex;flex-direction:column;gap:8px;align-items:center;color:var(--muted)}
 .modal-contacts .copy-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .modal-contacts input{padding:6px;border:1px solid #e6e6e6;border-radius:6px}
@@ -149,44 +166,16 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 /* Footer */
 .site-footer{background:#fafafa;padding:14px;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid #eee}
 
-/* Mobile / Desktop menu rules */
+/* menus rules */
 @media (max-width:1024px){
   body{padding-bottom:74px}
   .top-nav{display:none}
   .bottom-nav{display:flex}
 }
-/* bottom nav: mobile only */
-.bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;padding:6px 8px;justify-content:space-around;z-index:2100}
-.bn-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#555;font-size:12px}
-.bn-item img{width:22px;height:22px}
-/* desktop hides bottom nav */
 @media (min-width:1025px){
   .bottom-nav{display:none}
   body{padding-bottom:0}
 }
 
-/* Accessibility focus */
+/* accessibility focus */
 :focus{outline:2px dashed rgba(125,95,182,0.18);outline-offset:2px}
-
-/* Базовое поведение — 2 в ряд на мобильных */
-.gallery-item {
-  width: calc(50% - 10px);
-  aspect-ratio: 1 / 1; /* всегда квадрат */
-  object-fit: cover;
-}
-
-/* Планшеты — 4 в ряд */
-@media (min-width: 768px) {
-  .gallery-item {
-    width: calc(25% - 10px);
-    max-width: 300px;
-  }
-}
-
-/* ПК — 6 в ряд */
-@media (min-width: 1200px) {
-  .gallery-item {
-    width: calc(16.666% - 10px);
-    max-width: 250px; /* чуть меньше, чтобы аккуратнее смотрелось */
-  }
-}
