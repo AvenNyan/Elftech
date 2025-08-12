@@ -5,7 +5,7 @@
   --muted: #666;
   --card-bg: #fff;
   --gap: 12px;
-  --thumb-size: 64px; /* размер миниатюр в модалке */
+  --thumb-size: 64px;
   --bottom-nav-h: 66px;
 }
 *{box-sizing:border-box}
@@ -42,19 +42,12 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   gap: var(--gap);
   align-items:flex-start;
   justify-content:flex-start;
-  max-width: 1200px; /* ограничиваем максимальную ширину контейнера */
-  margin-left: 0; /* чтобы отступ слева был одинаковый */
+  max-width: 1200px;
+  margin-left: 0;
 }
 
-/* Touch devices: force 2 in row regardless of CSS viewport width */
-@media (hover: none) and (pointer: coarse) {
-  .gallery-item {
-    flex: 0 0 calc(50% - (var(--gap) / 2)) !important;
-    max-width: calc(50% - (var(--gap) / 2)) !important;
-  }
-}
-
-/* Small screens: 2 in row (fallback for non-coarse) */
+/* Default breakpoints (non-touch behavior) */
+/* Small screens: 2 in row (fallback) */
 @media (max-width: 767px) {
   .gallery-item {
     flex: 0 0 calc(50% - (var(--gap) / 2));
@@ -120,7 +113,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   align-items:center;
 }
 
-/* Main image — уменьшаем max-height, чтобы резервировать место под миниатюры и описание */
+/* Main image — reserve space for thumbs and description */
 #modal-img{
   width:100%;
   max-height: calc(70vh - (var(--thumb-size) + 90px));
@@ -140,11 +133,10 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   justify-content:center;
   align-items:center;
   -webkit-overflow-scrolling: touch;
-  /* Скрываем видимые полосы прокрутки, но оставляем возможность scroll */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.modal-thumbs::-webkit-scrollbar { height: 0; } /* WebKit */
+.modal-thumbs::-webkit-scrollbar { height: 0; }
 .modal-thumbs::-webkit-scrollbar-thumb { background: transparent; }
 
 /* thumb fixed square */
@@ -162,10 +154,8 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   box-shadow:0 6px 16px rgba(16,24,40,0.08);
 }
 
-/* hide old color-buttons (back compat) */
+/* hide old color-buttons */
 .color-buttons{display:none}
-
-/* modal controls */
 .modal-close{position:absolute;right:12px;top:12px;border:none;background:transparent;font-size:20px;cursor:pointer;color:#666}
 
 /* Ozon button */
@@ -184,9 +174,9 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .bn-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#555;font-size:12px}
 .bn-item img{width:22px;height:22px}
 
-/* Mobile rules */
+/* Mobile rules (non-touch fallback) */
 @media (max-width:1024px){
-  body{padding-bottom:calc(var(--bottom-nav-h) + 6px);} /* reserve space for bottom nav */
+  body{padding-bottom:calc(var(--bottom-nav-h) + 6px);}
   .top-nav{display:none}
   .bottom-nav{display:flex}
 }
@@ -196,6 +186,26 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   .bottom-nav{display:none}
   body{padding-bottom:0}
 }
+
+/* ========================= */
+/* Touch-device overrides via body.is-touch (more reliable than media queries) */
+/* If JS adds class 'is-touch' to <body>, these rules force mobile UI */
+
+/* force 2 items in row on touch devices */
+body.is-touch .gallery-item {
+  flex: 0 0 calc(50% - (var(--gap) / 2)) !important;
+  max-width: calc(50% - (var(--gap) / 2)) !important;
+}
+
+/* hide top nav, show bottom nav on touch devices */
+body.is-touch .top-nav { display: none !important; }
+body.is-touch .bottom-nav { display: flex !important; }
+
+/* reserve space for bottom nav when touch */
+body.is-touch { padding-bottom: calc(var(--bottom-nav-h) + 6px) !important; }
+
+/* ensure bottom nav above footer */
+body.is-touch .bottom-nav { z-index: 10000; position: fixed; }
 
 /* Focus outline */
 :focus{outline:2px dashed rgba(125,95,182,0.18);outline-offset:2px}
