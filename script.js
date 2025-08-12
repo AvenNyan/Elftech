@@ -32,11 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!raw) return null;
     const variants = Array.isArray(raw.variants) && raw.variants.length ? raw.variants.map(v => ({
       suffix: v.suffix || '',
-      label: v.label || (v.suffix ? v.suffix : 'Базовый'),
+      // if author provided label - use it, otherwise use readable defaults
+      label: v.label || (v.suffix === '-m' ? 'С магнитами' : 'Без магнитов'),
       description: v.description || raw.description || '',
       ozon: v.ozon || raw.ozon || '',
       price: v.price || v.pr || ''
-    })) : [{ suffix: raw.suffix || '', label: raw.variantLabel || 'Базовый', description: raw.description || '', ozon: raw.ozon || '', price: raw.price || '' }];
+    })) : [{ suffix: raw.suffix || '', label: raw.variantLabel || 'Без магнитов', description: raw.description || '', ozon: raw.ozon || '', price: raw.price || '' }];
 
     const colors = Array.isArray(raw.colors) ? raw.colors.map(c => {
       if (!c) return { code: '', img: '' };
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  /* ------------ NEW: fillGallery - groups + category-grid ------------ */
+  /* ------------ fillGallery (groups + grid) ------------ */
   function fillGallery() {
     const galleryRoot = document.querySelector('.gallery');
     if (!galleryRoot) return;
@@ -63,13 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
     galleryRoot.innerHTML = '';
 
     if (!RAW || typeof RAW !== 'object') {
-      // nothing to render
-      const p = document.createElement('p'); p.textContent = 'Пока нет товаров.';
-      galleryRoot.appendChild(p);
-      return;
+      const p = document.createElement('p'); p.textContent = 'Пока нет товаров.'; galleryRoot.appendChild(p); return;
     }
 
-    // normalize all items and group them
     const items = Object.keys(RAW).map(k => ({ key: k, norm: normalize(RAW[k], k) })).filter(x => x.norm);
     const groups = {};
     items.forEach(it => {
@@ -78,31 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
       groups[g].push(it.norm);
     });
 
-    // keep stable order of group names (alphabetic)
     const groupNames = Object.keys(groups).sort((a,b) => a.localeCompare(b,'ru'));
 
     groupNames.forEach(groupName => {
-      // section wrapper
-      const section = document.createElement('section');
-      section.className = 'category-section';
+      const section = document.createElement('section'); section.className = 'category-section';
+      const title = document.createElement('div'); title.className = 'category-title'; title.textContent = groupName; section.appendChild(title);
+      const grid = document.createElement('div'); grid.className = 'category-grid';
 
-      // title
-      const title = document.createElement('div');
-      title.className = 'category-title';
-      title.textContent = groupName;
-      section.appendChild(title);
-
-      // grid
-      const grid = document.createElement('div');
-      grid.className = 'category-grid';
-
-      // fill cards
       groups[groupName].forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card gallery-card';
-        // image
+        const card = document.createElement('div'); card.className = 'card gallery-card';
         const img = document.createElement('img');
-        // try explicit first color img, else build path from key + first variant + first color code
         const firstColor = item.colors && item.colors[0];
         let thumb = 'images/placeholder.png';
         if (firstColor) {
@@ -112,22 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
             thumb = `images/${item.key}${variantSuffix}-${firstColor.code}.jpg`;
           }
         }
-        img.src = thumb;
-        img.alt = item.name || item.key;
-        img.loading = 'lazy';
-        img.dataset.key = item.key;
+        img.src = thumb; img.alt = item.name || item.key; img.loading = 'lazy'; img.dataset.key = item.key;
         card.appendChild(img);
-
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'title';
-        titleDiv.textContent = item.name || item.key;
-        card.appendChild(titleDiv);
-
-        const meta = document.createElement('div');
-        meta.className = 'meta';
-        meta.textContent = item.key;
-        card.appendChild(meta);
-
+        const titleDiv = document.createElement('div'); titleDiv.className = 'title'; titleDiv.textContent = item.name || item.key; card.appendChild(titleDiv);
+        const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = item.key; card.appendChild(meta);
         grid.appendChild(card);
       });
 
@@ -136,10 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // call initial fill
+  // initial fill
   fillGallery();
 
-  /* ---------- modal and interactions (unchanged logic) ---------- */
+  /* ---------- modal and interactions (most logic preserved) ---------- */
   let currentItem = null;
   let currentVariantIndex = 0;
   let currentColorIndex = 0;
@@ -157,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderModalFor(item) {
     currentItem = item;
-    currentVariantIndex = 0;
+    currentVariantIndex = 0; // default to first (base)
     currentColorIndex = 0;
     const desc = item.variants[0].description || item.baseDescription || '';
     descEl.textContent = desc;
@@ -173,12 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let variantWrap = panel.querySelector('.variant-toggle');
     if (variantWrap) variantWrap.remove();
     if (!currentItem || !currentItem.variants || currentItem.variants.length <= 1) return;
-    variantWrap = document.createElement('div');
-    variantWrap.className = 'variant-toggle';
+    variantWrap = document.createElement('div'); variantWrap.className = 'variant-toggle';
     currentItem.variants.forEach((v, idx) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = v.label || (v.suffix || 'Вариант');
+      const btn = document.createElement('button'); btn.type = 'button';
+      // use readable labels (prefer provided label)
+      const label = v.label || (v.suffix === '-m' ? 'С магнитами' : 'Без магнитов');
+      btn.textContent = label;
       if (idx === currentVariantIndex) btn.classList.add('active');
       btn.addEventListener('click', () => {
         currentVariantIndex = idx;
@@ -265,21 +235,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const tg = contacts?.telegram || '@AvenNyan';
     const wa = contacts?.whatsapp || '+7 981 852-21-94';
-    container.innerHTML = `<a href="https://t.me/${String(tg).replace(/^@/,'')}" target="_blank" rel="noopener">Telegram: ${tg}</a> &nbsp;|&nbsp; <a href="https://wa.me/${String(wa).replace(/\D/g,'')}" target="_blank" rel="noopener">WhatsApp: ${wa}</a>`;
+    // produce simple two links — styled via CSS
+    container.innerHTML = `<a href="https://t.me/${String(tg).replace(/^@/,'')}" target="_blank" rel="noopener">Telegram: ${tg}</a>&nbsp;&nbsp;<span style="color:var(--muted)">|</span>&nbsp;&nbsp;<a href="https://wa.me/${String(wa).replace(/\D/g,'')}" target="_blank" rel="noopener">WhatsApp: ${wa}</a>`;
   }
 
   function openRawImage(imgEl) {
     currentItem = null;
     modalImg.src = imgEl.src;
     descEl.textContent = imgEl.alt || '';
-    skuEl.textContent = '';
+    if (skuEl) skuEl.textContent = '';
     if (priceEl) priceEl.textContent = '';
     if (ozonLink) ozonLink.style.display = 'none';
     fillContacts({telegram:'@AvenNyan', whatsapp:'+7 981 852-21-94'});
     showModal();
   }
 
-  // delegated click on gallery; works with new card layout because img.dataset.key is set
+  // delegated click on gallery
   document.addEventListener('click', (e) => {
     const target = e.target.closest('.gallery img, .gallery-card img, img[data-key]');
     if (!target) return;
