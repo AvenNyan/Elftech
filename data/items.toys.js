@@ -6,43 +6,64 @@ window.itemsData = {
     // variants: пустой суффикc = базовая, "-m" = с магнитом
     variants: [
       {
-        suffix: "",           // results in filenames like images/t010-G01.jpg
+        suffix: "",           // filenames: images/t010-G01.jpg
         label: "Без магнита",
         description: "Модель без магнита, подходит для полок и декора.",
-        ozon: "https://ozon.ru/product/t010", // общая ссылка для варианта
-        price: "950 ₽"
+        ozon: ""
       },
       {
-        suffix: "-m",         // results in filenames like images/t010-m-G01.jpg
+        suffix: "-m",         // filenames: images/t010-m-G01.jpg
         label: "С магнитом",
         description: "Модель с встроенным магнитом. Крепится к металлическим поверхностям.",
-        ozon: "https://ozon.ru/product/t010-m",
-        price: "1150 ₽"
+        ozon: ""
       }
     ],
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      { code: "G01" }, // images/t010-G01.jpg and images/t010-m-G01.jpg
-      { code: "G02" },
-      { code: "G03" }
+      {
+        code: "B01",
+        // prices per variant suffix ("" or "-m")
+        prices: { "": "200 ₽", "-m": "250 ₽" },
+        // optional per-color-per-variant ozon overrides (can be string or object)
+        ozon: { "": "https://ozon.ru/product/t010?color=G01", "-m": "https://ozon.ru/product/t010-m?color=G01" }
+      },
+      { code: "B04", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
+      { code: "B12", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
+      { code: "B14", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
+      { code: "G01", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "G04", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
+      { code: "G05", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
+      { code: "M01", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "M02", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "M03", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "M08", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "R01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
+      { code: "S01", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "S02", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "S03", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "S04", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "W01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
+      { code: "Y01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
+      { code: "Y02", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" }
     ]
   },
 
-  // пример другого товара (дракон) с базовой и магнитной версиями
   "d001": {
-    name: "Дракон малый",
+    name: "Дракон большой",
     group: "Драконы",
     variants: [
-      { suffix: "", label: "Базовая", description: "Дракон малый, детализированный.", ozon: "https://ozon.ru/product/d001", price: "1200 ₽" },
-      { suffix: "-m", label: "С магнитом", description: "Дракон с магнитом.", ozon: "", price: "1400 ₽" }
+      { suffix: "", label: "Базовая", description: "Большой 45 см дракон", ozon: "" },
+      { suffix: "-m", label: "С магнитом", description: "Большой 45 см дракон с магнитами", ozon: "" }
     ],
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      { code: "R01" },
-      { code: "B01" },
-      { code: "K01" }
+      { code: "R01", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
+      { code: "M01", prices: { "": "500 ₽", "-m": "600 ₽" } ozon: "" },
+      { code: "M02", prices: { "": "500 ₽", "-m": "600 ₽" } ozon: "" },
+      { code: "M03", prices: { "": "500 ₽", "-m": "600 ₽" } ozon: "" }
     ]
-  },
+  }
 
-  // добавь другие товары по той же схеме
+  // добавляй новые товары по этой же схеме;
+  // если хочешь указать явный путь к картинке, добавь color.img = "images/t010-G01.jpg"
 };
