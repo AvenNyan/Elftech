@@ -46,7 +46,7 @@ window.itemsData = {
     ]
   },
 
-  "d001": {
+  "t020": {
     name: "Дракон большой",
     group: "Драконы",
     variants: [
