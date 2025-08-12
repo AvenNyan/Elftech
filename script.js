@@ -1,3 +1,15 @@
+// ВСТАВЬТЕ ЭТО В НАЧАЛО script.js (или перед DOMContentLoaded)
+(function detectTouchAndMarkBody(){
+  try {
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 0);
+    if (isTouch) {
+      document.documentElement.classList.add('is-touch'); // добавляем к <html> для совместимости
+      document.body.classList.add('is-touch'); // и к <body> (используется в CSS)
+    }
+  } catch(e) { /* silent */ }
+})();
+
+
 /* script.js — модалка с лентой миниатюр, per-color ozon, компактные контакты, авто-дополнение галереи */
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modal');
