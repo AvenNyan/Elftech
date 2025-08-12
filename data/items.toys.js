@@ -102,7 +102,7 @@ window.itemsData = {
     ],
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      { code: "R01", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
+      { code: "G01", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
       { code: "M01", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
       { code: "M02", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
       { code: "M03", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" }
