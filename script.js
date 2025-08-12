@@ -238,22 +238,44 @@ document.addEventListener('DOMContentLoaded', () => {
     if (active) active.scrollIntoView({ inline:'center', behavior:'auto' });
   }
 
-  function updateSkuPriceOzon() {
-    if (!currentItem) return;
-    const variant = currentItem.variants[currentVariantIndex];
-    const color = currentItem.colors[currentColorIndex] || {};
-    const code = color.code || '';
-    // SKU: key + variantSuffix (without leading dash?)? user wants t010-m-G01 so we use variant.suffix as given
-    const sku = code ? `${currentItem.key}${variant.suffix || ''}-${code}` : `${currentItem.key}${variant.suffix || ''}`;
-    if (skuEl) skuEl.textContent = 'Артикул: ' + sku;
-    // price
-    if (priceEl) priceEl.textContent = (variant.price ? 'Цена: ' + variant.price : '');
-    // palette link
-    if (paletteLink) paletteLink.href = `palette.html?pref=${encodeURIComponent(sku)}`;
-    // ozon priority: color.ozon > variant.ozon > ''
-    const oz = (color.ozon && String(color.ozon).trim()) ? color.ozon : (variant.ozon && String(variant.ozon).trim() ? variant.ozon : '');
-    if (oz && ozonLink) { ozonLink.href = oz; ozonLink.style.display = 'inline-block'; } else if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
+function updateSkuPriceOzon() {
+  if (!currentItem) return;
+  const variant = currentItem.variants[currentVariantIndex] || { suffix: '' };
+  const color = currentItem.colors[currentColorIndex] || {};
+  const code = color.code || '';
+
+  // SKU: key + variantSuffix + "-" + code  (variant.suffix may include leading dash like "-m")
+  const sku = code ? `${currentItem.key}${variant.suffix || ''}-${code}` : `${currentItem.key}${variant.suffix || ''}`;
+  if (skuEl) skuEl.textContent = 'Артикул: ' + sku;
+
+  // PRICE: priority -> color.prices[variant.suffix] -> color.prices[""] -> variant.price -> ''
+  let price = '';
+  if (color.prices) {
+    // color.prices can be object { "": "950 ₽", "-m": "1150 ₽" }
+    if (variant.suffix && color.prices.hasOwnProperty(variant.suffix)) price = color.prices[variant.suffix];
+    else if (color.prices.hasOwnProperty('')) price = color.prices[''];
   }
+  if (!price && variant.price) price = variant.price;
+  if (priceEl) priceEl.textContent = price ? 'Цена: ' + price : '';
+
+  // OZON: priority -> color.ozon[variant.suffix] -> color.ozon (string) -> variant.ozon -> ''
+  let oz = '';
+  if (color.ozon) {
+    if (typeof color.ozon === 'object') {
+      if (variant.suffix && color.ozon[variant.suffix]) oz = color.ozon[variant.suffix];
+      else if (color.ozon['']) oz = color.ozon[''];
+    } else if (typeof color.ozon === 'string' && String(color.ozon).trim() !== '') {
+      oz = color.ozon;
+    }
+  }
+  if (!oz && variant.ozon) oz = variant.ozon;
+  if (oz && ozonLink) { ozonLink.href = oz; ozonLink.style.display = 'inline-block'; }
+  else if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
+
+  // palette link update (unchanged)
+  if (paletteLink) paletteLink.href = `palette.html?pref=${encodeURIComponent(sku)}`;
+}
+
 
   function fillContacts(contacts) {
     let container = modal.querySelector('.modal-contacts');
