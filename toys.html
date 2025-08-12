@@ -11,57 +11,54 @@
 <body>
   <header class="site-header">
     <a class="logo-wrap" href="index.html" aria-label="На главную">
-      <img src="images/logo.png" alt="Логотип" class="logo" width="56" height="56">
+      <img src="images/logo.png" alt="Логотип" class="logo">
       <span class="site-title">Лавка <strong>Эльфтех</strong></span>
     </a>
     <nav class="top-nav" aria-label="Главное меню">
       <a href="toys.html" class="nav-link active">3D Игрушки</a>
       <a href="vases.html" class="nav-link">Вазы</a>
-      <a href="repair.html" class="nav-link">Ремонт и детали</a>
-      <a href="resin.html" class="nav-link">Фигурки (фотополимер)</a>
+      <a href="repair.html" class="nav-link">Ремонт</a>
+      <a href="resin.html" class="nav-link">Фигурки</a>
+      <a href="palette.html" class="nav-link">Палитра</a>
     </nav>
   </header>
 
   <main class="container">
     <h1>3D Игрушки</h1>
-
     <section class="group">
-      <div class="group-title">Лягушки</div>
-      <div class="gallery">
-        <img data-key="frog1" src="images/frog1_pink.jpg" alt="Лягушка 1" loading="lazy" class="gallery-item">
-        <img data-key="frog2" src="images/frog2_pink.jpg" alt="Лягушка 2" loading="lazy" class="gallery-item">
-      </div>
+      <div class="gallery"></div>
     </section>
   </main>
 
+  <!-- modal -->
   <div id="modal" class="modal" role="dialog" aria-hidden="true">
     <div class="modal-panel" role="document">
       <button class="modal-close" aria-label="Закрыть">✕</button>
       <img id="modal-img" src="" alt="" loading="lazy">
-      <div id="color-buttons" class="color-buttons"></div>
+      <div id="sku"></div>
       <p id="description"></p>
-      <a id="ozon-link" class="btn btn-primary" target="_blank" rel="noopener">Смотреть на Ozon</a>
-      <div style="margin-top:10px;color:#666;">Контакты: <a href="https://t.me/AvenNyan">Telegram</a>, <a href="https://wa.me/79818522194">WhatsApp</a></div>
+      <div class="actions">
+        <a id="ozon-link" class="btn" target="_blank" rel="noopener" style="display:none">Смотреть на Ozon</a>
+        <a id="palette-link" class="btn ghost" href="palette.html">Подобрать цвет</a>
+      </div>
+      <div class="modal-contacts"></div>
+      <!-- thumbs inserted by script -->
     </div>
   </div>
 
   <footer class="site-footer">
-    <div class="contacts">
-      <a href="https://t.me/AvenNyan" target="_blank" rel="noopener">Telegram: @AvenNyan</a> |
-      <a href="https://wa.me/79818522194" target="_blank" rel="noopener">WhatsApp: +7 981 852-21-94</a>
-    </div>
-    <div class="domains">elftech3d.ru | эльфтех3д.рф</div>
-    <div class="copyright">© Лавка Эльфтех — <span id="year-toys"></span></div>
+    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> | WhatsApp: <a href="https://wa.me/79818522194">+7 981 852-21-94</a><br>
+    elftech3d.ru | эльфтех3д.рф<br>© Лавка Эльфтех — <span id="year-toys"></span>
   </footer>
 
   <nav class="bottom-nav" aria-hidden="false">
-    <a href="toys.html" class="bn-item active" id="bn-toys"><img src="icon-toys.png" alt=""><span>Игрушки</span></a>
-    <a href="vases.html" class="bn-item" id="bn-vases"><img src="icon-vases.png" alt=""><span>Вазы</span></a>
-    <a href="repair.html" class="bn-item" id="bn-repair"><img src="icon-repair.png" alt=""><span>Детали</span></a>
-    <a href="resin.html" class="bn-item" id="bn-resin"><img src="icon-resin.png" alt=""><span>Фигурки</span></a>
+    <a href="toys.html" class="bn-item active" id="bn-toys"><img src="images/icon-toys.png" alt=""><span>Игрушки</span></a>
+    <a href="vases.html" class="bn-item" id="bn-vases"><img src="images/icon-vases.png" alt=""><span>Вазы</span></a>
+    <a href="repair.html" class="bn-item" id="bn-repair"><img src="images/icon-repair.png" alt=""><span>Ремонт</span></a>
+    <a href="resin.html" class="bn-item" id="bn-resin"><img src="images/icon-resin.png" alt=""><span>Фигурки</span></a>
   </nav>
 
-  <script src="data/items.js" defer></script>
+  <script src="data/items.toys.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
