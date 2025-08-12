@@ -1,29 +1,23 @@
-/* Универсальный script.js — модалка с лентой миниатюр + свайп + клавиши */
+/* script.js — модалка с лентой миниатюр, свайп и клавиши, автоскрытие Ozon */
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modal');
+  if (!modal) return; // safety
+
   const modalImg = document.getElementById('modal-img');
   const descEl = document.getElementById('description');
   const ozonLink = document.getElementById('ozon-link');
-  const colorButtons = document.getElementById('color-buttons'); // kept for backcompat
-  const closeBtn = modal?.querySelector('.modal-close');
+  const closeBtn = modal.querySelector('.modal-close');
 
-  // Defensive: ensure modal exists
-  if (!modal) return;
-
-  // hide initially
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden', 'true');
-
-  // set year in footer elements (if present)
-  const y = new Date().getFullYear();
+  // year
+  const year = new Date().getFullYear();
   ['year','year-toys','year-vases','year-repair','year-resin'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.textContent = y;
+    const el = document.getElementById(id); if (el) el.textContent = year;
   });
 
-  // Data source: try commonly used globals
-  const RAW_DATA = window.itemsData || window.items || window.windowItems || null;
+  // data source
+  const RAW = window.itemsData || window.items || null;
 
-  // normalize input item (works with many shapes)
+  // normalize helper (same logic as before)
   function normalize(raw) {
     if (!raw) return null;
     const out = {
@@ -34,18 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
       images: [],
       colors: []
     };
-
-    // images priority
     if (Array.isArray(raw.images) && raw.images.length) out.images = raw.images.slice();
     else if (raw.image) out.images.push(raw.image);
     else if (raw.img) out.images.push(raw.img);
 
-    // colors can be array/object
     if (Array.isArray(raw.colors) && raw.colors.length) {
       raw.colors.forEach((c, i) => {
-        if (typeof c === 'string') {
-          out.colors.push({ name: c, img: out.images[i] || '' });
-        } else if (c && typeof c === 'object') {
+        if (typeof c === 'string') out.colors.push({ name: c, img: out.images[i] || '' });
+        else if (c && typeof c === 'object') {
           const img = c.img || c.image || '';
           out.colors.push({ name: c.name || c.title || ('Вариант ' + (i+1)), img, hex: c.hex || c.color || '' });
           if (img && !out.images.includes(img)) out.images.push(img);
@@ -54,93 +44,66 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (raw.colors && typeof raw.colors === 'object') {
       Object.keys(raw.colors).forEach(k => {
         const v = raw.colors[k];
-        if (typeof v === 'string') {
-          out.colors.push({ name: k, img: v });
-          if (!out.images.includes(v)) out.images.push(v);
-        } else if (v && typeof v === 'object') {
-          const img = v.img || v.image || '';
-          out.colors.push({ name: k, img, hex: v.hex || v.color || '' });
-          if (img && !out.images.includes(img)) out.images.push(img);
-        }
+        if (typeof v === 'string') { out.colors.push({ name: k, img: v }); if (!out.images.includes(v)) out.images.push(v); }
+        else if (v && typeof v === 'object') { const img = v.img || v.image || ''; out.colors.push({ name: k, img, hex: v.hex || v.color || '' }); if (img && !out.images.includes(img)) out.images.push(img); }
       });
     }
-
-    // fallback: create colors from images
-    if (out.colors.length === 0 && out.images.length) {
-      out.images.forEach((im, idx) => out.colors.push({ name: 'Вариант ' + (idx+1), img: im }));
-    }
+    if (out.colors.length === 0 && out.images.length) out.images.forEach((im,i) => out.colors.push({ name: 'Вариант '+(i+1), img: im }));
     return out;
   }
 
-  // find item by data-key or by image filename
+  // find item by data-key or filename
   function findItemByTarget(target) {
-    // prefer data-key if present
     const key = target.dataset?.key;
-    if (key && RAW_DATA && RAW_DATA[key]) return { key, item: normalize(RAW_DATA[key]) };
+    if (key && RAW && RAW[key]) return { key, item: normalize(RAW[key]) };
 
-    // fallback: try to match filename in RAW_DATA
     const src = target.getAttribute('src') || target.dataset?.src || '';
     const filename = src.split('/').pop();
-    if (!filename || !RAW_DATA) return null;
+    if (!filename || !RAW) return null;
 
-    for (const k in RAW_DATA) {
-      const raw = RAW_DATA[k];
-      const norm = normalize(raw);
+    for (const k in RAW) {
+      const norm = normalize(RAW[k]);
       if (!norm) continue;
-      // images
-      for (const im of norm.images) {
-        if (!im) continue;
-        if (im.split('/').pop() === filename) return { key: k, item: norm };
-      }
-      // colors
-      for (const c of norm.colors) {
-        if (!c || !c.img) continue;
-        if (c.img.split('/').pop() === filename) return { key: k, item: norm };
-      }
+      for (const im of norm.images) if (im && im.split('/').pop() === filename) return { key: k, item: norm };
+      for (const c of norm.colors) if (c && c.img && c.img.split('/').pop() === filename) return { key: k, item: norm };
     }
     return null;
   }
 
-  // create thumbnail container inside modal (just once)
+  // thumbs container (create once)
   let thumbsContainer = modal.querySelector('.modal-thumbs');
   if (!thumbsContainer) {
     thumbsContainer = document.createElement('div');
     thumbsContainer.className = 'modal-thumbs';
-    // We'll insert it after modalImg when opening the modal
   }
 
   let currentImages = [];
   let currentIndex = 0;
 
-  // delegated click handler for gallery images
+  // delegated click for any image in gallery
   document.addEventListener('click', (e) => {
-    const img = e.target.closest('.gallery img, .gallery-item, img[data-key]');
-    if (!img) return;
+    const target = e.target.closest('.gallery img, .gallery-item, img[data-key]');
+    if (!target) return;
     e.preventDefault();
 
-    const found = findItemByTarget(img);
-    if (found && found.item) {
-      openModalWithItem(found.item);
-    } else {
-      openRawImage(img);
-    }
+    const found = findItemByTarget(target);
+    if (found && found.item) openModalWithItem(found.item);
+    else openRawImage(target);
   });
 
-  // open raw image without item data
   function openRawImage(imgEl) {
     currentImages = [ imgEl.src ];
     currentIndex = 0;
     renderMainAndThumbs();
     descEl.textContent = imgEl.alt || '';
-    ozonLink.style.display = 'none';
+    hideOzon();
     fillContactsEmpty();
     showModal();
   }
 
-  // open modal with normalized item
   function openModalWithItem(item) {
     currentImages = (item.images && item.images.length) ? item.images.slice() : (item.colors.map(c => c.img).filter(Boolean));
-    if (!currentImages || currentImages.length === 0) currentImages = ['']; // guard
+    if (!currentImages || currentImages.length === 0) currentImages = [''];
     currentIndex = 0;
     renderMainAndThumbs();
 
@@ -149,21 +112,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (item.ozon && String(item.ozon).trim() !== '') {
       ozonLink.href = item.ozon;
       ozonLink.style.display = 'inline-block';
-    } else {
-      ozonLink.style.display = 'none';
-    }
+    } else hideOzon();
 
     fillContacts(item.contacts);
     showModal();
   }
 
-  // render main image and thumbnails
   function renderMainAndThumbs() {
-    if (!modalImg) return;
     modalImg.src = currentImages[currentIndex] || '';
     modalImg.alt = '';
 
-    // render thumbs
     thumbsContainer.innerHTML = '';
     currentImages.forEach((src, idx) => {
       const t = document.createElement('img');
@@ -178,21 +136,24 @@ document.addEventListener('DOMContentLoaded', () => {
       thumbsContainer.appendChild(t);
     });
 
-    // ensure thumbsContainer is in DOM right after modalImg
-    // (avoid duplicating)
+    // ensure thumbsContainer is inserted once after modalImg
     const panel = modal.querySelector('.modal-panel');
     if (panel && !panel.contains(thumbsContainer)) {
-      // find modalImg in panel and insert after it
       const imgNode = panel.querySelector('#modal-img');
       if (imgNode) imgNode.insertAdjacentElement('afterend', thumbsContainer);
       else panel.appendChild(thumbsContainer);
     }
-    // scroll active thumb into view
+
+    // scroll active thumb into view (smooth off for performance)
     const active = thumbsContainer.querySelector('.thumb.active');
     if (active) active.scrollIntoView({ inline: 'center', behavior: 'auto' });
   }
 
-  // fill contacts (clickable links + copy fields)
+  function hideOzon() {
+    if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
+  }
+
+  // contacts functions (same as previous)
   function fillContacts(contacts) {
     let container = modal.querySelector('.modal-contacts');
     if (!container) {
@@ -201,20 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.querySelector('.modal-panel')?.appendChild(container);
     }
     container.innerHTML = '';
-
     if (!contacts) return fillContactsEmpty();
-
     const tg = contacts.telegram || contacts.tg || contacts.telegram_handle || '';
     const wa = contacts.whatsapp || contacts.wh || contacts.phone || contacts.tel || '';
-
     const linksDiv = document.createElement('div');
     linksDiv.innerHTML = `
       ${tg ? `<a href="https://t.me/${tg.replace(/^@/,'')}" target="_blank" rel="noopener">Telegram: ${tg}</a>` : ''}
       ${tg && wa ? ' | ' : ''}
-      ${wa ? `<a href="https://wa.me/${String(wa).replace(/\D/g,'')}" target="_blank" rel="noopener">WhatsApp: ${wa}</a>` : ''}
+      ${wa ? `<a href="https://wa.me/${String(wa).replace(/\\D/g,'')}" target="_blank" rel="noopener">WhatsApp: ${wa}</a>` : ''}
     `;
     container.appendChild(linksDiv);
-
     const copyRow = document.createElement('div');
     copyRow.className = 'copy-row';
     if (tg) {
@@ -233,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (copyRow.children.length) container.appendChild(copyRow);
   }
-
   function fillContactsEmpty() {
     let container = modal.querySelector('.modal-contacts');
     if (!container) {
@@ -243,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     container.innerHTML = '<div style="color:var(--muted)">Контакты: Telegram @AvenNyan | WhatsApp +7 981 852-21-94</div>';
   }
-
   function copyToClipboard(text, btn) {
     if (!text) return;
     if (navigator.clipboard) {
@@ -258,22 +213,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // swipe support on the main modal image
+  // swipe support on modalImg
   let touchStartX = null;
-  modalImg.addEventListener('touchstart', (e) => {
-    if (!e.touches || e.touches.length === 0) return;
-    touchStartX = e.touches[0].clientX;
-  }, {passive:true});
+  modalImg.addEventListener('touchstart', (e) => { if (e.touches && e.touches.length) touchStartX = e.touches[0].clientX; }, {passive:true});
   modalImg.addEventListener('touchend', (e) => {
-    if (!touchStartX) return;
+    if (touchStartX === null) return;
     const x = e.changedTouches[0].clientX;
-    const diff = x - touchStartX;
-    touchStartX = null;
-    if (diff > 50) prevImage();
-    if (diff < -50) nextImage();
-  });
+    const diff = x - touchStartX; touchStartX = null;
+    if (diff > 50) prevImage(); if (diff < -50) nextImage();
+  }, {passive:true});
 
-  // keyboard navigation
+  // keyboard nav & close
   document.addEventListener('keydown', (e) => {
     if (modal.getAttribute('aria-hidden') === 'false') {
       if (e.key === 'ArrowLeft') prevImage();
@@ -282,29 +232,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function nextImage() {
-    if (currentImages.length <= 1) return;
-    currentIndex = (currentIndex + 1) % currentImages.length;
-    renderMainAndThumbs();
-  }
-  function prevImage() {
-    if (currentImages.length <= 1) return;
-    currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
-    renderMainAndThumbs();
-  }
+  function nextImage(){ if (!currentImages || currentImages.length <= 1) return; currentIndex = (currentIndex + 1) % currentImages.length; renderMainAndThumbs(); }
+  function prevImage(){ if (!currentImages || currentImages.length <= 1) return; currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length; renderMainAndThumbs(); }
 
-  function showModal() {
-    modal.style.display = 'flex';
-    modal.classList.add('show');
-    modal.setAttribute('aria-hidden','false');
-    document.body.classList.add('no-scroll');
-  }
-  function closeModal() {
-    modal.style.display = 'none';
-    modal.classList.remove('show');
-    modal.setAttribute('aria-hidden','true');
-    document.body.classList.remove('no-scroll');
-  }
+  function showModal(){ modal.style.display = 'flex'; modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('no-scroll'); }
+  function closeModal(){ modal.style.display = 'none'; modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); }
 
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
