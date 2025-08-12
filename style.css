@@ -5,7 +5,7 @@
   --muted: #666;
   --card-bg: #fff;
   --gap: 12px;
-  --thumb-size: 64px;
+  --thumb-size: 64px; /* размер миниатюр в модалке */
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comfortaa',sans-serif}
@@ -34,16 +34,16 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .group{margin:18px 0}
 .group-title{margin-left:6px;margin-bottom:10px;font-weight:700;color:var(--accent-1)}
 
-/* ===== Gallery: flex-based for left-aligned flow ===== */
+/* ===== Gallery (flex with left-aligned flow) ===== */
 .gallery{
   display:flex;
   flex-wrap:wrap;
   gap: var(--gap);
   align-items:flex-start;
-  justify-content:flex-start; /* items start from left */
+  justify-content:flex-start; /* important: items start from left */
 }
 
-/* Mobile: 2 in row */
+/* Small screens: 2 in row */
 @media (max-width: 767px) {
   .gallery-item {
     flex: 0 0 calc(50% - (var(--gap) / 2));
@@ -67,10 +67,10 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   }
 }
 
-/* always square and cover */
+/* always square thumbnails */
 .gallery img, .gallery-item {
   width:100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1; /* ensures squares */
   object-fit: cover;
   border-radius:8px;
   cursor:pointer;
@@ -79,7 +79,8 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 }
 .gallery img:hover, .gallery-item:hover{ transform: translateY(-6px); box-shadow:0 12px 30px rgba(16,24,40,0.12); }
 
-/* ===== Modal ===== */
+/* ===== Modal (centered) ===== */
+/* note: we reduce modal-img max-height to reserve space for thumbs and description */
 .modal{
   position:fixed;
   inset:0;
@@ -109,16 +110,17 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   align-items:center;
 }
 
-/* Main image */
+/* Main image: reserve space for thumbnails under it */
 #modal-img{
   width:100%;
-  max-height:60vh;
+  /* subtract thumb row + description area (~var(--thumb-size) + 80px) from 70vh */
+  max-height: calc(70vh - (var(--thumb-size) + 90px));
   object-fit:contain;
   border-radius:8px;
   background:#f7f7f7;
 }
 
-/* Thumbnails under main image */
+/* Thumbnails row (under main image) */
 .modal-thumbs{
   display:flex;
   gap:8px;
@@ -133,7 +135,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .modal-thumbs::-webkit-scrollbar{height:8px}
 .modal-thumbs::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:4px}
 
-/* thumb style */
+/* thumbs fixed square size */
 .modal-thumbs .thumb{
   width:var(--thumb-size);
   height:var(--thumb-size);
@@ -148,7 +150,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   box-shadow:0 6px 16px rgba(16,24,40,0.08);
 }
 
-/* hide old color-buttons (kept for compatibility) */
+/* hide old color-buttons (kept for back-compat) */
 .color-buttons{display:none}
 
 /* modal controls */
