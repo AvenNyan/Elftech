@@ -8,40 +8,96 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Header (унифицированный с другими страницами) -->
   <header class="site-header">
-    <a class="logo-wrap" href="index.html"><img src="images/logo.png" alt="Логотип" class="logo"><span class="site-title">Лавка <strong>Эльфтех</strong></span></a>
-    <nav class="top-nav">
-      <a href="toys.html">3D Игрушки</a>
-      <a href="vases.html">Вазы</a>
-      <a href="repair.html">Ремонт</a>
-      <a href="resin.html">Фигурки</a>
-      <a href="palette.html" class="nav-link active">Палитра</a>
+    <a class="logo-wrap" href="index.html" aria-label="На главную">
+      <img src="images/logo.png" alt="Логотип" class="logo" width="56" height="56">
+      <span class="site-title">Лавка <strong>Эльфтех</strong></span>
+    </a>
+
+    <nav class="top-nav" aria-label="Главное меню">
+      <a href="index.html" class="nav-link">Главная</a>
+      <a href="toys.html" class="nav-link">3D Игрушки</a>
+      <a href="vases.html" class="nav-link">Вазы</a>
+      <a href="repair.html" class="nav-link">Ремонт и детали</a>
+      <a href="resin.html" class="nav-link">Фигурки (фотополимер)</a>
+      <a href="palette.html" class="nav-link active" aria-current="page">Палитра</a>
     </nav>
   </header>
 
   <main class="container">
     <h1>Палитра</h1>
     <p>Здесь показаны образцы цветов / текстур. Клик по картинке откроет её крупно.</p>
+
     <section>
+      <!-- palette-grid использует общий .gallery класс, чтобы скрипт работал одинаково -->
       <div class="palette-grid gallery"></div>
     </section>
   </main>
 
-  <!-- modal (simple image view, reuse main modal) -->
+  <!-- modal (унифицированный — содержит все элементы, которые script.js может ожидать) -->
   <div id="modal" class="modal" role="dialog" aria-hidden="true">
     <div class="modal-panel" role="document">
-      <button class="modal-close">✕</button>
+      <button class="modal-close" aria-label="Закрыть">✕</button>
+
+      <!-- Большая картинка -->
       <img id="modal-img" src="" alt="" loading="lazy">
-      <div id="sku"></div>
-      <!-- palette page: no description or contacts shown by script -->
+
+      <!-- Набор миниатюр под большой картинкой (скрипт наполняет .modal-thumbs) -->
+      <div class="modal-thumbs" aria-hidden="false"></div>
+
+      <!-- Описание (script.js ожидает #description) -->
+      <p id="description" style="margin:6px 0;color:#444;"></p>
+
+      <!-- SKU и цена (script.js использует #sku и #price) -->
+      <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:6px;">
+        <div id="sku"></div>
+        <div id="price"></div>
+      </div>
+
+      <!-- Цветовые кнопки (script.js ожидает #color-buttons иногда) -->
+      <div id="color-buttons" class="color-buttons" style="margin-top:8px;"></div>
+
+      <!-- Кнопка на Ozon (скрипт покажет/скроет её) -->
+      <a id="ozon-link" class="btn" href="#" target="_blank" rel="noopener" style="display:none;margin-top:8px;">Смотреть на Ozon</a>
+
+      <!-- Контакты внутри модалки (script.js заполнит .modal-contacts) -->
+      <div class="modal-contacts" style="margin-top:8px;"></div>
+
+      <!-- Здесь можно добавить кнопку 'Подобрать цвет' (script.js может создать palette-link при отсутствии) -->
     </div>
   </div>
 
+  <!-- Footer: контакты вынесены в .contacts, как на других страницах -->
   <footer class="site-footer">
-    Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> | WhatsApp: <a href="https://wa.me/79818522194">+7 981 852-21-94</a><br>
-    elftech3d.ru | эльфтех3д.рф<br>© Лавка Эльфтех — <span id="year-toys"></span>
+    <div class="contacts">
+      <a href="https://t.me/AvenNyan" target="_blank" rel="noopener">Telegram: @AvenNyan</a> &nbsp;|&nbsp;
+      <a href="https://wa.me/79818522194" target="_blank" rel="noopener">WhatsApp: +7 981 852-21-94</a>
+    </div>
+    <div class="domains">elftech3d.ru | эльфтех3д.рф</div>
+    <div class="copyright">© Лавка Эльфтех — <span id="year-toys"></span></div>
   </footer>
 
+  <!-- Нижняя панель навигации (унифицирована и содержит пункт Палитра) -->
+  <nav class="bottom-nav" aria-hidden="false">
+    <a href="toys.html" class="bn-item" id="bn-toys">
+      <img src="images/icon-toys.png" alt="Игрушки"><span>Игрушки</span>
+    </a>
+    <a href="vases.html" class="bn-item" id="bn-vases">
+      <img src="images/card-vases.png" alt="Вазы"><span>Вазы</span>
+    </a>
+    <a href="repair.html" class="bn-item" id="bn-repair">
+      <img src="images/icon-repair.png" alt="Детали"><span>Детали</span>
+    </a>
+    <a href="resin.html" class="bn-item" id="bn-resin">
+      <img src="images/icon-resin.png" alt="Фигурки"><span>Фигурки</span>
+    </a>
+    <a href="palette.html" class="bn-item active" id="bn-palette">
+      <img src="images/icon-palette.png" alt="Палитра"><span>Палитра</span>
+    </a>
+  </nav>
+
+  <!-- data + script — порядок важен: data файл до общего script.js -->
   <script src="data/items.palette.js" defer></script>
   <script src="script.js" defer></script>
 </body>
