@@ -27,20 +27,25 @@
     </section>
   </main>
 
-  <!-- modal -->
-  <div id="modal" class="modal" role="dialog" aria-hidden="true">
-    <div class="modal-panel" role="document">
-      <button class="modal-close">✕</button>
-      <img id="modal-img" src="" alt="" loading="lazy">
-      <div id="sku"></div>
-      <p id="description"></p>
-      <div class="actions">
-        <a id="ozon-link" class="btn" target="_blank" rel="noopener" style="display:none">Смотреть на Ozon</a>
-        <a id="palette-link" class="btn ghost" href="palette.html">Подобрать цвет</a>
-      </div>
-      <div class="modal-contacts"></div>
+<!-- modal -->
+<div id="modal" class="modal" role="dialog" aria-hidden="true">
+  <div class="modal-panel" role="document">
+    <button class="modal-close" aria-label="Закрыть">✕</button>
+    <img id="modal-img" src="" alt="" loading="lazy">
+    <div>
+      <span id="sku"></span>
+      <span id="price"></span>
     </div>
+    <p id="description"></p>
+    <div class="actions">
+      <a id="ozon-link" class="btn" target="_blank" rel="noopener" style="display:none">Смотреть на Ozon</a>
+      <a id="palette-link" class="btn ghost" href="palette.html">Подобрать цвет</a>
+    </div>
+    <div class="modal-contacts"></div>
+    <!-- thumbs will be injected here by script -->
   </div>
+</div>
+
 
   <footer class="site-footer">
     Telegram: <a href="https://t.me/AvenNyan">@AvenNyan</a> | WhatsApp: <a href="https://wa.me/79818522194">+7 981 852-21-94</a><br>
