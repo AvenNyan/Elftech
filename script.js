@@ -1,7 +1,7 @@
-/* script.js — модалка с лентой миниатюр, свайп, клавиши, автогенерация галереи для toys */
+/* script.js — модалка с лентой миниатюр, свайп, клавиши, дополняющая автогенерация галереи */
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('modal');
-  if (!modal) return; // nothing to do
+  if (!modal) return; // safety
 
   const modalImg = document.getElementById('modal-img');
   const descEl = document.getElementById('description');
@@ -14,10 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id); if (el) el.textContent = year;
   });
 
-  // data source (try common globals)
+  // data source
   const RAW = window.itemsData || window.items || null;
 
-  // Normalize helper
   function normalize(raw) {
     if (!raw) return null;
     const out = {
@@ -56,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return out;
   }
 
-  // find item by clicked element (data-key or filename)
   function findItemByTarget(target) {
     const key = target.dataset?.key;
     if (key && RAW && RAW[key]) return { key, item: normalize(RAW[key]) };
@@ -74,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return null;
   }
 
-  // thumbs container (create once)
+  // thumbs container
   let thumbsContainer = modal.querySelector('.modal-thumbs');
   if (!thumbsContainer) {
     thumbsContainer = document.createElement('div');
@@ -84,10 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentImages = [];
   let currentIndex = 0;
 
-  // If the .gallery exists and is empty, auto-render items for "Игрушки" page
-  tryAutoRenderGallery();
+  // AUTO-RENDER: если в .gallery меньше элементов, добавим остальные из itemsData
+  autoFillGallery();
 
-  // delegated click for gallery images
+  // delegated click for images
   document.addEventListener('click', (e) => {
     const target = e.target.closest('.gallery img, .gallery-item, img[data-key]');
     if (!target) return;
@@ -147,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function hideOzon() { if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; } }
 
-  // contacts
+  // contacts helpers
   function fillContacts(contacts) {
     let container = modal.querySelector('.modal-contacts');
     if (!container) {
@@ -231,33 +229,28 @@ document.addEventListener('DOMContentLoaded', () => {
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-  /* ---------- AUTO-RENDER GALLERY (only when .gallery is empty) ---------- */
-  function tryAutoRenderGallery() {
-    // only run if RAW data exists
+  /* ---------- AUTO-FILL GALLERY: append missing items if gallery has less elements ---------- */
+  function autoFillGallery() {
     if (!RAW) return;
-    // choose to auto-render on toys page (or on index)
-    const path = location.pathname.split('/').pop();
-    const onToys = path.includes('toys') || path === '' || path === 'index.html';
-    if (!onToys) return;
-
     const gallery = document.querySelector('.gallery');
     if (!gallery) return;
-    // only auto-render if gallery is empty
-    if (gallery.children.length > 0) return;
 
-    // Render all items that look like toys (frog/dragon) — fallback: render everything
+    // build list of keys that we want to render (toys)
     const keys = Object.keys(RAW);
     const toyKeys = keys.filter(k => (/frog|dragon|toy|игруш/i).test(k) || String(RAW[k].name||'').toLowerCase().includes('лягуш') || String(RAW[k].name||'').toLowerCase().includes('дракон'));
     const renderKeys = toyKeys.length ? toyKeys : keys;
 
+    // Count existing items that already have data-key (avoid duplicates)
+    const existingKeys = new Set(Array.from(gallery.querySelectorAll('[data-key]')).map(img => img.dataset.key).filter(Boolean));
+
+    // Append items from renderKeys that are not already present
     renderKeys.forEach(k => {
+      if (existingKeys.has(k)) return; // skip already present
       const raw = RAW[k];
       const norm = normalize(raw);
       const thumbSrc = norm.images && norm.images[0] ? norm.images[0] : (norm.colors && norm.colors[0] ? norm.colors[0].img : '');
-      // wrapper div with class gallery-item and data-key on img
       const wrap = document.createElement('div');
       wrap.className = 'gallery-item';
-      // create img inside
       const img = document.createElement('img');
       img.src = thumbSrc || 'images/placeholder.png';
       img.alt = norm.name || k;
