@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       name: raw.name || raw.title || '',
       description: raw.description || raw.desc || raw.text || '',
       ozon: raw.ozon || raw.oz || raw.ozon_link || '',
-      contacts: raw.contacts || { telegram: raw.telegram || raw.tg || '', whatsapp: raw.whatsapp || raw.phone || raw.tel || '' },
+      contacts: raw.contacts || { telegram: raw.telegram || raw.tg || '@AvenNyan', whatsapp: raw.whatsapp || raw.phone || raw.tel || '+79818522194' },
       images: [],
       colors: []
     };
@@ -173,14 +173,39 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ozonLink) { ozonLink.href = '#'; ozonLink.style.display = 'none'; }
   }
 
-  /* Contacts: compact (like footer) */
-  function fillContacts(contacts) {
+  /* Contacts handling: use existing "Контакты" block if present, else create modal-contacts */
+  function getOrCreateContactsContainer() {
     let container = modal.querySelector('.modal-contacts');
+    if (container) return container;
+
+    // try to find an existing inline "Контакты" block (static markup) and reuse it
+    const panel = modal.querySelector('.modal-panel');
+    if (panel) {
+      const possible = Array.from(panel.children).find(ch => {
+        if (ch === thumbsContainer) return false;
+        if (ch.classList && ch.classList.contains('modal-contacts')) return true;
+        if (ch.tagName === 'DIV' || ch.tagName === 'P') {
+          const txt = (ch.textContent || '').trim();
+          return /контакт/i.test(txt) && txt.length < 200; // heuristic: contains 'Контакт' and not huge
+        }
+        return false;
+      });
+      if (possible) {
+        possible.classList.add('modal-contacts');
+        container = possible;
+      }
+    }
+
     if (!container) {
       container = document.createElement('div');
       container.className = 'modal-contacts';
       modal.querySelector('.modal-panel')?.appendChild(container);
     }
+    return container;
+  }
+
+  function fillContacts(contacts) {
+    const container = getOrCreateContactsContainer();
     container.innerHTML = '';
     const tg = contacts?.telegram || contacts?.tg || contacts?.telegram_handle || '@AvenNyan';
     const wa = contacts?.whatsapp || contacts?.wh || contacts?.phone || contacts?.tel || '+7 981 852-21-94';
@@ -188,13 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const waLink = `<a href="https://wa.me/${String(wa).replace(/\D/g,'')}" target="_blank" rel="noopener">WhatsApp: ${wa}</a>`;
     container.innerHTML = `${tgLink} &nbsp;|&nbsp; ${waLink}`;
   }
+
   function fillContactsEmpty() {
-    let container = modal.querySelector('.modal-contacts');
-    if (!container) {
-      container = document.createElement('div');
-      container.className = 'modal-contacts';
-      modal.querySelector('.modal-panel')?.appendChild(container);
-    }
+    const container = getOrCreateContactsContainer();
     container.innerHTML = `<a href="https://t.me/AvenNyan" target="_blank" rel="noopener">Telegram: @AvenNyan</a> &nbsp;|&nbsp; <a href="https://wa.me/79818522194" target="_blank" rel="noopener">WhatsApp: +7 981 852-21-94</a>`;
   }
 
