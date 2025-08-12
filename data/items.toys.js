@@ -3,28 +3,13 @@ window.itemsData = {
   "t010": {
     name: "Лягушка",
     group: "Лягушки",
-    // variants: пустой суффикc = базовая, "-m" = с магнитом
     variants: [
-      {
-        suffix: "",           // filenames: images/t010-G01.jpg
-        label: "Без магнита",
-        description: "Модель без магнита, подходит для полок и декора.",
-        ozon: ""
-      },
-      {
-        suffix: "-m",         // filenames: images/t010-m-G01.jpg
-        label: "С магнитом",
-        description: "Модель с встроенным магнитом. Крепится к металлическим поверхностям.",
-        ozon: ""
-      }
+      { suffix: "", label: "Без магнита", description: "Модель без магнита, подходит для полок и декора.", ozon: "" },
+      { suffix: "-m", label: "С магнитом", description: "Модель с магнитом, крепится к металлу.", ozon: "" }
     ],
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      {
-        code: "B01",
-        prices: { "": "200 ₽", "-m": "250 ₽" },
-        ozon: { "": "https://ozon.ru/product/t010?color=G01", "-m": "https://ozon.ru/product/t010-m?color=G01" }
-      },
+      { code: "B01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: { "": "https://ozon.ru/product/t010?color=B01", "-m": "https://ozon.ru/product/t010-m?color=B01" } },
       { code: "B04", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B12", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B14", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
@@ -46,32 +31,16 @@ window.itemsData = {
     ]
   },
 
-window.itemsData = {
   "t011": {
-    name: "Лягушка",
+    name: "Лягушка (вариант 011)",
     group: "Лягушки",
-    // variants: пустой суффикc = базовая, "-m" = с магнитом
     variants: [
-      {
-        suffix: "",           // filenames: images/t010-G01.jpg
-        label: "Без магнита",
-        description: "Модель без магнита, подходит для полок и декора.",
-        ozon: ""
-      },
-      {
-        suffix: "-m",         // filenames: images/t010-m-G01.jpg
-        label: "С магнитом",
-        description: "Модель с встроенным магнитом. Крепится к металлическим поверхностям.",
-        ozon: ""
-      }
+      { suffix: "", label: "Без магнита", description: "Модель 011 без магнита.", ozon: "" },
+      { suffix: "-m", label: "С магнитом", description: "Модель 011 с магнитом.", ozon: "" }
     ],
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      {
-        code: "B01",
-        prices: { "": "200 ₽", "-m": "250 ₽" },
-        ozon: { "": "https://ozon.ru/product/t010?color=G01", "-m": "https://ozon.ru/product/t010-m?color=G01" }
-      },
+      { code: "B01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B04", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B12", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B14", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
@@ -93,32 +62,16 @@ window.itemsData = {
     ]
   },
 
-window.itemsData = {
   "t012": {
-    name: "Лягушка",
+    name: "Лягушка (вариант 012)",
     group: "Лягушки",
-    // variants: пустой суффикc = базовая, "-m" = с магнитом
     variants: [
-      {
-        suffix: "",           // filenames: images/t010-G01.jpg
-        label: "Без магнита",
-        description: "Модель без магнита, подходит для полок и декора.",
-        ozon: ""
-      },
-      {
-        suffix: "-m",         // filenames: images/t010-m-G01.jpg
-        label: "С магнитом",
-        description: "Модель с встроенным магнитом. Крепится к металлическим поверхностям.",
-        ozon: ""
-      }
+      { suffix: "", label: "Без магнита", description: "Модель 012 без магнита.", ozon: "" },
+      { suffix: "-m", label: "С магнитом", description: "Модель 012 с магнитом.", ozon: "" }
     ],
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      {
-        code: "B01",
-        prices: { "": "200 ₽", "-m": "250 ₽" },
-        ozon: { "": "https://ozon.ru/product/t010?color=G01", "-m": "https://ozon.ru/product/t010-m?color=G01" }
-      },
+      { code: "B01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B04", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B12", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B14", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
@@ -133,29 +86,4 @@ window.itemsData = {
       { code: "S01", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
       { code: "S02", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
       { code: "S03", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
-      { code: "S04", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
-      { code: "W01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
-      { code: "Y01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
-      { code: "Y02", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" }
-    ]
-  },
-  
-  "t020": {
-    name: "Дракон большой",
-    group: "Драконы",
-    variants: [
-      { suffix: "", label: "Базовая", description: "Большой 45 см дракон", ozon: "" },
-      { suffix: "-m", label: "С магнитом", description: "Большой 45 см дракон с магнитами", ozon: "" }
-    ],
-    contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
-    colors: [
-      { code: "R01", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
-      { code: "M01", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
-      { code: "M02", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" },
-      { code: "M03", prices: { "": "500 ₽", "-m": "600 ₽" }, ozon: "" }
-    ]
-  }
-
-  // добавляй новые товары по этой же схеме;
-  // если хочешь указать явный путь к картинке, добавь color.img = "images/t010-G01.jpg"
-};
+      { code: "S04", prices: { "": "250 ₽", "-m": "300
