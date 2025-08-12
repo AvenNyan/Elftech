@@ -98,13 +98,18 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   margin-bottom:6px;
   overflow-x:auto;
   overflow-y:hidden;
-  padding:6px 4px;
+  /* добавляем пространство под миниатюрами, чтобы полоса прокрутки не лезла на них */
+  padding:6px 4px 12px 4px;   /* <-- 12px снизу; можно выставить 5-10px, как хочешь */
   justify-content:flex-start;
   align-items:center;
   -webkit-overflow-scrolling:touch;
   white-space:nowrap;
   scrollbar-width:auto;
   max-width:95%;
+  /* резервируем место для полосы прокрутки в современных браузерах */
+  scrollbar-gutter: stable both-edges;
+  /* гарантируем, что padding считается отдельно от размеров контента */
+  box-sizing: content-box;
 }
 /* hide default scrollbar lightly (still usable) */
 .modal-thumbs::-webkit-scrollbar{ height:8px; }
