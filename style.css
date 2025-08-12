@@ -51,11 +51,11 @@ body.is-touch .gallery-item { flex: 0 0 calc(50% - (var(--gap) / 2)) !important;
 /* desktop 6 in row */
 @media (min-width:1200px){ .gallery-item{ flex:0 0 calc(16.6666% - (var(--gap)*5/6)); max-width:calc(16.6666% - (var(--gap)*5/6)); } }
 
-/* thumbs in gallery - square */
+/* Thumbnails in gallery - square */
 .gallery img, .gallery-item{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px; cursor:pointer; box-shadow:0 6px 18px rgba(16,24,40,0.06); transition:transform .14s ease,box-shadow .14s ease; }
 .gallery img:hover, .gallery-item:hover{ transform:translateY(-6px); box-shadow:0 12px 30px rgba(16,24,40,0.12); }
 
-/* Card wrapper (some spacing + caption) */
+/* Card wrapper (caption) */
 .card{ display:flex; flex-direction:column; gap:8px; }
 .card .title{ font-weight:700; font-size:0.95rem; color:#222; }
 .card .meta{ font-size:0.85rem; color:var(--muted); }
@@ -77,13 +77,19 @@ body.is-touch .gallery-item { flex: 0 0 calc(50% - (var(--gap) / 2)) !important;
 /* controls */
 .modal-close{ position:absolute; right:12px; top:12px; border:none; background:transparent; font-size:20px; cursor:pointer; color:#666 }
 
-/* action buttons (ozon + palette) */
+/* actions */
 .actions{ display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:6px; }
 .btn{ display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; color:#fff; background:var(--accent-1); }
 .btn.ghost{ background:transparent; color:var(--accent-1); border:1px solid rgba(0,0,0,0.06); }
 
-/* SKU row */
-#sku { color:var(--sku-color); font-weight:600; font-size:0.95rem; margin-top:6px; }
+/* variant toggle */
+.variant-toggle{ display:flex; gap:8px; align-items:center; justify-content:center; margin-top:6px; flex-wrap:wrap; }
+.variant-toggle button{ padding:6px 10px; border-radius:8px; border:1px solid #e6e6e6; background:#fafafa; cursor:pointer; }
+.variant-toggle button.active{ background:var(--accent-1); color:#fff; border-color:transparent }
+
+/* SKU and price */
+#sku { color:var(--sku-color); font-weight:600; font-size:0.95rem; margin-top:6px; display:inline-block; }
+#price { color:var(--accent-1); font-weight:700; margin-left:10px; font-size:1rem; }
 
 /* contacts: compact single line */
 .modal-contacts{ width:100%; display:flex; justify-content:center; gap:8px; align-items:center; color:var(--muted); font-size:0.95rem; }
@@ -106,9 +112,18 @@ body.is-touch .gallery-item { flex: 0 0 calc(50% - (var(--gap) / 2)) !important;
 /* desktop hides bottom nav */
 @media (min-width:1025px){ .bottom-nav{ display:none } body{ padding-bottom:0 } }
 
+/* Palette grid: desktop 6-8, mobile 3 */
+.palette-grid{ display:grid; gap:12px; align-items:center; }
+@media (max-width:767px) {
+  .palette-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width:768px) and (max-width:1199px) {
+  .palette-grid { grid-template-columns: repeat(6, minmax(100px, 1fr)); }
+}
+@media (min-width:1200px) {
+  .palette-grid { grid-template-columns: repeat(8, minmax(100px, 1fr)); }
+}
+.palette-card img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px; cursor:pointer; }
+
 /* accessibility focus */
 :focus{ outline:2px dashed rgba(125,95,182,0.18); outline-offset:2px }
-
-/* palette page: large grid */
-.palette-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap:12px; align-items:center; }
-.palette-card img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px; cursor:pointer; }
