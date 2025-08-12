@@ -167,3 +167,26 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 
 /* Accessibility focus */
 :focus{outline:2px dashed rgba(125,95,182,0.18);outline-offset:2px}
+
+/* Базовое поведение — 2 в ряд на мобильных */
+.gallery-item {
+  width: calc(50% - 10px);
+  aspect-ratio: 1 / 1; /* всегда квадрат */
+  object-fit: cover;
+}
+
+/* Планшеты — 4 в ряд */
+@media (min-width: 768px) {
+  .gallery-item {
+    width: calc(25% - 10px);
+    max-width: 300px;
+  }
+}
+
+/* ПК — 6 в ряд */
+@media (min-width: 1200px) {
+  .gallery-item {
+    width: calc(16.666% - 10px);
+    max-width: 250px; /* чуть меньше, чтобы аккуратнее смотрелось */
+  }
+}
