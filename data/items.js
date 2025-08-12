@@ -19,7 +19,7 @@ const items = {
     ],
     ozon: ""
   },
-    frog2: {
+    frog3: {
     name: "Лягушка 3",
     description: "Лягушка с милой мордочкой.",
     images: ["images/frog2_pink.jpg"],
@@ -29,7 +29,7 @@ const items = {
     ],
     ozon: ""
   },
-    frog2: {
+    frog4: {
     name: "Лягушка 4",
     description: "Лягушка с милой мордочкой.",
     images: ["images/frog2_pink.jpg"],
@@ -39,7 +39,7 @@ const items = {
     ],
     ozon: ""
   },
-    frog2: {
+    frog5: {
     name: "Лягушка 5",
     description: "Лягушка с милой мордочкой.",
     images: ["images/frog2_pink.jpg"],
@@ -49,7 +49,7 @@ const items = {
     ],
     ozon: ""
   },
-    frog2: {
+    frog6: {
     name: "Лягушка 6",
     description: "Лягушка с милой мордочкой.",
     images: ["images/frog2_pink.jpg"],
@@ -59,7 +59,7 @@ const items = {
     ],
     ozon: ""
   },
-    frog2: {
+    frog7: {
     name: "Лягушка 7",
     description: "Лягушка с милой мордочкой.",
     images: ["images/frog2_pink.jpg"],
