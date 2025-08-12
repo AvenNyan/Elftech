@@ -1,22 +1,21 @@
 // data/items.toys.js
 window.itemsData = {
-  // пример: обычная лягушка (без магнита)
   "t010": {
     name: "Лягушка базовая",
     description: "Милая лягушка для декора, ~10 см.",
-    ozon: "https://ozon.ru/product/t010", // fallback товарная ссылка
+    group: "Лягушки",
+    ozon: "https://ozon.ru/product/t010",
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
       { code: "G01", img: "images/t010-G01.jpg", ozon: "https://ozon.ru/product/t010?color=G01" },
-      { code: "G02", img: "images/t010-G02.jpg" },
-      { code: "G03", img: "images/t010-G03.jpg" }
+      { code: "G02", img: "images/t010-G02.jpg", ozon: "" },
+      { code: "G03", img: "images/t010-G03.jpg", ozon: "" }
     ]
   },
-
-  // версия с магнитами — ключ включает -m
   "t011-m": {
     name: "Лягушка с магнитом",
-    description: "Лягушка с встроенным магнитом, крепится на поверхность.",
+    description: "Версия с магнитом для крепления.",
+    group: "Лягушки",
     ozon: "",
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
@@ -25,11 +24,10 @@ window.itemsData = {
       { code: "G03", img: "images/t011-m-G03.jpg" }
     ]
   },
-
-  // дракон
   "d001": {
     name: "Дракон малый",
     description: "Дракон с детальной текстурой.",
+    group: "Драконы",
     ozon: "https://ozon.ru/product/d001",
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
@@ -38,6 +36,5 @@ window.itemsData = {
       { code: "K01", img: "images/d001-K01.jpg" }
     ]
   }
-
-  // ... добавляй далее свои товары точно по схеме
+  // при необходимости добавляй новые ключи по шаблону: "t012": { ... }
 };
