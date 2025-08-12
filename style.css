@@ -6,6 +6,7 @@
   --card-bg: #fff;
   --gap: 12px;
   --thumb-size: 64px; /* размер миниатюр в модалке */
+  --bottom-nav-h: 66px;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comfortaa',sans-serif}
@@ -27,20 +28,22 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .top-nav .nav-link{color:#fff;text-decoration:none;padding:6px 8px;border-radius:6px}
 .top-nav .nav-link.active{background:rgba(255,255,255,0.08)}
 
-/* Layout container */
+/* Container */
 .container{max-width:1200px;margin:18px auto;padding:0 16px}
 
 /* Group title */
 .group{margin:18px 0}
 .group-title{margin-left:6px;margin-bottom:10px;font-weight:700;color:var(--accent-1)}
 
-/* ===== Gallery (flex with left-aligned flow) ===== */
+/* ===== Gallery (flex, left-aligned) ===== */
 .gallery{
   display:flex;
   flex-wrap:wrap;
   gap: var(--gap);
   align-items:flex-start;
-  justify-content:flex-start; /* items start from left */
+  justify-content:flex-start;
+  max-width: 1200px; /* ограничиваем максимальную ширину контейнера */
+  margin-left: 0; /* чтобы отступ слева был одинаковый */
 }
 
 /* Small screens: 2 in row */
@@ -67,10 +70,10 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   }
 }
 
-/* always square thumbnails */
+/* Thumbnails in gallery: always square */
 .gallery img, .gallery-item {
   width:100%;
-  aspect-ratio: 1 / 1; /* ensures squares */
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius:8px;
   cursor:pointer;
@@ -79,8 +82,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 }
 .gallery img:hover, .gallery-item:hover{ transform: translateY(-6px); box-shadow:0 12px 30px rgba(16,24,40,0.12); }
 
-/* ===== Modal (centered) ===== */
-/* уменьшили max-height картинки, чтобы зарезервировать место под миниатюры и описание */
+/* ===== Modal ===== */
 .modal{
   position:fixed;
   inset:0;
@@ -110,8 +112,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   align-items:center;
 }
 
-/* Main image: reserve space for thumbnails under it */
-/* calc: допустимая высота экрана - (thumb row + описание ~90px) */
+/* Main image — уменьшаем max-height, чтобы резервировать место под миниатюры и описание */
 #modal-img{
   width:100%;
   max-height: calc(70vh - (var(--thumb-size) + 90px));
@@ -120,7 +121,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   background:#f7f7f7;
 }
 
-/* Thumbnails row (under main image) */
+/* Thumbnails under the main image */
 .modal-thumbs{
   display:flex;
   gap:8px;
@@ -131,11 +132,14 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   justify-content:center;
   align-items:center;
   -webkit-overflow-scrolling: touch;
+  /* Скрываем видимые полосы прокрутки, но оставляем возможность scroll */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
-.modal-thumbs::-webkit-scrollbar{height:8px}
-.modal-thumbs::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:4px}
+.modal-thumbs::-webkit-scrollbar { height: 0; } /* WebKit */
+.modal-thumbs::-webkit-scrollbar-thumb { background: transparent; }
 
-/* thumbs fixed square size */
+/* thumb fixed square */
 .modal-thumbs .thumb{
   width:var(--thumb-size);
   height:var(--thumb-size);
@@ -150,7 +154,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   box-shadow:0 6px 16px rgba(16,24,40,0.08);
 }
 
-/* hide old color-buttons (kept for back-compat) */
+/* hide old color-buttons (back compat) */
 .color-buttons{display:none}
 
 /* modal controls */
@@ -160,24 +164,30 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 #ozon-link{display:inline-block;margin-top:6px;padding:8px 12px;border-radius:8px;background:var(--accent-1);color:#fff;text-decoration:none}
 #ozon-link.hidden{display:none}
 
-/* contacts */
-.modal-contacts{width:100%;display:flex;flex-direction:column;gap:8px;align-items:center;color:var(--muted)}
-.modal-contacts .copy-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.modal-contacts input{padding:6px;border:1px solid #e6e6e6;border-radius:6px}
+/* modal contacts — only one compact line */
+.modal-contacts{width:100%;display:flex;justify-content:center;gap:8px;align-items:center;color:var(--muted)}
+.modal-contacts a{color:var(--accent-1);text-decoration:underline}
 
 /* Footer */
 .site-footer{background:#fafafa;padding:14px;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid #eee}
 
-/* menus rules */
+/* Bottom nav */
+.bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eee;padding:6px 8px;justify-content:space-around;z-index:9999;height:var(--bottom-nav-h);align-items:center}
+.bn-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#555;font-size:12px}
+.bn-item img{width:22px;height:22px}
+
+/* Mobile rules */
 @media (max-width:1024px){
-  body{padding-bottom:74px}
+  body{padding-bottom:calc(var(--bottom-nav-h) + 6px);} /* reserve space for bottom nav */
   .top-nav{display:none}
   .bottom-nav{display:flex}
 }
+
+/* Desktop hides bottom nav */
 @media (min-width:1025px){
   .bottom-nav{display:none}
   body{padding-bottom:0}
 }
 
-/* accessibility focus */
+/* Focus outline */
 :focus{outline:2px dashed rgba(125,95,182,0.18);outline-offset:2px}
