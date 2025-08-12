@@ -46,7 +46,15 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   margin-left: 0; /* чтобы отступ слева был одинаковый */
 }
 
-/* Small screens: 2 in row */
+/* Touch devices: force 2 in row regardless of CSS viewport width */
+@media (hover: none) and (pointer: coarse) {
+  .gallery-item {
+    flex: 0 0 calc(50% - (var(--gap) / 2)) !important;
+    max-width: calc(50% - (var(--gap) / 2)) !important;
+  }
+}
+
+/* Small screens: 2 in row (fallback for non-coarse) */
 @media (max-width: 767px) {
   .gallery-item {
     flex: 0 0 calc(50% - (var(--gap) / 2));
