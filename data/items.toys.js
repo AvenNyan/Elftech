@@ -9,7 +9,7 @@ window.itemsData = {
     ],
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      { code: "B01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: { "": "https://ozon.ru/product/t010?color=B01", "-m": "https://ozon.ru/product/t010-m?color=B01" } },
+      { code: "M02", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: { "": "https://ozon.ru/product/t010?color=B01", "-m": "https://ozon.ru/product/t010-m?color=B01" } },
       { code: "B04", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B12", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "B14", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
@@ -17,7 +17,7 @@ window.itemsData = {
       { code: "G04", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "G05", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "M01", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
-      { code: "M02", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
+      { code: "B01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
       { code: "M03", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
       { code: "M08", prices: { "": "250 ₽", "-m": "300 ₽" }, ozon: "" },
       { code: "R01", prices: { "": "200 ₽", "-m": "250 ₽" }, ozon: "" },
