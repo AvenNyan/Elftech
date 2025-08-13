@@ -1,6 +1,6 @@
 /* script.js — поддержка variants (без/с магнитом), SKU, price, palette pref, touch detection */
 
-// Touch detection (adds body.is-touch)
+/* Touch detection (adds body.is-touch) */
 (function detectTouchAndMarkBody(){
   try {
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints && navigator.msMaxTouchPoints > 0);
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = modal?.querySelector('.modal-close');
 
   const year = new Date().getFullYear();
-  ['year','year-toys','year-vases','year-repair','year-resin'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = year; });
+  ['year','year-toys','year-vases','year-repair','year-resin','year-toys'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = year; });
 
   // RAW data loaded via data/items.toys.js etc.
   const RAW = window.itemsData || null;
@@ -116,6 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let thumbsContainer = modal?.querySelector('.modal-thumbs') || null;
   if (!thumbsContainer && modal) { thumbsContainer = document.createElement('div'); thumbsContainer.className = 'modal-thumbs'; }
 
+  // History state flag
+  let modalStatePushed = false;
+
   function getImageFor(item, variant, color) {
     if (color.img && String(color.img).includes('{key}')) {
       return color.img.replace(/\{key\}/g, item.key).replace(/\{variant\}/g, variant.suffix || '').replace(/\{code\}/g, color.code || '');
@@ -135,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMainAndThumbs();
     updateSkuPriceOzon();
     fillContacts(item.contacts);
+    // show modal after SKU/price updated so we can push nice hash
     showModal();
   }
 
@@ -279,11 +283,83 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function showModal(){ if (!modal) return; modal.style.display = 'flex'; modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('no-scroll'); }
-  function closeModal(){ if (!modal) return; modal.style.display = 'none'; modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); document.body.classList.remove('no-scroll'); }
+  /* ----- History-aware modal open/close ----- */
 
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  function closeModalNoHistory() {
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('no-scroll');
+    // show bottom nav back if hidden
+    const bn = document.querySelector('.bottom-nav');
+    if (bn) bn.classList.remove('hidden');
+    modalStatePushed = false;
+  }
+
+  function showModal() {
+    if (!modal) return;
+    modal.style.display = 'flex';
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('no-scroll');
+
+    // hide bottom nav to avoid overlap on mobile, if present
+    const bn = document.querySelector('.bottom-nav');
+    if (bn) bn.classList.add('hidden');
+
+    // push state into history (only once per open)
+    try {
+      if (!modalStatePushed) {
+        let skuText = '';
+        if (skuEl && skuEl.textContent) {
+          skuText = String(skuEl.textContent).replace(/^Артикул:\s*/i, '').trim();
+          // sanitize to safe fragment
+          skuText = skuText.replace(/\s+/g, '-').replace(/[^A-Za-z0-9\-_]/g, '');
+        }
+        const newHash = skuText ? ('#' + skuText) : ('#item');
+        history.pushState({ modal: true, sku: skuText }, '', newHash);
+        modalStatePushed = true;
+      }
+    } catch (e) {
+      // ignore pushState errors (private mode, etc.)
+      modalStatePushed = false;
+    }
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    // if we pushed a state for the modal, navigate back so popstate closes it
+    if (modalStatePushed) {
+      try { history.back(); }
+      catch (e) { closeModalNoHistory(); }
+    } else {
+      closeModalNoHistory();
+    }
+  }
+
+  // popstate: when user presses Back, close modal if open
+  window.addEventListener('popstate', (e) => {
+    if (modal && modal.getAttribute('aria-hidden') === 'false') {
+      // close without affecting history (we're already in popstate)
+      closeModalNoHistory();
+    } else {
+      // nothing special — allow normal navigation
+    }
+  });
+
+  // attach close handlers
+  if (closeBtn) {
+    // ensure single listener
+    closeBtn.removeEventListener('click', closeModal);
+    closeBtn.addEventListener('click', closeModal);
+  }
+  if (modal) {
+    // overlay click
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  }
+
+  // keyboard navigation while modal open
   document.addEventListener('keydown', (e) => {
     if (modal?.getAttribute('aria-hidden') === 'false') {
       if (e.key === 'Escape') closeModal();
@@ -332,5 +408,4 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.querySelector('.modal-panel')?.appendChild(p);
     paletteLink = p;
   }
-
 });
