@@ -178,3 +178,24 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 
 /* accessibility focus */
 :focus{ outline:2px dashed rgba(125,95,182,0.18); outline-offset:2px }
+
+/* Активный пункт нижней навигации */
+.bottom-nav .bn-item {
+  color: #555;
+  transition: transform .12s ease, color .12s ease;
+  text-align: center;
+}
+.bottom-nav .bn-item img { display:block; margin:0 auto 4px; width:22px; height:22px; transition: transform .12s ease, filter .12s ease, opacity .12s ease; opacity: .9; }
+
+.bottom-nav .bn-item.active {
+  color: var(--accent-1);
+  transform: translateY(-2px);
+}
+.bottom-nav .bn-item.active img {
+  filter: none;
+  transform: scale(1.08);
+  opacity: 1;
+  /* optional: add subtle glow */
+  box-shadow: 0 6px 18px rgba(94,77,178,0.12);
+}
+.bottom-nav .bn-item span { display:block; font-size:12px; }
