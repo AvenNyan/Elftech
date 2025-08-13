@@ -7,6 +7,48 @@
   <meta name="description" content="Лавка Эльфтех — 3D-печать игрушек, ваз и деталей. Авторские модели, печать на FDM и фотополимерах.">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Локальные стили для главной (не ломают глобальные) */
+    .hero {
+      display:flex;
+      gap:24px;
+      align-items:center;
+      justify-content:space-between;
+      padding:32px 0;
+    }
+    @media (max-width:900px){
+      .hero{ flex-direction:column-reverse; text-align:center; gap:18px; }
+      .hero-left, .hero-right { width:100%; }
+    }
+    .hero-left { flex:1; min-width:240px; }
+    .hero-right { flex:1; display:flex; align-items:center; justify-content:center; }
+    .hero h1 { font-size:2.1rem; margin:0 0 12px; color:var(--accent-1); }
+    .hero .lead { font-size:1.05rem; color:#333; margin-bottom:14px; line-height:1.4; }
+    .hero-cta { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+    .btn-primary { background:var(--accent-1); color:#fff; padding:10px 16px; border-radius:10px; text-decoration:none; font-weight:700; }
+    .btn-outline { background:transparent; border:1px solid rgba(0,0,0,0.06); color:var(--accent-1); padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:700; }
+    .features { display:flex; gap:14px; margin-top:8px; list-style:none; padding:0; color:var(--muted); }
+    .features li { background:transparent; padding:6px 0; font-weight:600; font-size:0.95rem; }
+
+    /* Services (компактные карточки под героем) */
+    .services { display:grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin:20px 0 30px; }
+    .service-card { background:var(--card-bg); border-radius:10px; padding:12px; text-align:center; box-shadow:0 6px 18px rgba(16,24,40,0.04); text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:10px; align-items:center; }
+    .service-card img { width:64px; height:64px; object-fit:contain; }
+    .service-card .title { font-weight:700; color:#222; }
+
+    /* How it works */
+    .how { display:flex; gap:18px; margin:22px 0; flex-wrap:wrap; }
+    .how .step { flex:1; min-width:160px; background:var(--card-bg); padding:12px; border-radius:10px; box-shadow:0 6px 18px rgba(16,24,40,0.04); text-align:center; }
+    .how .num { font-weight:700; color:var(--accent-1); font-size:1.1rem; display:block; margin-bottom:8px; }
+
+    /* small gallery */
+    .showcase { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-top:8px; }
+    .showcase img { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px; box-shadow:0 8px 24px rgba(16,24,40,0.05); cursor:pointer; }
+
+    /* compact footer contacts in hero */
+    .hero-contacts { margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .contact-btn { display:inline-block; padding:8px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.06); text-decoration:none; color:var(--accent-1); font-weight:700; }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -14,64 +56,108 @@
       <img src="images/logo.png" alt="Лавка Эльфтех — логотип" class="logo" width="56" height="56">
       <span class="site-title">Лавка <strong>Эльфтех</strong></span>
     </a>
+
     <nav class="top-nav" aria-label="Главное меню">
       <a href="toys.html" class="nav-link">Игрушки и сувениры</a>
       <a href="vases.html" class="nav-link">Вазы</a>
       <a href="repair.html" class="nav-link">Ремонт и детали</a>
       <a href="resin.html" class="nav-link">Фигурки</a>
-      <a href="resin.html" class="nav-link">Палитра</a>
+      <a href="palette.html" class="nav-link">Палитра</a>
     </nav>
   </header>
 
   <main class="container">
-    <section class="hero">
+    <!-- HERO -->
+    <section class="hero" aria-label="Вступительный блок">
       <div class="hero-left">
         <h1>Лавка Эльфтех — 3D-мастерская</h1>
-        <p class="lead">Авторские игрушки, уникальные вазы и печать деталей на заказ. Работаем на FDM и фотополимерах. Подгон по размеру и цвету.</p>
+        <p class="lead">Авторские 3D-игрушки, уникальные вазы и печать деталей под заказ. Печатаем на FDM и фотополимере, подгоняем размер и цвет под вашу задачу.</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="toys.html">Каталог игрушек</a>
-          <a class="btn btn-outline" href="vases.html">Посмотреть вазы</a>
+          <a class="btn-primary" href="toys.html">Перейти в каталог</a>
+          <a class="btn-outline" href="palette.html">Подобрать цвет</a>
         </div>
-        <ul class="features">
-          <li>Прототип за 1–3 дня</li>
-          <li>Подгон по размерам и цветам</li>
+
+        <ul class="features" aria-hidden="false">
+          <li>Высокое качество печати</li>
+          <li>Подгон по размеру и цвету</li>
           <li>Отправка по РФ</li>
         </ul>
+
+        <div class="hero-contacts" role="navigation" aria-label="Контакты">
+          <a class="contact-btn" href="https://t.me/AvenNyan" target="_blank" rel="noopener">Telegram: @AvenNyan</a>
+          <a class="contact-btn" href="https://wa.me/79818522194" target="_blank" rel="noopener">WhatsApp: +7 981 852-21-94</a>
+        </div>
       </div>
+
       <div class="hero-right">
-        <img class="hero-img" src="images/hero.jpg" alt="Примеры работ — игрушки и вазы" loading="lazy">
+        <img class="hero-img" src="images/hero.jpg" alt="Примеры работ — игрушки и вазы" loading="lazy" style="width:100%;max-width:520px;border-radius:12px;box-shadow:0 20px 50px rgba(16,24,40,0.12);">
       </div>
     </section>
 
-    <section class="mini-catalog">
-      <h2>Популярные категории</h2>
-      <div class="cards">
-        <a class="card" href="toys.html">
-          <img src="images/card-toys.png" alt="3D игрушки" loading="lazy">
-          <div class="card-title">3D Игрушки</div>
+    <!-- Services (коротко) -->
+    <section>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+        <h2 style="margin:8px 0 12px;">Что мы делаем</h2>
+        <div style="color:var(--muted);font-size:0.95rem;align-self:center;">Коротко о направлениях</div>
+      </div>
+      <div class="services" role="list">
+        <a class="service-card" href="toys.html" role="listitem">
+          <img src="images/card-toys.png" alt="Игрушки">
+          <div class="title">Авторские игрушки</div>
+          <div style="color:var(--muted)">Фигурки и сувениры под идею</div>
         </a>
-        <a class="card" href="vases.html">
-          <img src="images/card-vases.png" alt="Вазы" loading="lazy">
-          <div class="card-title">Вазы</div>
+
+        <a class="service-card" href="vases.html" role="listitem">
+          <img src="images/card-vases.png" alt="Вазы">
+          <div class="title">Вазы и декор</div>
+          <div style="color:var(--muted)">Декор и интерьерные вещи</div>
         </a>
-        <a class="card" href="repair.html">
-          <img src="images/card-repair.png" alt="Ремонт" loading="lazy">
-          <div class="card-title">Ремонт и детали</div>
+
+        <a class="service-card" href="repair.html" role="listitem">
+          <img src="images/card-repair.png" alt="Ремонт">
+          <div class="title">Ремонт и детали</div>
+          <div style="color:var(--muted)">Восстановление и печать деталей</div>
         </a>
-        <a class="card" href="resin.html">
-          <img src="images/card-resin.png" alt="Фигурки" loading="lazy">
-          <div class="card-title">Фигурки (фотополимер)</div>
+
+        <a class="service-card" href="resin.html" role="listitem">
+          <img src="images/card-resin.png" alt="Фигурки">
+          <div class="title">Фигурки (фотополимер)</div>
+          <div style="color:var(--muted)">Тонкая детализация и окраска</div>
         </a>
       </div>
     </section>
 
-    <section class="about">
-      <h2>Как мы работаем</h2>
-      <ol>
-        <li>Вы присылаете модель или идею — обсуждаем детали</li>
-        <li>Настраиваем печать — материал, размер, отделка</li>
-        <li>Изготавливаем, фотографируем и отправляем</li>
-      </ol>
+    <!-- How it works -->
+    <section>
+      <h2 style="margin-top:18px;">Как заказать</h2>
+      <div class="how" aria-hidden="false">
+        <div class="step">
+          <span class="num">1</span>
+          <div>Связаться — объясните задачу</div>
+        </div>
+        <div class="step">
+          <span class="num">2</span>
+          <div>Утверждаем материал, размер и цену</div>
+        </div>
+        <div class="step">
+          <span class="num">3</span>
+          <div>Печать → проверка → отправка</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Showcase -->
+    <section>
+      <h2 style="margin-top:6px;">Примеры работ</h2>
+      <div class="showcase" aria-hidden="false">
+        <img src="images/show1.jpg" alt="Пример 1" loading="lazy">
+        <img src="images/show2.jpg" alt="Пример 2" loading="lazy">
+        <img src="images/show3.jpg" alt="Пример 3" loading="lazy">
+        <img src="images/show4.jpg" alt="Пример 4" loading="lazy">
+      </div>
+      <div style="text-align:center;margin-top:12px;">
+        <a class="btn-outline" href="toys.html">Посмотреть все работы</a>
+      </div>
     </section>
   </main>
 
@@ -84,7 +170,7 @@
     <div class="copyright">© Лавка Эльфтех — <span id="year"></span></div>
   </footer>
 
-  <!-- Нижняя панель навигации (унифицирована и содержит пункт Палитра) -->
+  <!-- Нижняя панель -->
   <nav class="bottom-nav" aria-hidden="false">
     <a href="toys.html" class="bn-item" id="bn-toys">
       <img src="images/card-toys.png" alt="Каталог"><span>Каталог</span>
