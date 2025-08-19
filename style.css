@@ -272,3 +272,27 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   box-shadow: 0 6px 18px rgba(94,77,178,0.12);
 }
 .bottom-nav .bn-item span { display:block; font-size:12px; }
+
+/* чуть больше места для основной картинки, чтобы миниатюры влезали */
+#modal-img{
+  width:100%;
+  height:auto;
+  /* увеличил max-height, чтобы изображение не "съедало" место для миниатюр */
+  max-height: calc(72vh - var(--thumb-size) - 48px);
+  object-fit:contain;
+  border-radius:8px;
+  background:#f7f7f7;
+}
+
+/* когда миниатюр немного и их общая ширина меньше контейнера,
+   мы включаем центрирование */
+.modal-thumbs.centered {
+  justify-content: center !important;
+}
+
+/* немного отступов сверху/снизу для миниатюр, чтобы scrollbar не налазил */
+.modal-thumbs{
+  margin-top:12px;
+  margin-bottom:12px;
+}
+
