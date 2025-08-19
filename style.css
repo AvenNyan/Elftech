@@ -9,10 +9,12 @@
   --bottom-nav-h: 66px;
   --sku-color: #333;
 }
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comfortaa',sans-serif}
 
-/* Header */
+/* Reset / base */
+* { box-sizing: border-box; }
+html,body { height:100%; margin:0; background:var(--bg); color:#222; font-family:'Comfortaa',sans-serif; }
+
+/* ===== Header ===== */
 .site-header{
   display:flex;
   align-items:center;
@@ -22,14 +24,14 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   color:#fff;
   box-shadow:0 6px 18px rgba(16,24,40,0.06);
 }
-.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
-.logo{width:48px;height:48px;object-fit:cover;border-radius:8px}
-.site-title{font-weight:700;font-size:1.05rem;text-shadow:0 2px 6px rgba(0,0,0,0.18)}
-.top-nav{display:flex;gap:10px}
-.top-nav .nav-link{color:#fff;text-decoration:none;padding:6px 8px;border-radius:6px}
-.top-nav .nav-link.active{background:rgba(255,255,255,0.07)}
+.logo-wrap{ display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; }
+.logo{ width:48px; height:48px; object-fit:cover; border-radius:8px; }
+.site-title{ font-weight:700; font-size:1.05rem; text-shadow:0 2px 6px rgba(0,0,0,0.18); }
+.top-nav{ display:flex; gap:10px; }
+.top-nav .nav-link{ color:#fff; text-decoration:none; padding:6px 8px; border-radius:6px; }
+.top-nav .nav-link.active{ background:rgba(255,255,255,0.07); }
 
-/* prevent visited links from turning purple */
+/* prevent visited links from turning purple and keep color stable */
 .top-nav .nav-link,
 .top-nav .nav-link:visited,
 .top-nav .nav-link:active,
@@ -37,12 +39,12 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   color: #fff;
 }
 
-/* Layout */
-.container{max-width:1200px;margin:18px auto;padding:0 16px}
+/* ===== Layout container ===== */
+.container{ max-width:1200px; margin:18px auto; padding:0 16px; }
 
-/* Group section */
+/* ===== Category / gallery grid ===== */
 .category-section{ margin-bottom:28px; }
-.category-title{ font-size:1.25rem; color:var(--accent-1); margin:8px 0 12px 6px; font-weight:700 }
+.category-title{ font-size:1.25rem; color:var(--accent-1); margin:8px 0 12px 6px; font-weight:700; }
 
 /* Category grid: responsive columns */
 .category-grid{
@@ -68,7 +70,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   .category-grid{ grid-template-columns: repeat(8, 1fr); }
 }
 
-/* Card */
+/* ===== Card ===== */
 .card{
   background:var(--card-bg);
   border-radius:10px;
@@ -84,8 +86,8 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 .card .title{ font-weight:700; font-size:0.95rem; color:#222; margin-left:2px; }
 .card .meta{ font-size:0.82rem; color:var(--muted); margin-left:2px; }
 
-/* Modal & thumbs */
-/* modal z-index поднят выше bottom-nav, чтобы модалка не пряталась под нижней панелью */
+/* ===== MODAL & THUMBS (унифицированный блок) ===== */
+/* overlay */
 .modal{
   position:fixed;
   inset:0;
@@ -98,14 +100,13 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 }
 .modal.show{ display:flex; }
 
-/* --- МОДАЛКА: визуальная зона и поведение --- */
+/* panel */
 .modal-panel{
   background:var(--card-bg);
   width:100%;
   max-width:920px;
-  /* увеличим запас по высоте и оставим скролл для содержимого */
   max-height:90vh;
-  overflow:auto; /* прокрутка внутри панели при необходимости */
+  overflow:auto;
   border-radius:12px;
   padding:14px 14px 18px;
   position:relative;
@@ -117,42 +118,39 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   align-items:center;
 }
 
-/* Главная картинка: оставляем auto-height, но жёстко ограничиваем макс-высоту
-   так, чтобы под миниатюры всегда оставалось место */
+/* main image - зарезервировано место для миниатюр */
 #modal-img{
   width:100%;
   height:auto;
-  max-height: calc(65vh - var(--thumb-size) - 48px); /* подгонить при желании */
+  max-height: calc(68vh - var(--thumb-size) - 48px);
   object-fit:contain;
   border-radius:8px;
   background:#f7f7f7;
 }
 
-/* Отдельный контейнер миниатюр: всегда одна строчка, горизонтальный скролл,
-   обязательно скрываем вертикальный скролл и резервируем место снизу для трека */
+/* thumbs container - horizontal row with scroll */
 .modal-thumbs{
   display:flex;
   gap:8px;
-  margin-top:10px;
-  margin-bottom:8px;
+  margin-top:12px;
+  margin-bottom:12px;
   overflow-x:auto;
-  overflow-y:hidden;               /* важно: нет вертикальной прокрутки */
-  padding:6px 6px 12px 6px;       /* снизу резервируем место для трека */
+  overflow-y:hidden;
+  padding:6px 8px 12px 8px;
   justify-content:flex-start;
   align-items:center;
   -webkit-overflow-scrolling:touch;
   white-space:nowrap;
   scrollbar-width:auto;
-  box-sizing: border-box;         /* чтобы padding считался корректно */
+  box-sizing: border-box;
   width:100%;
 }
 
-/* Стили полосы прокрутки (лизкие, не прячем полностью) */
+/* scrollbar visuals */
 .modal-thumbs::-webkit-scrollbar{ height:8px; }
 .modal-thumbs::-webkit-scrollbar-thumb{ background: rgba(0,0,0,0.12); border-radius:8px; }
 
-/* Квадратные миниатюры — фиксированный размер, не сжимаются и не растягиваются.
-   flex:0 0 auto гарантирует, что они не будут растягиваться при ограничениях. */
+/* fixed square thumbs */
 .modal-thumbs .thumb{
   width: var(--thumb-size);
   height: var(--thumb-size);
@@ -168,7 +166,10 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   box-shadow:0 6px 16px rgba(16,24,40,0.08);
 }
 
-/* Крестик закрытия — выше миниатюр и видим на любом фоне */
+/* centered modifier — ставится через JS */
+.modal-thumbs.centered { justify-content: center !important; }
+
+/* close button */
 .modal-close{
   position:absolute;
   right:12px;
@@ -188,19 +189,17 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   box-shadow:0 6px 18px rgba(16,24,40,0.08);
 }
 
-/* Мобильная подстройка: чуть меньше миниатюр */
+/* mobile tweak */
 @media (max-width:600px){
   :root { --thumb-size: 56px; }
   #modal-img{ max-height: calc(60vh - var(--thumb-size) - 40px); }
 }
 
-
-/* variant toggle styling */
+/* ===== Variant toggle / actions / buttons ===== */
 .variant-toggle{ display:flex; gap:8px; align-items:center; justify-content:center; margin-top:6px; flex-wrap:wrap; }
 .variant-toggle button{ padding:8px 12px; border-radius:8px; border:1px solid #e6e6e6; background:#fafafa; cursor:pointer; color:#333; font-weight:600; }
 .variant-toggle button.active{ background:var(--accent-1); color:#fff; border-color:transparent; box-shadow:0 6px 18px rgba(94,77,178,0.12); }
 
-/* actions */
 .actions{ display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:6px; }
 .btn{ display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; color:#fff; background:var(--accent-1); }
 .btn.ghost{ background:transparent; color:var(--accent-1); border:1px solid rgba(0,0,0,0.06); }
@@ -209,7 +208,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 #sku { color:var(--sku-color); font-weight:600; font-size:0.95rem; margin-top:6px; display:inline-block; }
 #price { color:var(--accent-1); font-weight:700; margin-left:10px; font-size:1rem; }
 
-/* contacts styling - appear as neutral buttons, not blue links */
+/* contacts styling - neutral buttons */
 .modal-contacts{ width:100%; display:flex; justify-content:center; gap:8px; align-items:center; color:var(--muted); font-size:0.95rem; }
 .modal-contacts a, .site-footer .contacts a {
   display:inline-block;
@@ -223,14 +222,14 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 }
 .modal-contacts a:visited, .site-footer .contacts a:visited { color:var(--accent-1); }
 
-/* footer */
-.site-footer{ background:#fafafa; padding:14px; text-align:center; color:var(--muted); font-size:14px; border-top:1px solid #eee }
+/* ===== Footer ===== */
+.site-footer{ background:#fafafa; padding:14px; text-align:center; color:var(--muted); font-size:14px; border-top:1px solid #eee; }
 .site-footer .contacts { margin-bottom:8px; }
 
-/* bottom nav */
-.bottom-nav{ display:none; position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid #eee; padding:6px 8px; justify-content:space-around; z-index:10000; height:var(--bottom-nav-h); align-items:center }
-.bn-item{ display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#555; font-size:12px }
-.bn-item img{ width:22px; height:22px }
+/* ===== Bottom nav ===== */
+.bottom-nav{ display:none; position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid #eee; padding:6px 8px; justify-content:space-around; z-index:10000; height:var(--bottom-nav-h); align-items:center; }
+.bn-item{ display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#555; font-size:12px; }
+.bn-item img{ width:22px; height:22px; }
 
 /* if device uses coarse pointer (touch) — force mobile nav regardless of CSS pixel width */
 @media (pointer: coarse) {
@@ -250,9 +249,9 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
 @media (min-width:1025px){ .bottom-nav{ display:none } body{ padding-bottom:0 } }
 
 /* accessibility focus */
-:focus{ outline:2px dashed rgba(125,95,182,0.18); outline-offset:2px }
+:focus{ outline:2px dashed rgba(125,95,182,0.18); outline-offset:2px; }
 
-/* Активный пункт нижней навигации */
+/* Active bottom nav item visuals */
 .bottom-nav .bn-item {
   color: #555;
   transition: transform .12s ease, color .12s ease;
@@ -268,31 +267,6 @@ html,body{height:100%;margin:0;background:var(--bg);color:#222;font-family:'Comf
   filter: none;
   transform: scale(1.08);
   opacity: 1;
-  /* optional: add subtle glow */
   box-shadow: 0 6px 18px rgba(94,77,178,0.12);
 }
 .bottom-nav .bn-item span { display:block; font-size:12px; }
-
-/* чуть больше места для основной картинки, чтобы миниатюры влезали */
-#modal-img{
-  width:100%;
-  height:auto;
-  /* увеличил max-height, чтобы изображение не "съедало" место для миниатюр */
-  max-height: calc(72vh - var(--thumb-size) - 48px);
-  object-fit:contain;
-  border-radius:8px;
-  background:#f7f7f7;
-}
-
-/* когда миниатюр немного и их общая ширина меньше контейнера,
-   мы включаем центрирование */
-.modal-thumbs.centered {
-  justify-content: center !important;
-}
-
-/* немного отступов сверху/снизу для миниатюр, чтобы scrollbar не налазил */
-.modal-thumbs{
-  margin-top:12px;
-  margin-bottom:12px;
-}
-
