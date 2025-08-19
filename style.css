@@ -273,5 +273,47 @@ opacity: 1;
 box-shadow: 0 6px 18px rgba(94,77,178,0.12);
 }
 .bottom-nav .bn-item span { display:block; font-size:12px; }
+/* ===== FIX: modal thumbs collapsed -> ensure visible area ===== */
+.modal-thumbs {
+  box-sizing: border-box !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  height: auto !important;                      /* не фиксируем высоту */
+  min-height: calc(var(--thumb-size) + 12px) !important; /* гарантируем достаточную высоту */
+  padding-top: 8px !important;
+  padding-bottom: 12px !important;              /* резерв под трек скролла */
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  white-space: nowrap !important;
+  z-index: 1300 !important;
+}
 
+/* Убедимся, что миниатюра не абсолютирована и учитывается в потоке */
+.modal-thumbs .thumb {
+  display: block !important;
+  box-sizing: border-box !important;
+  width: var(--thumb-size) !important;
+  height: var(--thumb-size) !important;
+  flex: 0 0 var(--thumb-size) !important;
+  object-fit: cover !important;   /* или contain по предпочтению */
+  margin: 0 !important;
+  border: 2px solid transparent !important;
+  background: #f6f6f6 !important;
+  z-index: 1400 !important;
+}
+
+/* Убираем возможные inline-gap / line-height эффекты */
+.modal-thumbs img, .modal-thumbs .thumb {
+  vertical-align: middle !important;
+  line-height: 0 !important;
+}
+
+/* На всякий случай — запретим родителям «урезать» высоту */
+.modal-panel, .modal-panel > * {
+  min-height: 0;
+}
 
