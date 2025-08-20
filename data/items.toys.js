@@ -155,9 +155,9 @@ window.itemsData = {
     group: "Животные",
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      { code: "M07", img: "images/T019-M07.jpg", prices: { "": "450 ₽"}, ozon: "" },
-      { code: "M11", img: "images/T019-M11.jpg", prices: { "": "450 ₽"}, ozon: "" },
-      { code: "M03", img: "images/T019-M03.jpg", prices: { "": "450 ₽"}, ozon: "" }
+      { code: "M07", img: "images/T019-M07.jpg", prices: { "": "350 ₽"}, ozon: "" },
+      { code: "M11", img: "images/T019-M11.jpg", prices: { "": "350 ₽"}, ozon: "" },
+      { code: "M03", img: "images/T019-M03.jpg", prices: { "": "350 ₽"}, ozon: "" }
     ]
   }
   
