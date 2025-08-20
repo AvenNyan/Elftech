@@ -49,7 +49,7 @@ window.itemsData = {
     image: "",
     variants: [
       { suffix: "-15", label: "15 см", description: "Невеста - собранная фата, высота 15 см.", ozon: "" },
-      { suffix: "-20", label: "20 см", description: "Невеста - собранная фата, высота 20 см.", ozon: "" }
+      { suffix: "-20", label: "20 см", description: "Невеста - собранная фата, высота 20 см.", ozon: "" },
       { suffix: "-25", label: "25 см", description: "Невеста - собранная фата, высота 25 см.", ozon: "" }
     ],
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
