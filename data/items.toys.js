@@ -138,5 +138,28 @@ window.itemsData = {
       { code: "B21", prices: { "": "220 ₽", "-m": "260 ₽" }, ozon: "" },
       { code: "M03", prices: { "": "260 ₽", "-m": "320 ₽" }, ozon: "" }
     ]
+  },
+
+
+    "T018": {
+    name: "Лабубу подвижный",
+    group: "Лабубу",
+    contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
+    colors: [
+      { code: "P04", img: "images/T018-P04.jpg", prices: { "": "350 ₽"}, ozon: "" }
+    ]
+  },
+
+    "T018": {
+    name: "Лабубу подвижный",
+    group: "Лабубу",
+    variants: [
+      { suffix: "", label: "Базовая", description: "Небольшой 15см лабубу с подвижными частями.", ozon: "" },
+    ],
+    contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
+    colors: [
+      { code: "P04", img: "images/T018-P04.jpg", prices: { "": "350 ₽"}, ozon: "" }
+    ]
   }
+  
 };
