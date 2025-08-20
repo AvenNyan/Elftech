@@ -150,15 +150,14 @@ window.itemsData = {
     ]
   },
 
-    "T018": {
-    name: "Лабубу подвижный",
-    group: "Лабубу",
-    variants: [
-      { suffix: "", label: "Базовая", description: "Небольшой 15см лабубу с подвижными частями.", ozon: "" },
-    ],
+    "T019": {
+    name: "Феникс",
+    group: "Животные",
     contacts: { telegram: "@AvenNyan", whatsapp: "+79818522194" },
     colors: [
-      { code: "P04", img: "images/T018-P04.jpg", prices: { "": "350 ₽"}, ozon: "" }
+      { code: "M07", img: "images/T019-M07.jpg", prices: { "": "450 ₽"}, ozon: "" },
+      { code: "M11", img: "images/T019-M11.jpg", prices: { "": "450 ₽"}, ozon: "" },
+      { code: "M03", img: "images/T019-M03.jpg", prices: { "": "450 ₽"}, ozon: "" }
     ]
   }
   
