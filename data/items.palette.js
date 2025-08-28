@@ -1,39 +1,39 @@
 // data/items.palette.js
 window.itemsData = {
   "G01": {
+    code: "G01",
     name: "Мятный",
-    group: "Палитра",
-    // миниатюра будет взята из первого цвета
-    colors: [
-      { code: "G01", img: "images/G01.jpg", ozon: "" }
-    ]
+    img: "images/G01.jpg",
+    material: "PLA",
+    type: "solid",
+    hex: "#7ED48A",
+    description: "Материал PLA, хорош для декора и прототипов, легко печатается."
   },
   "G02": {
+    code: "G02",
     name: "Тёмно-зелёный",
-    group: "Палитра",
-    colors: [
-      { code: "G02", img: "images/G02.jpg", ozon: "" }
-    ]
+    img: "images/G02.jpg",
+    material: "PETG",
+    type: "solid",
+    hex: "#2F6F3E",
+    description: "PETG — прочный, с хорошей адгезией между слоями."
   },
-  "G03": {
-    name: "Оливковый",
-    group: "Палитра",
-    colors: [
-      { code: "G03", img: "images/G03.jpg", ozon: "" }
-    ]
+  "MUL01": {
+    code: "MUL01",
+    name: "Ocean Mix (многоцветный)",
+    img: "images/MUL01.jpg",
+    material: "PLA",
+    type: "multi",
+    hex: "#6ab7c6",
+    description: "Многоцветная нить (градиент)."
   },
-  "W01": {
-    name: "Белый",
-    group: "Палитра",
-    colors: [
-      { code: "W01", img: "images/W01.jpg", ozon: "" }
-    ]
-  },
-  "R01": {
-    name: "Ярко-красный",
-    group: "Палитра",
-    colors: [
-      { code: "R01", img: "images/R01.jpg", ozon: "" }
-    ]
+  "T101": {
+    code: "T101",
+    name: "Технический PET-CF",
+    img: "images/T101.jpg",
+    material: "PET-CF",
+    type: "tech",
+    hex: "#9aa0a6",
+    description: "Усиленный углеводородом, для прочных печатных деталей."
   }
 };
