@@ -139,6 +139,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSkuPriceOzon();
     fillContacts(item.contacts);
     // show modal after SKU/price updated so we can push nice hash
+    // --- material + description block (создаётся или обновляется) ---
+(function showMaterialAndDesc(it){
+  if (!modal) return;
+  let matNode = modal.querySelector('.modal-material');
+  if (!matNode) {
+    matNode = document.createElement('div');
+    matNode.className = 'modal-material';
+    matNode.innerHTML = '<div class="modal-material-line"></div><div class="modal-material-desc"></div>';
+    // вставляем в конец панели (перед кнопками если они есть)
+    const panel = modal.querySelector('.modal-panel');
+    if (panel) panel.appendChild(matNode);
+  }
+  const matLine = matNode.querySelector('.modal-material-line');
+  const descLine = matNode.querySelector('.modal-material-desc');
+  matLine.textContent = it.material ? ('Материал: ' + it.material) : '';
+  descLine.textContent = it.description || '';
+})(item);
     showModal();
   }
 
