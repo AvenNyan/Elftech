@@ -431,39 +431,43 @@ if (oldMat) oldMat.remove();
   }
 });
 
-/* --- palette renderer: groups (solid, multi, tech) + solid sorting by hue --- */
+/* --- renderPaletteIfNeeded (замена) --- */
 function renderPaletteIfNeeded() {
   const root = document.querySelector('.palette-grid');
-  if (!root) return false; // не наша страница
+  if (!root) return false;
 
-  // RAW должен быть уже загружен в window.itemsData
   const RAW = window.itemsData || {};
-  // normalize function уже есть в script.js — используем его
-  const entries = Object.keys(RAW).map(k => ({ key: k, item: normalize(RAW[k], k) })).filter(e => e.item);
+  const entries = Object.keys(RAW).map(k => ({ key: k, raw: RAW[k] })).filter(e => e.raw);
 
-  const solids = [];
-  const multis = [];
-  const techs = [];
+  // helper: determine type
+  function detectType(raw) {
+    if (!raw) return 'multi';
+    const t = (raw.type || raw.kind || raw.ty || '').toString().toLowerCase();
+    if (t === 'solid' || t === 'single' || t === 'one' || t === 'mono') return 'solid';
+    if (t === 'multi' || t === 'multicolor' || t === 'multi-color') return 'multi';
+    if (t === 'tech' || t === 'technical' || t === 'techplastic' || t === 'technical-plastic') return 'tech';
 
-  entries.forEach(e => {
-    const it = e.item;
-    const t = (it.type || '').toString().toLowerCase();
-    if (t === 'solid' || t === 'single') solids.push(e);
-    else if (t === 'multi' || t === 'multicolor' || t === 'multi-color') multis.push(e);
-    else if (t === 'tech' || t === 'technical' || t === 'techplastic') techs.push(e);
-    else {
-      // fallback: try to guess by material name (PLA/PETG/ABS -> solid)
-      const m = (it.material || '').toLowerCase();
-      if (m.includes('pla') || m.includes('petg') || m.includes('abs')) solids.push(e);
-      else multis.push(e);
-    }
-  });
+    const m = (raw.material || '').toString().toLowerCase();
+    if (m.includes('tech') || m.includes('cf') || m.includes('carbon') || m.includes('nylon') || m.includes('pa') || m.includes('pbt')) return 'tech';
+    if (m.includes('pla') || m.includes('petg') || m.includes('abs') || m.includes('tpu') || m.includes('pc')) return 'solid';
+
+    // guess by code prefix: codes starting with T or t -> tech ; MUL/M/MC -> multi
+    const code = (raw.code || raw.key || '').toString();
+    if (/^t/i.test(code)) return 'tech';
+    if (/^mul|^m/i.test(code)) return 'multi';
+
+    // fallback: if image filename suggests gradient/multi (contains 'mix'/'multi'), classify multi
+    if (raw.img && /mix|multi|gradient|varieg/i.test(raw.img)) return 'multi';
+
+    return 'solid'; // safe default (put into first group)
+  }
 
   // helper: hex -> hsl
   function hexToHsl(hex) {
-    if (!hex) return {h:999,s:0,l:0};
-    hex = hex.replace('#','');
+    if (!hex || typeof hex !== 'string') return { h: 999, s: 0, l: 0 };
+    hex = hex.replace('#', '');
     if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    if (hex.length !== 6) return { h: 999, s: 0, l: 0 };
     const r = parseInt(hex.slice(0,2),16)/255;
     const g = parseInt(hex.slice(2,4),16)/255;
     const b = parseInt(hex.slice(4,6),16)/255;
@@ -482,73 +486,95 @@ function renderPaletteIfNeeded() {
     return { h: Math.round(h), s: Math.round(s*100), l: Math.round(l*100) };
   }
 
-  // sorting solids by hue -> saturation -> lightness
+  // group containers
+  const solids = [], multis = [], techs = [];
+
+  entries.forEach(e => {
+    const raw = e.raw;
+    const type = detectType(raw);
+    const item = {
+      key: e.key,
+      code: raw.code || e.key,
+      name: raw.name || raw.title || raw.code || e.key,
+      img: raw.img || raw.image || (raw.colors && raw.colors[0] && raw.colors[0].img) || raw.imageThumb || 'images/placeholder.png',
+      material: raw.material || raw.mat || '',
+      hex: (raw.hex || raw.colorHex || (raw.colors && raw.colors[0] && raw.colors[0].hex)) || '',
+      description: raw.description || raw.desc || raw.note || ''
+    };
+    if (type === 'solid') solids.push(item);
+    else if (type === 'multi') multis.push(item);
+    else techs.push(item);
+  });
+
+  // sort solids by hue -> sat -> lightness
   solids.sort((a,b) => {
-    const ha = hexToHsl(a.item.hex || (a.item.colors && a.item.colors[0] && a.item.colors[0].hex) || '');
-    const hb = hexToHsl(b.item.hex || (b.item.colors && b.item.colors[0] && b.item.colors[0].hex) || '');
+    const ha = hexToHsl(a.hex);
+    const hb = hexToHsl(b.hex);
     if (ha.h !== hb.h) return ha.h - hb.h;
-    if (ha.s !== hb.s) return hb.s - ha.s ? hb.s - ha.s : ha.s - hb.s; // prefer more saturated earlier
+    if (ha.s !== hb.s) return hb.s - ha.s;
     return ha.l - hb.l;
   });
 
-  // helper to create card node
-  function makeCard(e) {
-    const it = e.item;
-    const c = document.createElement('div');
-    c.className = 'card';
+  // helper to create card
+  function makeCard(item, flags = {}) {
+    const c = document.createElement('div'); c.className = 'card';
+    if (flags.badge) {
+      const badge = document.createElement('div');
+      badge.className = 'card-badge';
+      badge.textContent = flags.badge;
+      badge.style.position = 'absolute';
+      badge.style.right = '8px';
+      badge.style.top = '8px';
+      badge.style.background = 'rgba(0,0,0,0.06)';
+      badge.style.padding = '4px 6px';
+      badge.style.fontSize = '12px';
+      badge.style.borderRadius = '6px';
+      c.style.position = 'relative';
+      c.appendChild(badge);
+    }
     const img = document.createElement('img');
-    // thumb logic: prefer explicit img, else try first color, else placeholder
-    const firstColor = (it.colors && it.colors[0]) ? (it.colors[0].img || '') : '';
-    img.src = it.img || firstColor || 'images/placeholder.png';
-    img.alt = it.name || it.code || e.key;
+    img.src = item.img;
+    img.alt = item.name;
     img.loading = 'lazy';
-    img.dataset.key = e.key;
+    img.dataset.key = item.code || item.key;
     c.appendChild(img);
 
-    const title = document.createElement('div');
-    title.className = 'title';
-    title.textContent = it.name || e.key;
+    const title = document.createElement('div'); title.className = 'title'; title.textContent = item.name;
     c.appendChild(title);
 
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    const codeText = it.code || e.key;
-    meta.textContent = codeText + (it.material ? (' ' + it.material) : '');
+    const meta = document.createElement('div'); meta.className = 'meta';
+    meta.textContent = (item.code ? item.code + (item.material ? ' ' + item.material : '') : (item.material || ''));
     c.appendChild(meta);
 
     return c;
   }
 
+  // build DOM
   root.innerHTML = '';
 
-  // append solids first (no header)
+  // solids first (no header)
   const solidsGrid = document.createElement('div'); solidsGrid.className = 'category-grid';
-  solids.forEach(e => solidsGrid.appendChild(makeCard(e)));
+  solids.forEach(it => solidsGrid.appendChild(makeCard(it)));
   root.appendChild(solidsGrid);
 
-  // append multicolor section (if any)
+  // multis
   if (multis.length) {
     const h = document.createElement('div'); h.className = 'category-title'; h.textContent = 'Многоцветные';
     root.appendChild(h);
-    const gridM = document.createElement('div'); gridM.className = 'category-grid';
-    multis.forEach(e => gridM.appendChild(makeCard(e)));
-    root.appendChild(gridM);
+    const g = document.createElement('div'); g.className = 'category-grid';
+    multis.forEach(it => g.appendChild(makeCard(it, { badge: 'Многоцветный' })));
+    root.appendChild(g);
   }
 
-  // append technical plastics
+  // techs
   if (techs.length) {
     const h2 = document.createElement('div'); h2.className = 'category-title'; h2.textContent = 'Технические пластики';
     root.appendChild(h2);
-    const gridT = document.createElement('div'); gridT.className = 'category-grid';
-    techs.forEach(e => gridT.appendChild(makeCard(e)));
-    root.appendChild(gridT);
+    const g2 = document.createElement('div'); g2.className = 'category-grid';
+    techs.forEach(it => g2.appendChild(makeCard(it, { badge: 'Техпластик' })));
+    root.appendChild(g2);
   }
 
-  // attach delegated click behaviour: already exists in script.js — it listens to .gallery img or .gallery-card img or img[data-key]
+  // done
   return true;
 }
-
-// auto-run for palette pages (after DOMContentLoaded)
-document.addEventListener('DOMContentLoaded', () => {
-  try { renderPaletteIfNeeded(); } catch(e){/* ignore */ }
-});
