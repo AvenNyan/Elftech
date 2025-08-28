@@ -409,3 +409,125 @@ document.addEventListener('DOMContentLoaded', () => {
     paletteLink = p;
   }
 });
+
+/* --- palette renderer: groups (solid, multi, tech) + solid sorting by hue --- */
+function renderPaletteIfNeeded() {
+  const root = document.querySelector('.palette-grid');
+  if (!root) return false; // не наша страница
+
+  // RAW должен быть уже загружен в window.itemsData
+  const RAW = window.itemsData || {};
+  // normalize function уже есть в script.js — используем его
+  const entries = Object.keys(RAW).map(k => ({ key: k, item: normalize(RAW[k], k) })).filter(e => e.item);
+
+  const solids = [];
+  const multis = [];
+  const techs = [];
+
+  entries.forEach(e => {
+    const it = e.item;
+    const t = (it.type || '').toString().toLowerCase();
+    if (t === 'solid' || t === 'single') solids.push(e);
+    else if (t === 'multi' || t === 'multicolor' || t === 'multi-color') multis.push(e);
+    else if (t === 'tech' || t === 'technical' || t === 'techplastic') techs.push(e);
+    else {
+      // fallback: try to guess by material name (PLA/PETG/ABS -> solid)
+      const m = (it.material || '').toLowerCase();
+      if (m.includes('pla') || m.includes('petg') || m.includes('abs')) solids.push(e);
+      else multis.push(e);
+    }
+  });
+
+  // helper: hex -> hsl
+  function hexToHsl(hex) {
+    if (!hex) return {h:999,s:0,l:0};
+    hex = hex.replace('#','');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const r = parseInt(hex.slice(0,2),16)/255;
+    const g = parseInt(hex.slice(2,4),16)/255;
+    const b = parseInt(hex.slice(4,6),16)/255;
+    const max = Math.max(r,g,b), min = Math.min(r,g,b);
+    let h=0, s=0, l=(max+min)/2;
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h = h * 60;
+    }
+    return { h: Math.round(h), s: Math.round(s*100), l: Math.round(l*100) };
+  }
+
+  // sorting solids by hue -> saturation -> lightness
+  solids.sort((a,b) => {
+    const ha = hexToHsl(a.item.hex || (a.item.colors && a.item.colors[0] && a.item.colors[0].hex) || '');
+    const hb = hexToHsl(b.item.hex || (b.item.colors && b.item.colors[0] && b.item.colors[0].hex) || '');
+    if (ha.h !== hb.h) return ha.h - hb.h;
+    if (ha.s !== hb.s) return hb.s - ha.s ? hb.s - ha.s : ha.s - hb.s; // prefer more saturated earlier
+    return ha.l - hb.l;
+  });
+
+  // helper to create card node
+  function makeCard(e) {
+    const it = e.item;
+    const c = document.createElement('div');
+    c.className = 'card';
+    const img = document.createElement('img');
+    // thumb logic: prefer explicit img, else try first color, else placeholder
+    const firstColor = (it.colors && it.colors[0]) ? (it.colors[0].img || '') : '';
+    img.src = it.img || firstColor || 'images/placeholder.png';
+    img.alt = it.name || it.code || e.key;
+    img.loading = 'lazy';
+    img.dataset.key = e.key;
+    c.appendChild(img);
+
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = it.name || e.key;
+    c.appendChild(title);
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    const codeText = it.code || e.key;
+    meta.textContent = codeText + (it.material ? (' ' + it.material) : '');
+    c.appendChild(meta);
+
+    return c;
+  }
+
+  root.innerHTML = '';
+
+  // append solids first (no header)
+  const solidsGrid = document.createElement('div'); solidsGrid.className = 'category-grid';
+  solids.forEach(e => solidsGrid.appendChild(makeCard(e)));
+  root.appendChild(solidsGrid);
+
+  // append multicolor section (if any)
+  if (multis.length) {
+    const h = document.createElement('div'); h.className = 'category-title'; h.textContent = 'Многоцветные';
+    root.appendChild(h);
+    const gridM = document.createElement('div'); gridM.className = 'category-grid';
+    multis.forEach(e => gridM.appendChild(makeCard(e)));
+    root.appendChild(gridM);
+  }
+
+  // append technical plastics
+  if (techs.length) {
+    const h2 = document.createElement('div'); h2.className = 'category-title'; h2.textContent = 'Технические пластики';
+    root.appendChild(h2);
+    const gridT = document.createElement('div'); gridT.className = 'category-grid';
+    techs.forEach(e => gridT.appendChild(makeCard(e)));
+    root.appendChild(gridT);
+  }
+
+  // attach delegated click behaviour: already exists in script.js — it listens to .gallery img or .gallery-card img or img[data-key]
+  return true;
+}
+
+// auto-run for palette pages (after DOMContentLoaded)
+document.addEventListener('DOMContentLoaded', () => {
+  try { renderPaletteIfNeeded(); } catch(e){/* ignore */ }
+});
