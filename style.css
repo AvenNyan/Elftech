@@ -117,26 +117,6 @@ gap:12px;
 align-items:center;
 }
 
-/* модалка палитры */
-.modal-material {
-  width:100%;
-  text-align:center;
-  color:var(--muted);
-  font-size:0.95rem;
-  margin-top:8px;
-  padding: 6px 12px;
-  box-sizing: border-box;
-}
-.modal-material-line {
-  font-weight:700;
-  color:var(--sku-color, #333);
-}
-.modal-material-desc {
-  margin-top:6px;
-  font-size:0.92rem;
-  color:var(--muted);
-  line-height:1.3;
-}
 
 
 /* Главная картинка: оставляем auto-height, но жёстко ограничиваем макс-высоту
