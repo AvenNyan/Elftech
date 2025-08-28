@@ -268,6 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (priceEl) priceEl.textContent = '';
     if (ozonLink) ozonLink.style.display = 'none';
     fillContacts({telegram:'@AvenNyan', whatsapp:'+7 981 852-21-94'});
+    // remove material/description block for raw images
+const oldMat = modal.querySelector('.modal-material');
+if (oldMat) oldMat.remove();
+
     showModal();
   }
 
